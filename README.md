@@ -16,26 +16,19 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 
 ## Getting Started
 
-1. Clone the repository:
-
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
-
-2. Install dependencies:
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Run the development server:
+2. Run the development server:
 
 ```bash
 npm run dev
 ```
 
-4. Build for production:
+3. Build for production:
 
 ```bash
 npm run build
