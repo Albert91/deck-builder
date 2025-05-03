@@ -1,19 +1,20 @@
 import type { APIRoute } from 'astro';
 import { searchDecksSchema } from '../../lib/validation/decks';
 import { listDecks } from '../../lib/services/deckService';
+import { defaultUserId } from '@/db/supabase.client';
 
 export const prerender = false;
 
 export const GET: APIRoute = async ({ request, locals }) => {
   // Authentication check
-  const { data: { user }, error: authError } = await locals.supabase.auth.getUser();
+  // const { data: { user }, error: authError } = await locals.supabase.auth.getUser();
   
-  if (authError || !user) {
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized' }),
-      { status: 401, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
+  // if (authError || !user) {
+  //   return new Response(
+  //     JSON.stringify({ error: 'Unauthorized' }),
+  //     { status: 401, headers: { 'Content-Type': 'application/json' } }
+  //   );
+  // }
 
   try {
     // Parse and validate query parameters
@@ -31,7 +32,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     
     // Get decks from service
     const params = validationResult.data;
-    const result = await listDecks(locals.supabase, user.id, params);
+    const result = await listDecks(locals.supabase, defaultUserId, params);
     
     return new Response(
       JSON.stringify(result),
