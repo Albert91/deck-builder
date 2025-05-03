@@ -102,6 +102,7 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
   - Użytkownik może wybrać metodę uwierzytelniania: hasło lub OTP
   - Po pomyślnej rejestracji, użytkownik jest automatycznie zalogowany
   - System informuje użytkownika o pomyślnym utworzeniu konta
+  - Użytkownik nie może korzystać z aplikacji bez zarejestrowania się
 
 ### US-002
 - Tytuł: Logowanie użytkownika przez hasło
