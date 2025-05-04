@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { DeckDTO, DeckListResponseDTO, SearchParams } from '../../types';
+import type { CreateDeckCommand, DeckDTO, DeckListResponseDTO, SearchParams, Deck } from '../../types';
+import { mapToDeckDTO } from '../../types';
 
 /**
  * Retrieves a paginated list of decks for a specific user.
@@ -91,4 +92,64 @@ export async function deleteDeck(
   }
 
   return { success: true };
+}
+
+/**
+ * Gets the count of decks owned by a user.
+ * Used to enforce the deck limit per user.
+ */
+export async function getUserDeckCount(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<number> {
+  const { count, error } = await supabase
+    .from('decks')
+    .select('*', { count: 'exact', head: true })
+    .eq('owner_id', userId);
+
+  if (error) {
+    console.error('Error counting user decks:', error);
+    throw error;
+  }
+
+  return count || 0;
+}
+
+/**
+ * Creates a new deck for a user.
+ * The share_hash will be generated automatically by a database trigger.
+ */
+export async function createDeck(
+  supabase: SupabaseClient,
+  userId: string,
+  data: CreateDeckCommand
+): Promise<DeckDTO> {
+  // Check if template exists
+  const { data: template, error: templateError } = await supabase
+    .from('templates')
+    .select('id')
+    .eq('id', data.template_id)
+    .single();
+
+  if (templateError) {
+    throw new Error('Template not found');
+  }
+
+  // Create the new deck
+  const { data: deck, error } = await supabase
+    .from('decks')
+    .insert({
+      name: data.name,
+      template_id: data.template_id,
+      owner_id: userId
+    })
+    .select('id, name, share_hash, template_id, created_at, updated_at')
+    .single();
+
+  if (error) {
+    console.error('Error creating deck:', error);
+    throw error;
+  }
+
+  return mapToDeckDTO(deck as Deck);
 } 
