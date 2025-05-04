@@ -52,6 +52,21 @@ export interface SharedDeckDTO extends DeckDTO {
   cards: CardDTO[];
 }
 
+// =================== DECK FORM TYPES ===================
+
+export interface DeckFormData {
+  name: string;
+  templateId: string;
+  frontImage?: string;
+  backImage?: string;
+}
+
+export interface Toast {
+  type: 'success' | 'error';
+  message: string;
+  id: string;
+}
+
 // =================== CARD TYPES ===================
 
 export type CardAttributeDTO = Pick<CardAttribute, 'id' | 'attribute_type' | 'value'>;
