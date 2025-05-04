@@ -204,7 +204,7 @@ export function LoginForm() {
                   <div className="flex justify-between">
                     <Label htmlFor="password">Password</Label>
                     <a 
-                      href="/reset-password" 
+                      href="/forgot-password" 
                       className="text-xs text-primary hover:underline"
                     >
                       Forgot password?

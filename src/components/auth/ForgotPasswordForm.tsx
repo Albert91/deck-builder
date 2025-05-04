@@ -1,31 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle, AlertCircle } from "lucide-react";
-import { resetPasswordSchema } from "@/lib/validators/auth";
+import { forgotPasswordSchema } from "@/lib/validators/auth";
 import { ZodError } from "zod";
 
-export function ResetPasswordForm() {
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [token, setToken] = useState<string | null>(null);
+export function ForgotPasswordForm() {
+  const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    
-    if (code) {
-      setToken(code);
-    } else {
-      setError("Invalid or expired password reset link. Please request a new one.");
-    }
-  }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,47 +20,33 @@ export function ResetPasswordForm() {
     
     // Validate with Zod schema
     try {
-      resetPasswordSchema.parse({
-        password,
-        passwordConfirm,
-        token: token || ""
-      });
+      forgotPasswordSchema.parse({ email });
     } catch (err) {
       const zodError = err as ZodError;
-      setError(zodError.errors?.[0]?.message || "Invalid input");
-      return;
-    }
-    
-    if (!token) {
-      setError("Invalid reset token. Please request a new password reset link.");
+      setError(zodError.errors?.[0]?.message || "Invalid email");
       return;
     }
     
     try {
       setIsSubmitting(true);
       
-      const response = await fetch("/api/auth/reset-password", {
+      const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          password,
-          passwordConfirm,
-          token,
-        }),
+        body: JSON.stringify({ email }),
       });
       
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || "Failed to reset password");
+        throw new Error(data.message || "Failed to send reset link");
       }
       
       // Show success message
       setSuccess(true);
-      setPassword("");
-      setPasswordConfirm("");
+      setEmail("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred");
     } finally {
@@ -86,7 +59,7 @@ export function ResetPasswordForm() {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
-            Password Reset Successful
+            Check Your Email
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -94,7 +67,8 @@ export function ResetPasswordForm() {
             <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             <AlertTitle>Success!</AlertTitle>
             <AlertDescription>
-              Your password has been successfully reset.
+              If an account exists with that email, we've sent a password reset link.
+              Please check your inbox and follow the instructions.
             </AlertDescription>
           </Alert>
           <div className="mt-6 text-center">
@@ -102,7 +76,7 @@ export function ResetPasswordForm() {
               href="/login" 
               className="text-primary hover:underline font-medium"
             >
-              Go to Login Page
+              Return to Login
             </a>
           </div>
         </CardContent>
@@ -114,10 +88,10 @@ export function ResetPasswordForm() {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
-          Reset Password
+          Forgot Password
         </CardTitle>
         <CardDescription className="text-center">
-          Create a new password for your account
+          Enter your email to receive a password reset link
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -131,25 +105,13 @@ export function ResetPasswordForm() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="new-password">New Password</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="new-password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isSubmitting}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirm-password">Confirm Password</Label>
-            <Input
-              id="confirm-password"
-              type="password"
-              placeholder="••••••••"
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="example@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isSubmitting}
             />
@@ -159,9 +121,9 @@ export function ResetPasswordForm() {
             type="submit"
             className="w-full"
             variant="gradient"
-            disabled={isSubmitting || !token}
+            disabled={isSubmitting}
           >
-            {isSubmitting ? "Resetting..." : "Reset Password"}
+            {isSubmitting ? "Sending..." : "Send Reset Link"}
           </Button>
         </form>
       </CardContent>
