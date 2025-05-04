@@ -116,7 +116,7 @@ export function LoginForm() {
       }
       
       // Przekierowanie do strony z taliami po udanym logowaniu
-      window.location.href = '/decks';
+      window.location.href = '/';
       
     } catch (err) {
       setError("Wystąpił nieoczekiwany błąd podczas weryfikacji kodu");
