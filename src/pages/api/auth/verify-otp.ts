@@ -52,7 +52,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(
       JSON.stringify({ 
         success: true, 
-        user: { id: data.user.id } 
+        user: { id: data?.user?.id } 
       }),
       { status: 200 }
     );
