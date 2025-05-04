@@ -3,7 +3,7 @@ import type { CreateDeckCommand, DeckDTO, DeckListResponseDTO, SearchParams, Dec
 import { mapToDeckDTO } from '../../types';
 
 /**
- * Retrieves a paginated list of decks for a specific user.
+ * Retrieves a list of decks for a specific user.
  * Supports full-text search on deck names.
  */
 export async function listDecks(
@@ -11,7 +11,7 @@ export async function listDecks(
   userId: string,
   params: SearchParams
 ): Promise<DeckListResponseDTO> {
-  const { page = 1, limit = 20, search } = params;
+  const { search } = params;
   
   const query = supabase
     .from('decks')
@@ -21,11 +21,16 @@ export async function listDecks(
   if (search) {
     query.textSearch('name_tsv', search, { config: 'english' });
   }
-
-  const from = (page - 1) * limit;
-  const to = page * limit - 1;
   
-  query.range(from, to);
+  // Add sorting if specified in params
+  if (params.sortBy) {
+    const sortOrder = params.sortOrder === 'asc' ? 'asc' : 'desc';
+    query.order(params.sortBy, { ascending: sortOrder === 'asc' });
+  } else {
+    // Default sort by updated_at DESC if not specified
+    query.order('updated_at', { ascending: false });
+  }
+
   const { data, count, error } = await query;
 
   if (error) {
@@ -45,8 +50,8 @@ export async function listDecks(
   return {
     items,
     totalCount: count || 0,
-    page,
-    limit
+    page: 1,
+    limit: items.length
   };
 }
 

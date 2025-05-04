@@ -118,8 +118,10 @@ export interface PaginationParams {
   limit?: number;
 }
 
-export interface SearchParams extends PaginationParams {
+export interface SearchParams {
   search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 // =================== DECK LIST VIEW TYPES ===================

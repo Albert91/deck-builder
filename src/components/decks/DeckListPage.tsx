@@ -6,7 +6,6 @@ import type { DeckLimitInfo, DeckSortOption, DeckViewModel } from '../../types';
 import { DeckListHeader } from './DeckListHeader';
 import { DeckFilterBar } from './DeckFilterBar';
 import { DeckGrid } from './DeckGrid';
-import { Pagination } from './Pagination';
 import { LoadingState } from './LoadingState';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
@@ -27,17 +26,12 @@ export default function DeckListPage() {
     decks,
     isLoading,
     error,
-    pagination,
     params,
-    setPage,
-    setLimit,
     setSearch,
     setSortBy,
     setSortOrder,
     refetch
   } = useDeckList({ 
-    page: 1, 
-    limit: 12,
     sortBy: 'updated_at',
     sortOrder: 'desc',
     search: ''
@@ -130,19 +124,11 @@ export default function DeckListPage() {
       ) : isEmpty ? (
         <EmptyState onCreateDeck={handleCreateDeck} hasFilters={hasActiveFilters} />
       ) : (
-        <>
-          <DeckGrid 
-            decks={decks} 
-            onDeckSelect={handleDeckSelect} 
-            onDeckOptionsClick={handleDeckOptions} 
-          />
-          
-          <Pagination 
-            pagination={pagination} 
-            onPageChange={setPage} 
-            onLimitChange={setLimit} 
-          />
-        </>
+        <DeckGrid 
+          decks={decks} 
+          onDeckSelect={handleDeckSelect} 
+          onDeckOptionsClick={handleDeckOptions} 
+        />
       )}
     </div>
   );

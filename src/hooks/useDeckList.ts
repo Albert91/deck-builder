@@ -2,25 +2,18 @@ import { useEffect, useState } from 'react';
 import type { 
   DeckViewModel, 
   DeckListParams,
-  DeckListResponseDTO,
-  PaginationModel
+  DeckListResponseDTO
 } from '../types';
 
 /**
  * Custom hook for managing deck list state and fetching data
  */
-export function useDeckList(initialParams: DeckListParams = { page: 1, limit: 12 }) {
+export function useDeckList(initialParams: DeckListParams = {}) {
   // State
   const [decks, setDecks] = useState<DeckViewModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const [params, setParams] = useState<DeckListParams>(initialParams);
-  const [pagination, setPagination] = useState<PaginationModel>({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 0,
-    itemsPerPage: initialParams.limit || 12
-  });
 
   // Fetch decks with provided parameters
   const fetchDecks = async (queryParams: DeckListParams) => {
@@ -30,8 +23,6 @@ export function useDeckList(initialParams: DeckListParams = { page: 1, limit: 12
     try {
       // Build URL parameters
       const urlParams = new URLSearchParams({
-        page: String(queryParams.page || 1),
-        limit: String(queryParams.limit || 12),
         ...(queryParams.search ? { search: queryParams.search } : {}),
         ...(queryParams.sortBy ? { sortBy: queryParams.sortBy } : {}),
         ...(queryParams.sortOrder ? { sortOrder: queryParams.sortOrder } : {})
@@ -54,12 +45,6 @@ export function useDeckList(initialParams: DeckListParams = { page: 1, limit: 12
       }));
       
       setDecks(deckViewModels);
-      setPagination({
-        currentPage: queryParams.page || 1,
-        totalPages: Math.ceil(data.totalCount / (queryParams.limit || 12)),
-        totalItems: data.totalCount,
-        itemsPerPage: queryParams.limit || 12
-      });
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Wystąpił nieznany błąd'));
     } finally {
@@ -76,26 +61,20 @@ export function useDeckList(initialParams: DeckListParams = { page: 1, limit: 12
   useEffect(() => {
     localStorage.setItem('deckListPreferences', JSON.stringify({
       sortBy: params.sortBy,
-      sortOrder: params.sortOrder,
-      limit: params.limit
+      sortOrder: params.sortOrder
     }));
-  }, [params.sortBy, params.sortOrder, params.limit]);
+  }, [params.sortBy, params.sortOrder]);
 
   // Parameter update methods
-  const setPage = (page: number) => setParams(prev => ({ ...prev, page }));
-  const setLimit = (limit: number) => setParams(prev => ({ ...prev, limit, page: 1 }));
-  const setSearch = (search: string) => setParams(prev => ({ ...prev, search, page: 1 }));
-  const setSortBy = (sortBy: string) => setParams(prev => ({ ...prev, sortBy, page: 1 }));
-  const setSortOrder = (sortOrder: 'asc' | 'desc') => setParams(prev => ({ ...prev, sortOrder, page: 1 }));
+  const setSearch = (search: string) => setParams(prev => ({ ...prev, search }));
+  const setSortBy = (sortBy: string) => setParams(prev => ({ ...prev, sortBy }));
+  const setSortOrder = (sortOrder: 'asc' | 'desc') => setParams(prev => ({ ...prev, sortOrder }));
 
   return {
     decks,
     isLoading,
     error,
-    pagination,
     params,
-    setPage,
-    setLimit,
     setSearch,
     setSortBy,
     setSortOrder,

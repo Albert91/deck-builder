@@ -63,7 +63,7 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
 
   // Handle cancel button
   const handleCancel = () => {
-    window.location.href = "/decks";
+    window.location.href = "/";
   };
 
   // Handle AI image generation
