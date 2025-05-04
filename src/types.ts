@@ -116,6 +116,48 @@ export interface SearchParams extends PaginationParams {
   search?: string;
 }
 
+// =================== DECK LIST VIEW TYPES ===================
+
+// Model widoku dla pojedynczej talii
+export interface DeckViewModel extends DeckDTO {
+  cardCount: number;       // liczba kart w talii
+  thumbnailUrl: string;    // URL miniatury talii
+}
+
+// Parametry listy talii (rozszerzenie SearchParams)
+export interface DeckListParams extends SearchParams {
+  sortBy?: string;          // pole po którym sortujemy
+  sortOrder?: 'asc' | 'desc'; // kierunek sortowania
+}
+
+// Model paginacji
+export interface PaginationModel {
+  currentPage: number;     // aktualna strona
+  totalPages: number;      // całkowita liczba stron
+  totalItems: number;      // całkowita liczba elementów
+  itemsPerPage: number;    // liczba elementów na stronę
+}
+
+// Opcje sortowania talii
+export interface DeckSortOption {
+  id: string;              // identyfikator opcji
+  label: string;           // etykieta wyświetlana użytkownikowi
+  value: string;           // wartość używana w API
+}
+
+// Stan filtrów
+export interface DeckFilterState {
+  search: string;          // tekst wyszukiwania
+  sortBy: string;          // pole sortowania
+  sortOrder: 'asc' | 'desc'; // kierunek sortowania
+}
+
+// Informacje o limicie talii
+export interface DeckLimitInfo {
+  totalDecks: number;      // aktualna liczba talii
+  deckLimit: number;       // maksymalna liczba talii (5)
+}
+
 // Mapping helpers for converting database rows to DTOs
 export const mapToCardDTO = (card: Card, attributes?: CardAttribute[]): CardDTO => ({
   id: card.id,
