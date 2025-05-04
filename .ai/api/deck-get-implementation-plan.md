@@ -102,9 +102,6 @@ export async function getDeckById(
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
-      throw new Error('Talia nie została znaleziona');
-    }
     console.error('Error fetching deck:', error);
     throw error;
   }

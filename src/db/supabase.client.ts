@@ -8,8 +8,6 @@ const supabaseAnonKey = import.meta.env.SUPABASE_KEY;
 
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey); 
 
-export const defaultUserId = import.meta.env.SUPABASE_USER_ID;
-
 export const cookieOptions: CookieOptionsWithName = {
   path: '/',
   secure: true,

@@ -152,4 +152,31 @@ export async function createDeck(
   }
 
   return mapToDeckDTO(deck as Deck);
+}
+
+/**
+ * Pobiera talię na podstawie ID z weryfikacją właściciela
+ */
+export async function getDeckById(
+  supabase: SupabaseClient,
+  userId: string,
+  deckId: string
+): Promise<DeckDTO> {
+  const { data, error } = await supabase
+    .from('decks')
+    .select('id, name, share_hash, template_id, created_at, updated_at, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching deck:', error);
+    throw error;
+  }
+
+  // Sprawdzenie czy użytkownik jest właścicielem talii
+  if (data.owner_id !== userId) {
+    throw new Error('Brak uprawnień do wyświetlenia tej talii');
+  }
+
+  return mapToDeckDTO(data as Deck);
 } 
