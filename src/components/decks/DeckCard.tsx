@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { pl } from 'date-fns/locale';
-import { MoreHorizontal } from 'lucide-react';
+import { Pencil, Copy, Share2, Trash2 } from 'lucide-react';
 import type { DeckViewModel } from '../../types';
 import {
   Card,
@@ -10,13 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export interface DeckCardProps {
   deck: DeckViewModel;
@@ -48,8 +43,8 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
     <Card 
       className="group h-full overflow-hidden transition-all hover:shadow-md cursor-pointer"
       onClick={(e) => {
-        // Prevent click when clicking on the options menu
-        if ((e.target as HTMLElement).closest('[data-options-menu]')) {
+        // Prevent click when clicking on action buttons
+        if ((e.target as HTMLElement).closest('[data-action-button]')) {
           return;
         }
         onClick();
@@ -68,36 +63,81 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
         <div className="flex items-start justify-between">
           <CardTitle className="text-xl line-clamp-1">{deck.name}</CardTitle>
           
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild data-options-menu>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <span className="sr-only">Opcje</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onOptionsClick('edit', deck)}>
-                Edytuj
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onOptionsClick('duplicate', deck)}>
-                Duplikuj
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onOptionsClick('share', deck)}>
-                Udostępnij
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => onOptionsClick('delete', deck)}
-                className="text-destructive"
-              >
-                Usuń
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex space-x-1" onClick={(e) => e.stopPropagation()}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    data-action-button
+                    onClick={() => onOptionsClick('edit', deck)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edytuj</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Edytuj talię</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    data-action-button
+                    onClick={() => onOptionsClick('duplicate', deck)}
+                  >
+                    <Copy className="h-4 w-4" />
+                    <span className="sr-only">Duplikuj</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Duplikuj talię</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    data-action-button
+                    onClick={() => onOptionsClick('share', deck)}
+                  >
+                    <Share2 className="h-4 w-4" />
+                    <span className="sr-only">Udostępnij</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Udostępnij talię</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    data-action-button
+                    onClick={() => onOptionsClick('delete', deck)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Usuń</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Usuń talię</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </CardHeader>
       
