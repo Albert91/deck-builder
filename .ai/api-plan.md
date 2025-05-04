@@ -13,18 +13,6 @@
 
 ## 2. Endpoints
 
-### 2.2 Users
-
-#### 2.2.1 Get Current User
-- Method: `GET`
-- URL: `/users/me`
-- Description: Retrieve authenticated user's profile.
-- Authentication: Required (Bearer token)
-- Success Response (200):
-  ```json
-  { "id": "uuid", "email": "user@example.com", "username": "gamer123", "created_at": "..." }
-  ```
-
 ### 2.3 Templates
 
 #### 2.3.1 List Templates
