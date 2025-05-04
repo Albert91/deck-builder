@@ -5,6 +5,7 @@ import { DeckNameField } from "./DeckNameField";
 import { TemplateCarousel } from "./TemplateCarousel";
 import { CardPreview } from "./CardPreview";
 import { LoadingOverlay } from "./LoadingOverlay";
+import { AIGeneratorPanel } from "./AIGeneratorPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ interface DeckFormPageProps {
 
 const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
   const [loadingMessage, setLoadingMessage] = useState("Loading...");
+  const [aiPrompt, setAiPrompt] = useState("");
   
   const {
     formData,
@@ -25,7 +27,8 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
     setToast,
     createDeck,
     updateDeck,
-    updateFormField
+    updateFormField,
+    generateImage
   } = useDeckForm(deckId);
   
   const { templates, isLoading: isLoadingTemplates } = useTemplates();
@@ -72,6 +75,15 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
     updateFormField("templateId", templateId);
   };
 
+  // Handle AI image generation
+  const handleGenerate = async (prompt: string, type: "front" | "back") => {
+    const imageUrl = await generateImage(prompt, type);
+    if (imageUrl) {
+      toast.success(`${type === "front" ? "Front" : "Back"} image generated successfully`);
+    }
+    return imageUrl || "";
+  };
+
   // Determine if form is valid
   const isFormValid = !!formData.name && !!formData.templateId;
   
@@ -113,7 +125,13 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
             backImage={formData.backImage}
           />
           
-          {/* AI Generator Panel will be implemented next */}
+          {/* AI Generator Panel */}
+          <AIGeneratorPanel
+            prompt={aiPrompt}
+            onPromptChange={setAiPrompt}
+            onGenerate={handleGenerate}
+            isGenerating={isGeneratingAI}
+          />
           
           {/* Action Buttons */}
           <div className="flex justify-end gap-4 pt-4">
