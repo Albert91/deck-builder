@@ -3,7 +3,6 @@ import { createSupabaseServerClient } from '../db/supabase.client';
 
 // Ścieżki, które są dostępne bez logowania
 const PUBLIC_PATHS = [
-  '/',
   '/login',
   '/register',
   '/reset-password',
