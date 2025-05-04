@@ -104,8 +104,8 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
           
           {/* Card Preview */}
           <CardPreview
-            frontImage={formData.frontImage}
-            backImage={formData.backImage}
+            frontImage={formData.frontImage ?? '/images/default-card-front.jpeg'}
+            backImage={formData.backImage ?? '/images/default-card-back.jpeg'}
           />
           
           {/* AI Generator Panel */}

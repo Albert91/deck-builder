@@ -55,11 +55,11 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
         onClick();
       }}
     >
-      <div className="relative aspect-video overflow-hidden">
+      <div className="relative overflow-hidden">
         <img
-          src={thumbnailUrl}
+          src={'/images/default-card-back.jpeg'}
           alt={`Miniatura talii ${deck.name}`}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+          className="h-full w-full"
           onError={() => setIsImageError(true)}
         />
       </div>
