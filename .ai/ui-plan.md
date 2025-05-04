@@ -48,11 +48,9 @@ Główne sekcje aplikacji:
 - **Główny cel**: Tworzenie nowej talii lub edycja istniejącej
 - **Kluczowe informacje**:
   - Nazwa talii
-  - Wybór szablonu (karuzela)
   - Podgląd awersu i rewersu talii
 - **Kluczowe komponenty**:
   - Pole edycji nazwy talii
-  - Karuzela szablonów (max 3 widoczne)
   - Generator tła (prompt AI)
   - Generator rewersu (prompt AI)
   - Podgląd obu stron
@@ -121,7 +119,6 @@ Główne sekcje aplikacji:
 ### 3.2. Tworzenie talii
 1. Użytkownik klika przycisk "Nowa talia" na dashboardzie
 2. Wprowadza nazwę talii
-3. Wybiera szablon z karuzeli (max 3 widoczne)
 4. Wprowadza prompt do generowania tła talii przez AI
    - UI jest blokowany z komunikatem o generowaniu
    - Po zakończeniu generowania, tło jest widoczne w podglądzie
@@ -187,9 +184,6 @@ Podobna do DeckGrid, ale dla kart. Wyświetla karty w układzie kolumnowym z prz
 
 ### 5.3. CardPreview
 Komponent podglądu karty w czasie rzeczywistym, aktualizowany podczas edycji. Pokazuje tylko awers karty.
-
-### 5.4. TemplateCarousel
-Karuzela szablonów talii (max 3 widoczne jednocześnie) z możliwością przewijania. Dostępna zarówno podczas tworzenia jak i edycji talii.
 
 ### 5.5. ProgressBar
 Pasek postępu z tooltipem pokazującym aktualny stan limitu (x/5 talii lub x/100 kart).

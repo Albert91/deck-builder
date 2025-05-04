@@ -45,12 +45,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
 - Podgląd na żywo podczas edycji
 - Automatyczny zapis postępu prac
 
-### 3.4 System szablonów kart
-- Biblioteka 3-5 predefiniowanych szablonów kart reprezentujących różne style graficzne
-- Wizualna karuzela szablonów z możliwością podglądu w kontekście talii
-- Możliwość wyboru szablonu przed rozpoczęciem generowania kart
-- Każdy szablon z zdefiniowanymi miejscami na tytuł, główny obrazek oraz tekst karty
-
 ### 3.5 System zarządzania taliami
 - Tworzenie, przeglądanie, edycja i usuwanie talii
 - Eksport talii do formatu PDF gotowego do druku
@@ -81,7 +75,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
 
 ### Co NIE wchodzi w zakres MVP:
 - Zaawansowane funkcje projektowania kart (warstwy, efekty, niestandardowe kształty)
-- Wiele szablonów gier karcianych (poza podstawowymi 3-5)
 - Współdzielenie talii między użytkownikami z możliwością wspólnej edycji
 - Aplikacje mobilne (na początek tylko web)
 - Integracja z popularnymi platformami gier karcianych
@@ -134,17 +127,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
   - Nowa talia jest zapisywana w systemie
   - Użytkownik jest przekierowany do edytora talii
   - System informuje użytkownika o pomyślnym utworzeniu talii
-
-### US-005
-- Tytuł: Wybór szablonu talii
-- Opis: Jako użytkownik tworzący nową talię, chcę wybrać szablon wyglądu kart, aby zapewnić spójność wizualną.
-- Kryteria akceptacji:
-  - Użytkownik może przeglądać dostępne szablony kart (3-5 opcji) w formie karuzeli
-  - Każdy szablon jest wyświetlany z podglądem przykładowej karty
-  - Użytkownik może wybrać szablon dla swojej talii
-  - Wybrany szablon jest zapisywany i stosowany do wszystkich kart w talii
-  - Użytkownik może zmienić szablon w dowolnym momencie tworzenia talii
-
 ### US-006
 - Tytuł: Generowanie tła talii przez AI
 - Opis: Jako użytkownik tworzący talię, chcę wygenerować jednolite tło dla wszystkich kart w talii za pomocą AI, aby zapewnić spójność wizualną.

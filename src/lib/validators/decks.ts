@@ -10,7 +10,6 @@ export type SearchDecksSchema = z.infer<typeof searchDecksSchema>;
 
 export const createDeckSchema = z.object({
   name: z.string().trim().min(3).max(50),
-  template_id: z.string().uuid()
 });
 
 export type CreateDeckSchema = z.infer<typeof createDeckSchema>;

@@ -11,8 +11,7 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
 - Body (JSON):
   ```json
   {
-    "name": "My Deck",
-    "template_id": "template-uuid"
+    "name": "My Deck"
   }
   ```
 - Typy wykorzystywane do parsowania żądania:
@@ -20,7 +19,6 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
   // src/types.ts
   interface CreateDeckCommand {
     name: string;
-    template_id: string;
   }
   ```
 
@@ -36,7 +34,6 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
     "id": "uuid-1",
     "name": "My Deck",
     "share_hash": "abc123",
-    "template_id": "template-uuid",
     "created_at": "2024-07-01T12:00:00Z",
     "updated_at": "2024-07-01T12:00:00Z"
   }
@@ -66,10 +63,9 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
        .from('decks')
        .insert({
          name: data.name,
-         template_id: data.template_id,
          owner_id: userId
        })
-       .select('id, name, share_hash, template_id, created_at, updated_at')
+       .select('id, name, share_hash, created_at, updated_at')
        .single();
      
      if (error) throw new Error(error.message);
@@ -79,9 +75,8 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
 ## 5. Względy bezpieczeństwa
 - Uwierzytelnianie JWT przez Supabase Auth.
 - Autoryzacja przez Supabase RLS: `owner_id = auth.uid()` w bazie danych.
-- Walidacja pól `name` i `template_id` za pomocą Zod:
+- Walidacja pola `name` za pomocą Zod:
   - `name`: niepusty string, min 3 znaki, max 50 znaków
-  - `template_id`: string w formacie UUID; sprawdzenie czy istnieje w tabeli `templates`
 - Weryfikacja limitu talii (max 5) przez deckService.
 - `export const prerender = false` w pliku Astro, by nie cache'ować endpointu.
 
@@ -91,12 +86,10 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
 | 400 | Nieprawidłowe dane w body                 | Zwróć `{ error: zodError.message }`         |
 | 401 | Brak lub nieważny token                   | Zwróć `{ error: "Unauthorized" }`           |
 | 403 | Przekroczony limit talii (5)             | Zwróć `{ error: "Deck limit reached (5)" }` |
-| 404 | Nieprawidłowy template_id                | Zwróć `{ error: "Template not found" }`     |
 | 500 | Błąd zapytania do bazy lub wewnętrzny     | `console.error(error)` + `{ error: "Server error" }` |
 
 ## 7. Rozważania dotyczące wydajności
 - Użycie pojedynczego zapytania do sprawdzenia liczby talii zamiast pobierania całej listy.
-- Walidacja szablonu przez referencję zewnętrzną (template_id).
 - Generowanie losowego share_hash przez trigger bazy danych.
 - Indeks na kolumnie `owner_id` w tabeli `decks` dla szybkiego zliczania talii użytkownika.
 
@@ -105,8 +98,7 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
    - Dodaj `createDeckSchema` w pliku `src/lib/validation/decks.ts`:
      ```ts
      export const createDeckSchema = z.object({
-       name: z.string().min(3).max(50),
-       template_id: z.string().uuid()
+       name: z.string().min(3).max(50)
      });
      ```
 2. **Service**
@@ -117,7 +109,6 @@ Endpoint `POST /decks` umożliwia utworzenie nowej talii kart dla zalogowanego u
    - Sprawdź limit talii przed utworzeniem nowej.
    - Wywołaj `deckService.createDeck` i zwróć wynik ze statusem 201.
 4. **Weryfikacje**
-   - Dodaj weryfikację istnienia template_id w tabeli templates.
    - Upewnij się, że RLS w bazie danych jest poprawnie skonfigurowane.
    - Sprawdź, czy trigger generujący share_hash jest skonfigurowany w bazie danych.
 5. **Sprawdzenie lintera/formatowania**

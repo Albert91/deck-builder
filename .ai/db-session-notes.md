@@ -15,7 +15,7 @@ Implementacja pełnotekstowego wyszukiwania talii po nazwie.
 Sortowanie talii według czasu (ostatni element jako pierwszy) i alfabetycznie.
 </decisions>
 <matched_recommendations>
-Utworzenie schematu bazy danych z tabelami: users, templates, decks, cards, card_attributes i image_metadata.
+Utworzenie schematu bazy danych z tabelami: users, decks, cards, card_attributes i image_metadata.
 Używanie UUID jako kluczy podstawowych dla wszystkich tabel.
 Zaimplementowanie funkcji do generowania unikalnego share_hash z wykorzystaniem UUID v4 konwertowanego do base64url.
 Utworzenie typu enum attribute_type dla atrybutów kart z ograniczeniem CHECK na wartościach (0-99).
@@ -32,12 +32,8 @@ Baza danych dla AI Card Deck Creator będzie zaimplementowana w PostgreSQL poprz
 Przechowywanie podstawowych informacji: UUID, email, username
 Integracja z systemem OTP Supabase dla autentykacji
 Automatyczne timestampy utworzenia i aktualizacji
-2. Szablony (templates)
-Predefiniowane wzorce kart dostępne w systemie
-Podstawowe informacje: nazwa, opis
-Logika rozmieszczenia elementów przechowywana w aplikacji, nie w bazie
 3. Talie (decks)
-Powiązanie z właścicielem (owner_id) i szablonem (template_id)
+Powiązanie z właścicielem (owner_id)
 Unikalny hash dla udostępniania (share_hash)
 Pełnotekstowe wyszukiwanie po nazwie talii
 Limity (5 talii na użytkownika) implementowane na poziomie aplikacji

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDeckForm } from "@/hooks/useDeckForm";
-import { useTemplates } from "@/hooks/useTemplates";
 import { DeckNameField } from "./DeckNameField";
-import { TemplateCarousel } from "./TemplateCarousel";
 import { CardPreview } from "./CardPreview";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { AIGeneratorPanel } from "./AIGeneratorPanel";
@@ -30,8 +28,6 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
     updateFormField,
     generateImage
   } = useDeckForm(deckId);
-  
-  const { templates, isLoading: isLoadingTemplates } = useTemplates();
 
   // Update loading message based on state
   useEffect(() => {
@@ -70,11 +66,6 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
     window.location.href = "/decks";
   };
 
-  // Handle template selection
-  const handleTemplateSelect = (templateId: string) => {
-    updateFormField("templateId", templateId);
-  };
-
   // Handle AI image generation
   const handleGenerate = async (prompt: string, type: "front" | "back") => {
     const imageUrl = await generateImage(prompt, type);
@@ -85,7 +76,7 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
   };
 
   // Determine if form is valid
-  const isFormValid = !!formData.name && !!formData.templateId;
+  const isFormValid = !!formData.name;
   
   // Display loading overlay when necessary
   const showLoading = isLoading || isGeneratingAI;
@@ -109,14 +100,6 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
             name={formData.name}
             onChange={(name) => updateFormField("name", name)}
             error={!formData.name && error ? "Deck name is required" : undefined}
-          />
-          
-          {/* Template Carousel */}
-          <TemplateCarousel
-            templates={templates}
-            selectedTemplateId={formData.templateId}
-            onTemplateSelect={handleTemplateSelect}
-            isLoading={isLoadingTemplates}
           />
           
           {/* Card Preview */}

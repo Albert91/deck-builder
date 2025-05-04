@@ -3,7 +3,6 @@
 ## 1. Resources
 
 - **User** (`users` table)
-- **Template** (`templates` table)
 - **Deck** (`decks` table)
 - **Card** (`cards` table)
 - **CardAttribute** (`card_attributes` table)
@@ -12,30 +11,6 @@
 - **Analytics** (aggregated metrics)
 
 ## 2. Endpoints
-
-### 2.3 Templates
-
-#### 2.3.1 List Templates
-- Method: `GET`
-- URL: `/templates`
-- Description: Get all available card templates.
-- Success Response (200):
-  ```json
-  [ { "id": "uuid", "name": "Fantasy", "description": "..." }, ... ]
-  ```
-
-#### 2.3.2 Get Template
-- Method: `GET`
-- URL: `/templates/{templateId}`
-- Description: Get details of a single template.
-- URL Params:
-  - `templateId` (UUID)
-- Success Response (200):
-  ```json
-  { "id": "uuid", "name": "Fantasy", "description": "..." }
-  ```
-- Error Responses:
-  - 404 Not Found: templateId invalid
 
 ### 2.4 Decks
 
@@ -51,7 +26,7 @@
 - Success Response (200):
   ```json
   {
-    "items": [ { "id": "...", "name": "My Deck", "share_hash": "...", "template_id": "..." } ],
+    "items": [ { "id": "...", "name": "My Deck", "share_hash": "..." } ],
     "totalCount": 5,
     "page": 1,
     "limit": 20
@@ -65,11 +40,11 @@
 - Authentication: Required
 - Request Body:
   ```json
-  { "name": "My Deck", "template_id": "template-uuid" }
+  { "name": "My Deck" }
   ```
 - Success Response (201):
   ```json
-  { "id": "uuid", "name": "My Deck", "share_hash": "abc123", "template_id": "template-uuid" }
+  { "id": "uuid", "name": "My Deck", "share_hash": "abc123" }
   ```
 - Error Responses:
   - 400 Bad Request: missing or invalid fields
@@ -85,7 +60,6 @@
   {
     "id": "uuid",
     "name": "My Deck",
-    "template_id": "...",
     "share_hash": "...",
     "created_at": "...",
     "updated_at": "..."
@@ -98,11 +72,11 @@
 #### 2.4.4 Update Deck
 - Method: `PUT`
 - URL: `/decks/{deckId}`
-- Description: Update deck properties (name, template).
+- Description: Update deck properties (name).
 - Authentication: Required
 - Request Body:
   ```json
-  { "name": "Updated Deck", "template_id": "new-template-uuid" }
+  { "name": "Updated Deck" }
   ```
 - Success Response (200): updated deck object
 - Error Responses:
@@ -257,7 +231,6 @@
 
 - **User**: unique email and username; valid email format.
 - **Deck**: non-empty name; max 5 decks per user (enforced in controller before insert).
-- **Template**: `template_id` must exist.
 - **Card**: non-empty title; max 100 cards per deck.
 - **CardAttribute**: `value` ∈ [0,99]; `attribute_type` ∈ ('strength','defense','health').
 - **ImageMetadata**: `entity_type` ∈ ('deck_background','deck_back','card_image').

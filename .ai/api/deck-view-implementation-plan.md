@@ -35,7 +35,6 @@ Endpoint `GET /decks` zwraca stronowaną listę talii należących do uwierzytel
         "id": "uuid-1",
         "name": "Moja Talia",
         "share_hash": "abc123",
-        "template_id": "template-uuid",
         "created_at": "2024-07-01T12:00:00Z",
         "updated_at": "2024-07-02T08:30:00Z"
       }
@@ -59,7 +58,7 @@ Endpoint `GET /decks` zwraca stronowaną listę talii należących do uwierzytel
      ```ts
      const query = locals.supabase
        .from('decks')
-       .select('id, name, share_hash, template_id, created_at, updated_at', { count: 'exact' })
+       .select('id, name, share_hash, created_at, updated_at', { count: 'exact' })
        .eq('owner_id', userId);
 
      if (params.search) {

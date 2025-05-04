@@ -122,7 +122,6 @@ export type Database = {
           name_tsv: unknown
           owner_id: string
           share_hash: string
-          template_id: string
           updated_at: string
         }
         Insert: {
@@ -132,7 +131,6 @@ export type Database = {
           name_tsv: unknown
           owner_id: string
           share_hash: string
-          template_id: string
           updated_at?: string
         }
         Update: {
@@ -142,18 +140,8 @@ export type Database = {
           name_tsv?: unknown
           owner_id?: string
           share_hash?: string
-          template_id?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "decks_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "templates"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       image_metadata: {
         Row: {
@@ -188,31 +176,6 @@ export type Database = {
           parameters?: Json | null
           prompt?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      templates: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-          updated_at?: string
         }
         Relationships: []
       }

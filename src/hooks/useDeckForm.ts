@@ -5,7 +5,6 @@ export const useDeckForm = (deckId?: string) => {
   // Form state, loading states, errors, toast
   const [formData, setFormData] = useState<DeckFormData>({
     name: "",
-    templateId: "",
     frontImage: undefined,
     backImage: undefined
   });
@@ -37,7 +36,6 @@ export const useDeckForm = (deckId?: string) => {
       
       setFormData({
         name: deckData.name,
-        templateId: deckData.template_id,
         frontImage: undefined, // These would be loaded separately
         backImage: undefined,
       });
@@ -56,11 +54,11 @@ export const useDeckForm = (deckId?: string) => {
 
   // Create a new deck
   const createDeck = async (): Promise<string | null> => {
-    if (!formData.name || !formData.templateId) {
-      setError("Name and template are required");
+    if (!formData.name) {
+      setError("Name is required");
       setToast({
         type: "error",
-        message: "Please provide a name and select a template",
+        message: "Please provide a name for your deck",
         id: crypto.randomUUID()
       });
       return null;
@@ -71,8 +69,7 @@ export const useDeckForm = (deckId?: string) => {
     
     try {
       const createCommand: CreateDeckCommand = {
-        name: formData.name,
-        template_id: formData.templateId
+        name: formData.name
       };
       
       const response = await fetch("/api/decks", {
@@ -128,8 +125,7 @@ export const useDeckForm = (deckId?: string) => {
     
     try {
       const updateCommand: UpdateDeckCommand = {
-        name: formData.name,
-        template_id: formData.templateId
+        name: formData.name
       };
       
       const response = await fetch(`/api/decks/${deckId}`, {

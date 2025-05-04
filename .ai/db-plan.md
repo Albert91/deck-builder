@@ -12,17 +12,9 @@ This table is managed by Supabase Auth.
 - **created_at**: TIMESTAMPTZ NOT NULL DEFAULT now()
 - **updated_at**: TIMESTAMPTZ NOT NULL DEFAULT now()
 
-### templates
-- **id**: UUID PRIMARY KEY DEFAULT gen_random_uuid()
-- **name**: TEXT NOT NULL
-- **description**: TEXT
-- **created_at**: TIMESTAMPTZ NOT NULL DEFAULT now()
-- **updated_at**: TIMESTAMPTZ NOT NULL DEFAULT now()
-
 ### decks
 - **id**: UUID PRIMARY KEY DEFAULT gen_random_uuid()
 - **owner_id**: UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
-- **template_id**: UUID NOT NULL REFERENCES templates(id)
 - **name**: TEXT NOT NULL
 - **share_hash**: TEXT UNIQUE NOT NULL
 - **name_tsv**: TSVECTOR NOT NULL
@@ -61,14 +53,12 @@ This table is managed by Supabase Auth.
 
 - users (1) ↔ (M) decks
 - users (1) ↔ (M) image_metadata
-- templates (1) ↔ (M) decks
 - decks (1) ↔ (M) cards
 - cards (1) ↔ (M) card_attributes
 
 ## 3. Indexes
 
 - **decks_owner_idx**: ON decks(owner_id)
-- **decks_template_idx**: ON decks(template_id)
 - **decks_share_hash_idx**: ON decks(share_hash)
 - **decks_name_tsv_gin**: ON decks USING GIN (name_tsv)
 - **cards_deck_idx**: ON cards(deck_id)

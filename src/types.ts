@@ -7,7 +7,6 @@ export type Tables = Database['public']['Tables'];
 export type Enums = Database['public']['Enums'];
 
 // Individual table row types
-export type Template = Tables['templates']['Row'];
 export type Deck = Tables['decks']['Row'];
 export type Card = Tables['cards']['Row'];
 export type CardAttribute = Tables['card_attributes']['Row'];
@@ -22,23 +21,16 @@ export type UserDTO = {
   created_at: string;
 };
 
-// =================== TEMPLATE TYPES ===================
-
-export type TemplateDTO = Pick<Template, 'id' | 'name' | 'description'>;
-export type TemplateListDTO = TemplateDTO[];
-
 // =================== DECK TYPES ===================
 
-export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'template_id' | 'created_at' | 'updated_at'>;
+export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at'>;
 
 export interface CreateDeckCommand {
   name: string;
-  template_id: string;
 }
 
 export interface UpdateDeckCommand {
   name?: string;
-  template_id?: string;
 }
 
 export interface DeckListResponseDTO {
@@ -56,7 +48,6 @@ export interface SharedDeckDTO extends DeckDTO {
 
 export interface DeckFormData {
   name: string;
-  templateId: string;
   frontImage?: string;
   backImage?: string;
 }
@@ -192,7 +183,6 @@ export const mapToDeckDTO = (deck: Deck): DeckDTO => ({
   id: deck.id,
   name: deck.name,
   share_hash: deck.share_hash,
-  template_id: deck.template_id,
   created_at: deck.created_at,
   updated_at: deck.updated_at
 });

@@ -92,15 +92,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         JSON.stringify(newDeck),
         { status: 201, headers: { 'Content-Type': 'application/json' } }
       );
-    } catch (error: any) {
-      // Handle specific errors
-      if (error.message === 'Template not found') {
-        return new Response(
-          JSON.stringify({ error: 'Template not found' }),
-          { status: 404, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-      
+    } catch (error: any) {      
       // Re-throw for generic error handling
       throw error;
     }

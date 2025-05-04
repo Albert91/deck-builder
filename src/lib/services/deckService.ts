@@ -15,7 +15,7 @@ export async function listDecks(
   
   const query = supabase
     .from('decks')
-    .select('id, name, share_hash, template_id, created_at, updated_at', { count: 'exact' })
+    .select('id, name, share_hash, created_at, updated_at', { count: 'exact' })
     .eq('owner_id', userId);
 
   if (search) {
@@ -38,7 +38,6 @@ export async function listDecks(
     id: deck.id,
     name: deck.name,
     share_hash: deck.share_hash,
-    template_id: deck.template_id,
     created_at: deck.created_at,
     updated_at: deck.updated_at
   }));
@@ -124,26 +123,14 @@ export async function createDeck(
   userId: string,
   data: CreateDeckCommand
 ): Promise<DeckDTO> {
-  // Check if template exists
-  const { data: template, error: templateError } = await supabase
-    .from('templates')
-    .select('id')
-    .eq('id', data.template_id)
-    .single();
-
-  if (templateError) {
-    throw new Error('Template not found');
-  }
-
   // Create the new deck
   const { data: deck, error } = await supabase
     .from('decks')
     .insert({
       name: data.name,
-      template_id: data.template_id,
       owner_id: userId
     })
-    .select('id, name, share_hash, template_id, created_at, updated_at')
+    .select('id, name, share_hash, created_at, updated_at')
     .single();
 
   if (error) {
@@ -164,7 +151,7 @@ export async function getDeckById(
 ): Promise<DeckDTO> {
   const { data, error } = await supabase
     .from('decks')
-    .select('id, name, share_hash, template_id, created_at, updated_at, owner_id')
+    .select('id, name, share_hash, created_at, updated_at, owner_id')
     .eq('id', deckId)
     .single();
 

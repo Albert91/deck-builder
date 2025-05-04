@@ -1,7 +1,7 @@
 # API Endpoint Implementation Plan: Update Deck
 
 ## 1. Przegląd punktu końcowego
-Endpoint umożliwia aktualizację istniejącej talii (deck) poprzez zmianę jej nazwy (name) i/lub szablonu (template_id). Aktualizacja może obejmować jeden lub oba parametry. Endpoint wymaga uwierzytelnienia i weryfikuje, czy użytkownik jest właścicielem talii.
+Endpoint umożliwia aktualizację istniejącej talii (deck) poprzez zmianę jej nazwy (name). Aktualizacja może obejmować jeden lub oba parametry. Endpoint wymaga uwierzytelnienia i weryfikuje, czy użytkownik jest właścicielem talii.
 
 ## 2. Szczegóły żądania
 - Metoda HTTP: `PUT`
@@ -13,7 +13,6 @@ Endpoint umożliwia aktualizację istniejącej talii (deck) poprzez zmianę jej 
   ```json
   {
     "name": "Updated Deck",
-    "template_id": "new-template-uuid"
   }
   ```
   Uwaga: Co najmniej jedno z pól musi być przekazane.
@@ -30,7 +29,6 @@ Endpoint umożliwia aktualizację istniejącej talii (deck) poprzez zmianę jej 
     "id": "uuid",
     "name": "Updated Deck",
     "share_hash": "abc123",
-    "template_id": "new-template-uuid",
     "created_at": "2023-01-01T00:00:00Z",
     "updated_at": "2023-01-02T00:00:00Z"
   }
@@ -55,27 +53,22 @@ Endpoint umożliwia aktualizację istniejącej talii (deck) poprzez zmianę jej 
 2. **Autoryzacja**: Sprawdzenie, czy użytkownik jest właścicielem talii przed aktualizacją
 3. **Walidacja danych**: Użycie Zod do sprawdzenia, czy dane wejściowe spełniają wymagania:
    - `name`: Niepusty ciąg znaków po usunięciu białych znaków
-   - `template_id`: Prawidłowy UUID
    - Co najmniej jedno z tych pól musi być obecne
-4. **Weryfikacja template_id**: Sprawdzenie, czy szablon o podanym ID istnieje w bazie danych
 
 ## 6. Obsługa błędów
 1. Nieprawidłowe dane wejściowe (400):
    - Brak wymaganych pól
-   - Nieprawidłowy format `name` lub `template_id`
-   - Nieprawidłowy UUID dla `template_id`
+   - Nieprawidłowy format `name`
    - Nie podano żadnego pola do aktualizacji
 2. Talia nie istnieje (404)
 3. Użytkownik nie jest właścicielem talii (403)
 4. Brak autoryzacji (401)
-5. Szablon (template) nie istnieje (400)
-6. Błąd wewnętrzny serwera (500)
+5. Błąd wewnętrzny serwera (500)
 
 ## 7. Rozważania dotyczące wydajności
 1. Indeksowanie:
    - `decks.id` powinno być zaindeksowane jako klucz główny
    - `decks.owner_id` powinno być zaindeksowane do szybkiego sprawdzania właściciela
-   - `decks.template_id` powinno być zaindeksowane jako klucz obcy
 2. Transakcje:
    - Użyj transakcji dla aktualizacji rekordów w bazie danych, aby zapewnić atomowość
 3. Aktualizacja name_tsv:

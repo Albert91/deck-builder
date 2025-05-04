@@ -9,7 +9,6 @@
 6. Panel administratora nie powinien być implementowany
 7. Generyczne informacje o błędach rozróżniające grupy błędów (2xx, 4xx, 5xx)
 8. Nie ma potrzeby podglądu całej talii na jednym ekranie przed eksportem do PDF
-9. Karuzela z maksymalnie 3 szablonami jednocześnie
 10. Nie ma potrzeby zaawansowanego sortowania/filtrowania kart w ramach talii
 11. Użytkownik może edytować atrybuty karty (strength, defense, health)
 12. Podgląd rewersu karty potrzebny tylko na poziomie tworzenia talii
@@ -21,7 +20,6 @@
 18. Lista talii powinna umożliwiać edycję i usuwanie z poziomu listy
 19. Przycisk duplikacji powinien znajdować się obok przycisków edycji i usunięcia
 20. Nie ma potrzeby podglądu PDF przed generowaniem
-21. Wybór szablonu powinien być dostępny w dowolnym momencie edycji
 22. Limity powinny być pokazane jako paski postępu z tooltipami pokazującymi x/5 lub x/100 po najechaniu
 23. Nawigacja powinna zawierać zarówno menu jak i breadcrumbs (responsywne)
 24. Wymagany jest przełącznik trybu jasnego/ciemnego (bez respektowania preferencji systemowych)
@@ -37,8 +35,7 @@
 5. Stworzenie zoptymalizowanej siatki kart w widoku talii, z 2 kolumnami na mobile, 4 na tablet i elastyczną liczbą na desktop.
 6. Implementacja interfejsu edycji karty z intuicyjnymi kontrolkami: pole tytułu, opis, oraz suwaki dla atrybutów (0-99) z domyślną wartością 0.
 7. Stworzenie kompaktowego komponentu karty w widoku listy z paskiem akcji zawierającym przyciski edycji, duplikacji i usunięcia.
-8. Zaprojektowanie dwuetapowego interfejsu generowania talii: wybór nazwy/szablonu, a następnie generowanie awersu/rewersu z podglądem obu stron.
-9. Implementacja karuzeli wyboru szablonu (max 3 widoczne jednocześnie) dostępnej zarówno przy tworzeniu jak i podczas edycji talii.
+8. Zaprojektowanie dwuetapowego interfejsu generowania talii: wybór nazwy, a następnie generowanie awersu/rewersu z podglądem obu stron.
 10. Stworzenie przejrzystego systemu powiadomień toast dla komunikatów o błędach i sukcesach.
 11. Implementacja blokowania interfejsu podczas generowania AI z komunikatem "Tworzenie obrazu karty" i automatycznym odblokowaniem po zakończeniu lub błędzie.
 12. Zaprojektowanie interfejsu eksportu do PDF z prostym przepływem: przycisk eksportu → wskaźnik postępu → komunikat o sukcesie i link do pobrania.
@@ -70,10 +67,8 @@ Architektura UI będzie oparta na trzech głównych sekcjach, zgodnie z przepły
 - Przyciski szybkich akcji dla każdej talii (edycja, usunięcie)
 
 ### 3.2 Interfejs tworzenia/edycji talii
-- Dwuetapowy proces: (1) nazwa i szablon, (2) generowanie awersu/rewersu
-- Karuzela wyboru szablonu (max 3 widoczne jednocześnie)
+- Dwuetapowy proces: (1) nazwa, (2) generowanie awersu/rewersu
 - Podgląd zarówno awersu jak i rewersu talii podczas generowania
-- Możliwość zmiany szablonu w dowolnym momencie edycji
 
 ### 3.3 Lista kart w talii
 - Responsywna siatka kart bez paginacji

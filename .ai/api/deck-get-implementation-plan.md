@@ -1,7 +1,7 @@
 # API Endpoint Implementation Plan: Get Deck
 
 ## 1. Przegląd punktu końcowego
-Endpoint służy do pobierania szczegółowych informacji o talii (deck) na podstawie jej identyfikatora. Zwraca metadane talii, takie jak nazwa, identyfikator szablonu, hash udostępniania oraz daty utworzenia i aktualizacji. Wymaga uwierzytelnienia i autoryzacji, aby zapewnić, że tylko właściciel talii ma do niej dostęp.
+Endpoint służy do pobierania szczegółowych informacji o talii (deck) na podstawie jej identyfikatora. Zwraca metadane talii, takie jak nazwa, hash udostępniania oraz daty utworzenia i aktualizacji. Wymaga uwierzytelnienia i autoryzacji, aby zapewnić, że tylko właściciel talii ma do niej dostęp.
 
 ## 2. Szczegóły żądania
 - Metoda HTTP: `GET`
@@ -12,7 +12,7 @@ Endpoint służy do pobierania szczegółowych informacji o talii (deck) na pods
 - Request Body: brak (metoda GET)
 ```typescript
 // Istniejący typ DeckDTO zdefiniowany w src/types.ts
-export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'template_id' | 'created_at' | 'updated_at'>;
+export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at'>;
 
 // Potrzebne rozszerzenie serwisu deckService.ts
 export async function getDeckById(
@@ -31,7 +31,6 @@ export const deckIdSchema = z.string().uuid('Identyfikator talii musi być popra
   {
     "id": "uuid",
     "name": "My Deck",
-    "template_id": "uuid",
     "share_hash": "hash_string",
     "created_at": "timestamp",
     "updated_at": "timestamp"
@@ -97,7 +96,7 @@ export async function getDeckById(
 ): Promise<DeckDTO> {
   const { data, error } = await supabase
     .from('decks')
-    .select('id, name, share_hash, template_id, created_at, updated_at')
+    .select('id, name, share_hash, created_at, updated_at')
     .eq('id', deckId)
     .single();
 

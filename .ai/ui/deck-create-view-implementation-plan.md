@@ -1,7 +1,7 @@
 # Plan implementacji widoku Kreator/Edytor Talii
 
 ## 1. Przegląd
-Widok Kreatora/Edytora Talii umożliwia zalogowanym użytkownikom tworzenie nowych talii kart lub edycję istniejących. Użytkownik może nadać talii nazwę, wybrać szablon z karuzeli oraz generować tło i rewers karty za pomocą AI. Interfejs zapewnia podgląd obu stron karty w czasie rzeczywistym oraz automatyczny zapis zmian.
+Widok Kreatora/Edytora Talii umożliwia zalogowanym użytkownikom tworzenie nowych talii kart lub edycję istniejących. Użytkownik może nadać talii nazwę oraz generować tło i rewers karty za pomocą AI. Interfejs zapewnia podgląd obu stron karty w czasie rzeczywistym oraz automatyczny zapis zmian.
 
 ## 2. Routing widoku
 - `/decks/new` - tworzenie nowej talii
@@ -12,8 +12,6 @@ Widok Kreatora/Edytora Talii umożliwia zalogowanym użytkownikom tworzenie nowy
 DeckFormPage
 ├── LoadingOverlay (warunkowy)
 ├── DeckNameField
-├── TemplateCarousel
-│   ├── TemplateCard (wielokrotny)
 ├── CardPreview
 │   ├── CardFront
 │   ├── CardBack
@@ -42,22 +40,6 @@ DeckFormPage
 - Obsługiwana walidacja: Niepusta nazwa (wymagana)
 - Typy: { name: string, onChange: (name: string) => void, error?: string }
 - Propsy: name, onChange, error
-
-### TemplateCarousel
-- Opis komponentu: Karuzela do wyboru szablonów talii, pokazująca max 3 elementy jednocześnie
-- Główne elementy: Kontener karuzeli, przyciski przewijania, elementy szablonów
-- Obsługiwane interakcje: Przewijanie szablonów, wybór szablonu
-- Obsługiwana walidacja: Wybrany szablon jest wymagany
-- Typy: Template[], selectedTemplateId, onTemplateSelect
-- Propsy: templates, selectedTemplateId, onTemplateSelect, isLoading
-
-### TemplateCard
-- Opis komponentu: Pojedynczy element karuzeli reprezentujący szablon
-- Główne elementy: Obrazek szablonu, nazwa, indicator wybranego elementu
-- Obsługiwane interakcje: Kliknięcie wybiera szablon
-- Obsługiwana walidacja: brak
-- Typy: Template, boolean (isSelected), onSelect
-- Propsy: template, isSelected, onSelect
 
 ### CardPreview
 - Opis komponentu: Podgląd obu stron karty (awers i rewers)
@@ -97,7 +79,6 @@ DeckFormPage
 // Request DTO
 interface DeckCreateDTO {
   name: string;
-  template_id: string;
 }
 
 // Response DTO
@@ -105,20 +86,13 @@ interface DeckResponseDTO {
   id: string;
   name: string;
   share_hash: string;
-  template_id: string;
-}
-
-// Template Model
-interface Template {
-  id: string;
-  name: string;
-  previewImage: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // Form ViewModel
 interface DeckFormData {
   name: string;
-  templateId: string;
   frontImage?: string;
   backImage?: string;
 }
@@ -151,7 +125,6 @@ const useDeckForm = (deckId?: string) => {
   // Stan formularza, ładowania, błędy, toast
   const [formData, setFormData] = useState<DeckFormData>({
     name: '',
-    templateId: '',
     frontImage: undefined,
     backImage: undefined
   });
@@ -177,27 +150,6 @@ const useDeckForm = (deckId?: string) => {
     toast,
     // zwracane funkcje
   };
-};
-```
-
-Dodatkowo, zostanie utworzony hook `useTemplates` do zarządzania szablonami:
-
-```typescript
-const useTemplates = () => {
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Funkcja do ładowania szablonów z API
-  const loadTemplates = async () => {
-    // implementacja
-  };
-  
-  // Załadowanie szablonów po montażu komponentu
-  useEffect(() => {
-    loadTemplates();
-  }, []);
-  
-  return { templates, isLoading };
 };
 ```
 
@@ -234,7 +186,6 @@ Wykorzystane będą następujące endpointy:
 1. **Tworzenie nowej talii**:
    - Użytkownik wchodzi na `/decks/new`
    - Wprowadza nazwę talii
-   - Wybiera szablon z karuzeli
    - System automatycznie zapisuje talię
    - Użytkownik zostaje przekierowany do widoku edycji
 
@@ -243,18 +194,11 @@ Wykorzystane będą następujące endpointy:
    - Po zakończeniu edycji (blur, timeout) system zapisuje zmiany
    - Wyświetlany jest toast o powodzeniu lub błędzie
 
-3. **Wybór szablonu**:
-   - Użytkownik przewija karuzelę szablonów
-   - Klika na wybrany szablon
-   - System zapisuje zmianę i aktualizuje podgląd
-
-4. **Generowanie grafiki AI**:
-   - Użytkownik wprowadza prompt
-   - Wybiera czy generować awers czy rewers
-   - Klika przycisk generowania
-   - UI zostaje zablokowane overlayem z komunikatem
-   - Po wygenerowaniu podgląd jest aktualizowany
-   - System zapisuje wygenerowany obraz
+3. **Generowanie obrazu karty**:
+   - Użytkownik wprowadza prompt do generowania AI
+   - Klika przycisk generowania dla frontu lub tyłu karty
+   - Wyświetlany jest wskaźnik ładowania
+   - Po wygenerowaniu obrazu, podgląd karty jest aktualizowany
 
 ## 9. Warunki i walidacja
 
@@ -268,16 +212,6 @@ Wykorzystane będą następujące endpointy:
    - Limit 5 talii na użytkownika
    - Weryfikacja odbywa się na poziomie API
    - W razie przekroczenia wyświetlany jest toast z informacją
-
-3. **Warunki dotyczące szablonu**:
-   - Szablon jest wymagany
-   - Domyślnie wybierany jest pierwszy z listy
-   - Walidacja w komponencie TemplateCarousel
-
-4. **Warunki dotyczące generatora AI**:
-   - Prompt nie może być pusty
-   - Walidacja w komponencie AIGeneratorPanel
-   - Blokada przycisku generowania, jeśli prompt jest pusty
 
 ## 10. Obsługa błędów
 
@@ -296,10 +230,6 @@ Wykorzystane będą następujące endpointy:
    - Po nieudanych próbach wyświetlenie toast z informacją
    - Umożliwienie ręcznego zapisu
 
-4. **Błąd podczas ładowania szablonów**:
-   - Wyświetlenie informacji o błędzie w komponencie TemplateCarousel
-   - Przycisk "Spróbuj ponownie"
-
 ## 11. Kroki implementacji
 
 1. **Przygotowanie typów**:
@@ -308,42 +238,37 @@ Wykorzystane będą następujące endpointy:
 
 2. **Implementacja hooków**:
    - Implementacja `useDeckForm` do zarządzania stanem formularza
-   - Implementacja `useTemplates` do zarządzania szablonami
 
 3. **Implementacja komponentów bazowych**:
    - Implementacja LoadingOverlay
    - Implementacja ToastNotification
    - Implementacja DeckNameField
 
-4. **Implementacja komponentów związanych z szablonem**:
-   - Implementacja TemplateCard
-   - Implementacja TemplateCarousel
-
-5. **Implementacja komponentów związanych z podglądem**:
+4. **Implementacja komponentów związanych z podglądem**:
    - Implementacja CardPreview (CardFront, CardBack)
 
-6. **Implementacja generatora AI**:
+5. **Implementacja generatora AI**:
    - Implementacja AIGeneratorPanel
    - Implementacja AIPromptField
    - Implementacja GenerateButton
 
-7. **Integracja komponentów w DeckFormPage**:
+6. **Integracja komponentów w DeckFormPage**:
    - Połączenie wszystkich komponentów
    - Implementacja logiki przełączania między trybami (nowa/edycja)
 
-8. **Implementacja integracji z API**:
+7. **Implementacja integracji z API**:
    - Implementacja wywołań API w hookach
    - Implementacja obsługi błędów
 
-9. **Implementacja auto-zapisu**:
+8. **Implementacja auto-zapisu**:
    - Dodanie debouncing do formularza
    - Implementacja logiki auto-zapisu
 
-10. **Implementacja routingu**:
+9. **Implementacja routingu**:
     - Konfiguracja ścieżek w Astro
     - Implementacja przekierowań
 
-11. **Testowanie i finalizacja**:
+10. **Testowanie i finalizacja**:
     - Testowanie wszystkich interakcji użytkownika
     - Testowanie obsługi błędów
     - Finalne poprawki UX 
