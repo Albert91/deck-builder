@@ -46,8 +46,8 @@ export function LoginForm() {
         return;
       }
       
-      // Przekierowanie do dashboardu po udanym logowaniu
-      window.location.href = '/dashboard';
+      // Przekierowanie do strony z taliami po udanym logowaniu
+      window.location.href = '/';
       
     } catch (err) {
       setError("Wystąpił nieoczekiwany błąd podczas logowania");
@@ -115,8 +115,8 @@ export function LoginForm() {
         return;
       }
       
-      // Przekierowanie do dashboardu po udanym logowaniu
-      window.location.href = '/dashboard';
+      // Przekierowanie do strony z taliami po udanym logowaniu
+      window.location.href = '/decks';
       
     } catch (err) {
       setError("Wystąpił nieoczekiwany błąd podczas weryfikacji kodu");
