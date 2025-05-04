@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { deleteDeck } from '../../../lib/services/deckService';
-import { uuidSchema } from '../../../lib/validation/common';
+import { uuidSchema } from '../../../lib/validators/common';
 import { defaultUserId } from '@/db/supabase.client';
 
 export const prerender = false;

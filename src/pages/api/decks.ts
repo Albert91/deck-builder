@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { searchDecksSchema, createDeckSchema } from '../../lib/validation/decks';
+import { searchDecksSchema, createDeckSchema } from '../../lib/validators/decks';
 import { listDecks, getUserDeckCount, createDeck } from '../../lib/services/deckService';
 import { defaultUserId } from '@/db/supabase.client';
 
