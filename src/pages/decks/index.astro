@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import DeckListPage from '../../components/decks/DeckListPage';
+---
+
+<Layout title="Moje talie | Deck Builder">
+  <main class="container mx-auto px-4 py-8">
+    <DeckListPage client:load />
+  </main>
+</Layout>
+
+<script>
+  // We need to implement the React component first
+  console.log('Deck List page loaded');
+</script> 

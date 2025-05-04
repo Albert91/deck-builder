@@ -1,0 +1,149 @@
+import { useEffect, useState } from 'react';
+import { useDeckList } from '../../hooks/useDeckList';
+import { fetchDeckLimit } from '../../lib/api/decks';
+import type { DeckLimitInfo, DeckSortOption, DeckViewModel } from '../../types';
+
+import { DeckListHeader } from './DeckListHeader';
+import { DeckFilterBar } from './DeckFilterBar';
+import { DeckGrid } from './DeckGrid';
+import { Pagination } from './Pagination';
+import { LoadingState } from './LoadingState';
+import { ErrorState } from './ErrorState';
+import { EmptyState } from './EmptyState';
+
+// Default sort options
+const sortOptions: DeckSortOption[] = [
+  { id: 'updated', label: 'Data aktualizacji', value: 'updated_at' },
+  { id: 'created', label: 'Data utworzenia', value: 'created_at' },
+  { id: 'name', label: 'Nazwa', value: 'name' },
+];
+
+export default function DeckListPage() {
+  const [limitInfo, setLimitInfo] = useState<DeckLimitInfo>({ totalDecks: 0, deckLimit: 5 });
+  const [isLimitLoading, setIsLimitLoading] = useState(true);
+  
+  // Get deck list data from custom hook
+  const {
+    decks,
+    isLoading,
+    error,
+    pagination,
+    params,
+    setPage,
+    setLimit,
+    setSearch,
+    setSortBy,
+    setSortOrder,
+    refetch
+  } = useDeckList({ 
+    page: 1, 
+    limit: 12,
+    sortBy: 'updated_at',
+    sortOrder: 'desc',
+    search: ''
+  });
+  
+  // Load deck limit info
+  useEffect(() => {
+    const getLimitInfo = async () => {
+      setIsLimitLoading(true);
+      try {
+        const data = await fetchDeckLimit();
+        setLimitInfo(data);
+      } catch (err) {
+        console.error('Error fetching deck limit:', err);
+      } finally {
+        setIsLimitLoading(false);
+      }
+    };
+    
+    getLimitInfo();
+  }, []);
+  
+  // Navigation handlers - using window.location for Astro compatibility
+  const handleCreateDeck = () => {
+    window.location.href = '/decks/new';
+  };
+  
+  const handleDeckSelect = (deckId: string) => {
+    window.location.href = `/decks/${deckId}`;
+  };
+  
+  // Handle deck options
+  const handleDeckOptions = (option: string, deck: DeckViewModel) => {
+    switch (option) {
+      case 'edit':
+        window.location.href = `/decks/${deck.id}`;
+        break;
+      case 'duplicate':
+        // TODO: Implement duplication logic
+        console.log('Duplicate deck:', deck.id);
+        break;
+      case 'share':
+        // TODO: Implement sharing logic
+        console.log('Share deck:', deck.id);
+        break;
+      case 'delete':
+        // TODO: Implement deletion logic
+        console.log('Delete deck:', deck.id);
+        break;
+      default:
+        break;
+    }
+  };
+  
+  // Handle filter changes
+  const handleFilterChange = (filters: any) => {
+    if (filters.search !== undefined) setSearch(filters.search);
+    if (filters.sortBy !== undefined) setSortBy(filters.sortBy);
+    if (filters.sortOrder !== undefined) setSortOrder(filters.sortOrder);
+  };
+  
+  // Determine if we have any active filters
+  const hasActiveFilters = Boolean(params.search);
+  
+  // Check if decks is empty
+  const isEmpty = !isLoading && !error && (!decks || decks.length === 0);
+  
+  return (
+    <div>
+      <DeckListHeader 
+        totalDecks={limitInfo.totalDecks} 
+        deckLimit={limitInfo.deckLimit}
+        onCreateDeck={handleCreateDeck}
+      />
+      
+      <DeckFilterBar
+        filters={{
+          search: params.search || '',
+          sortBy: params.sortBy || 'updated_at',
+          sortOrder: params.sortOrder || 'desc'
+        }}
+        onFilterChange={handleFilterChange}
+        sortOptions={sortOptions}
+      />
+      
+      {isLoading ? (
+        <LoadingState />
+      ) : error ? (
+        <ErrorState error={error} onRetry={refetch} />
+      ) : isEmpty ? (
+        <EmptyState onCreateDeck={handleCreateDeck} hasFilters={hasActiveFilters} />
+      ) : (
+        <>
+          <DeckGrid 
+            decks={decks} 
+            onDeckSelect={handleDeckSelect} 
+            onDeckOptionsClick={handleDeckOptions} 
+          />
+          
+          <Pagination 
+            pagination={pagination} 
+            onPageChange={setPage} 
+            onLimitChange={setLimit} 
+          />
+        </>
+      )}
+    </div>
+  );
+} 
