@@ -127,7 +127,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div>
       <DeckCardsHeader 
         deck={deckViewModel}
         cardLimitInfo={cardLimitInfo}
@@ -136,7 +136,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
         exportStatus={exportStatus}
       />
 
-      <CardActionBar 
+      {/* <CardActionBar 
         cardCount={pagination.totalItems}
         maxLimit={100}
         isCardSideBack={filters.isCardSideBack}
@@ -169,7 +169,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
-      )}
+      )} */}
     </div>
   );
 } 

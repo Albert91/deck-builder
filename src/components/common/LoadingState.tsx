@@ -12,7 +12,7 @@ export function LoadingState() {
         </div>
         <h3 className="text-lg font-medium mb-2">Ładowanie...</h3>
         <p className="text-muted-foreground max-w-md">
-          Trwa ładowanie kart talii. To może chwilę potrwać.
+          Trwa ładowanie kart talii.
         </p>
       </CardContent>
     </Card>

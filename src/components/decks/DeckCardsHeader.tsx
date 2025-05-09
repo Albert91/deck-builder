@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CardLimitDisplay } from "./cards/CardLimitDisplay";
 import type { DeckViewModel, CardLimitInfo, ExportStatus } from "@/types";
 
@@ -31,7 +31,7 @@ export function DeckCardsHeader({
         </div>
         <div className="flex items-center gap-2">
           <Tooltip>
-            <Tooltip.Trigger asChild>
+            <TooltipTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -66,16 +66,16 @@ export function DeckCardsHeader({
                   </>
                 )}
               </Button>
-            </Tooltip.Trigger>
-            <Tooltip.Content>
+            </TooltipTrigger>
+            <TooltipContent>
               {cardLimitInfo.totalCards === 0 
                 ? "Nie można eksportować pustej talii" 
                 : "Eksportuj karty do pliku PDF"}
-            </Tooltip.Content>
+            </TooltipContent>
           </Tooltip>
 
           <Tooltip>
-            <Tooltip.Trigger asChild>
+            <TooltipTrigger asChild>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -98,12 +98,12 @@ export function DeckCardsHeader({
                 </svg>
                 Udostępnij
               </Button>
-            </Tooltip.Trigger>
-            <Tooltip.Content>
+            </TooltipTrigger>
+            <TooltipContent>
               {cardLimitInfo.totalCards === 0 
                 ? "Nie można udostępnić pustej talii" 
                 : "Udostępnij talię innym"}
-            </Tooltip.Content>
+            </TooltipContent>
           </Tooltip>
         </div>
       </CardContent>

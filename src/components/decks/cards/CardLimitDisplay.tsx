@@ -1,4 +1,4 @@
-import { Tooltip } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CardLimitDisplayProps {
   currentCount: number;
@@ -22,7 +22,7 @@ export function CardLimitDisplay({
 
   return (
     <Tooltip>
-      <Tooltip.Trigger asChild>
+      <TooltipTrigger asChild>
         <div className="flex flex-col gap-1 w-full max-w-xs">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Karty</span>
@@ -39,12 +39,12 @@ export function CardLimitDisplay({
             />
           </div>
         </div>
-      </Tooltip.Trigger>
-      <Tooltip.Content>
+      </TooltipTrigger>
+      <TooltipContent>
         {currentCount === maxLimit 
           ? "Osiągnięto limit kart" 
           : `Możesz dodać jeszcze ${maxLimit - currentCount} kart`}
-      </Tooltip.Content>
+      </TooltipContent>
     </Tooltip>
   );
 } 
