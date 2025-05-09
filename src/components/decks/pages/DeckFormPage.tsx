@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDeckForm } from "@/hooks/useDeckForm";
-import { DeckNameField } from "./DeckNameField";
-import { CardPreview } from "./CardPreview";
-import { LoadingOverlay } from "./LoadingOverlay";
-import { AIGeneratorPanel } from "./AIGeneratorPanel";
+import { DeckNameField } from "../form/DeckNameField";
+import { CardPreview } from "../cards/CardPreview";
+import { LoadingOverlay } from "../../common/LoadingOverlay";
+import { AIGeneratorPanel } from "../form/AIGeneratorPanel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

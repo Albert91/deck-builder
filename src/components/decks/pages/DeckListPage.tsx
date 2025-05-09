@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useDeckList } from '../../hooks/useDeckList';
-import { fetchDeckLimit } from '../../lib/api/decks';
-import type { DeckLimitInfo, DeckSortOption, DeckViewModel } from '../../types';
+import { useDeckList } from '../../../hooks/useDeckList';
+import { fetchDeckLimit } from '../../../lib/api/decks';
+import type { DeckLimitInfo, DeckSortOption, DeckViewModel } from '../../../types';
 
-import { DeckListHeader } from './DeckListHeader';
-import { DeckFilterBar } from './DeckFilterBar';
-import { DeckGrid } from './DeckGrid';
-import { LoadingState } from './LoadingState';
-import { ErrorState } from './ErrorState';
-import { EmptyState } from './EmptyState';
+import { DeckListHeader } from '../DeckListHeader';
+import { DeckFilterBar } from '../DeckFilterBar';
+import { DeckGrid } from '../DeckGrid';
+import { LoadingState } from '../../common/LoadingState';
+import { ErrorState } from '../../common/ErrorState';
+import { EmptyState } from '../DeckEmptyState';
 
 // Default sort options
 const sortOptions: DeckSortOption[] = [
@@ -60,14 +60,14 @@ export default function DeckListPage() {
   };
   
   const handleDeckSelect = (deckId: string) => {
-    window.location.href = `/decks/${deckId}`;
+    window.location.href = `/decks/${deckId}/cards`;
   };
   
   // Handle deck options
   const handleDeckOptions = (option: string, deck: DeckViewModel) => {
     switch (option) {
       case 'edit':
-        window.location.href = `/decks/${deck.id}`;
+        window.location.href = `/decks/${deck.id}/edit`;
         break;
       case 'duplicate':
         // TODO: Implement duplication logic
@@ -120,7 +120,7 @@ export default function DeckListPage() {
       {isLoading ? (
         <LoadingState />
       ) : error ? (
-        <ErrorState error={error} onRetry={refetch} />
+        <ErrorState message={error.toString()} onRetry={refetch} />
       ) : isEmpty ? (
         <EmptyState onCreateDeck={handleCreateDeck} hasFilters={hasActiveFilters} />
       ) : (
