@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand, UpdateCardCommand } from '../../types';
+import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand, UpdateCardCommand, CardAttribute } from '../../types';
 import { mapToCardDTO } from '../../types';
 
 /**
@@ -278,4 +278,64 @@ export async function updateCard(
 
   // 5. Zwróć dane w formacie CardDTO
   return mapToCardDTO(updatedCard, attributes || []);
+}
+
+/**
+ * Retrieves a single card by ID.
+ * Verifies that the card exists, is part of the specified deck,
+ * and the user is the owner of the deck.
+ * Returns the card with its attributes.
+ */
+export async function getCard(
+  supabase: SupabaseClient,
+  userId: string,
+  deckId: string,
+  cardId: string
+): Promise<CardDTO> {
+  // First check if the deck exists and belongs to the user
+  const { data: deck, error: deckError } = await supabase
+    .from('decks')
+    .select('id, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (deckError) {
+    if (deckError.code === 'PGRST116') {
+      throw new Error('Deck not found');
+    }
+    throw deckError;
+  }
+
+  // Check if user is the owner
+  if (deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // Get the card and check if it belongs to the specified deck
+  const { data: card, error: cardError } = await supabase
+    .from('cards')
+    .select('*')
+    .eq('id', cardId)
+    .eq('deck_id', deckId)
+    .single();
+
+  if (cardError) {
+    if (cardError.code === 'PGRST116') {
+      throw new Error('Card not found in this deck');
+    }
+    throw cardError;
+  }
+
+  // Get the card attributes
+  const { data: attributes, error: attrError } = await supabase
+    .from('card_attributes')
+    .select('*')
+    .eq('card_id', cardId);
+
+  if (attrError) {
+    console.error('Error fetching card attributes:', attrError);
+    throw attrError;
+  }
+
+  return mapToCardDTO(card as Card, attributes as CardAttribute[]);
 } 
