@@ -24,7 +24,7 @@ export function CardLimitDisplay({
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex flex-col gap-1 w-full max-w-xs">
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className="flex  text-xs text-muted-foreground gap-2">
             <span>Karty</span>
             <span aria-live="polite">{currentCount}/{maxLimit}</span>
           </div>

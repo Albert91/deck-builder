@@ -3,13 +3,11 @@ import type { CardViewModel } from "@/types";
 
 interface CardGridProps {
   cards: CardViewModel[];
-  isCardSideBack: boolean;
   onCardOptionsClick: (option: string, card: CardViewModel) => void;
 }
 
 export function CardGrid({
   cards,
-  isCardSideBack,
   onCardOptionsClick
 }: CardGridProps) {
   return (
@@ -18,7 +16,6 @@ export function CardGrid({
         <CardItem
           key={card.id}
           card={card}
-          isCardSideBack={isCardSideBack}
           onOptionsClick={onCardOptionsClick}
         />
       ))}

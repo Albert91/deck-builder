@@ -11,17 +11,15 @@ import type { CardViewModel } from "@/types";
 
 interface CardItemProps {
   card: CardViewModel;
-  isCardSideBack: boolean;
   onOptionsClick: (option: string, card: CardViewModel) => void;
 }
 
 export function CardItem({
   card,
-  isCardSideBack,
   onOptionsClick
 }: CardItemProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const thumbnailUrl = isCardSideBack ? card.backThumbnailUrl : card.thumbnailUrl;
+  const thumbnailUrl = card.thumbnailUrl;
 
   return (
     <Card 
@@ -35,7 +33,7 @@ export function CardItem({
           <div className="absolute inset-0 bg-muted">
             <img 
               src={thumbnailUrl} 
-              alt={isCardSideBack ? `${card.title} (rewers)` : card.title}
+              alt={card.title}
               className="w-full h-full object-cover"
               loading="lazy"
             />

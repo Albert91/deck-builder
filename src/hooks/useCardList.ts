@@ -20,8 +20,7 @@ export function useCardList(deckId: string) {
   });
   const [filters, setFilters] = useState<CardFilterState>({
     page: 1,
-    limit: 20,
-    isCardSideBack: false
+    limit: 20
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -175,14 +174,6 @@ export function useCardList(deckId: string) {
     }
   }, [deckId]);
   
-  // UI state functions
-  const toggleCardSide = useCallback(() => {
-    setFilters((prev: CardFilterState) => ({ 
-      ...prev, 
-      isCardSideBack: !prev.isCardSideBack 
-    }));
-  }, []);
-  
   const showDeleteConfirmation = useCallback((cardId: string) => {
     setCardToDelete(cardId);
     setShowDeleteDialog(true);
@@ -216,7 +207,6 @@ export function useCardList(deckId: string) {
     confirmDelete: deleteCard,
     changePage,
     exportToPdf,
-    shareDeck,
-    toggleCardSide
+    shareDeck
   };
 } 

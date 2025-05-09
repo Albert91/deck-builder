@@ -183,7 +183,6 @@ export interface CardListParams extends PaginationParams {
 export interface CardFilterState {
   page: number;              // aktualna strona
   limit: number;             // liczba kart na stronę
-  isCardSideBack: boolean;   // czy pokazywać rewersy kart
 }
 
 // Informacje o limicie kart

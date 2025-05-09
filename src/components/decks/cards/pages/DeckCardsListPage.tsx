@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react';
-import { DeckCardsHeader } from '../../DeckCardsHeader';
-import { CardActionBar } from '../CardActionBar';
-import { CardGrid } from '../CardGrid';
-import { EmptyState } from '../EmptyState';
-import { ErrorState } from '../../../common/ErrorState';
-import { LoadingState } from '../../../common/LoadingState';
-import { Pagination } from '../Pagination';
-import { DeleteConfirmationDialog } from '../DeleteConfirmationDialog';
-import { useCardList } from '@/hooks/useCardList';
-import * as deckApi from '@/lib/api/decks';
-import type { CardViewModel, DeckDTO, DeckViewModel } from '@/types';
+import { useEffect, useState } from "react";
+import { DeckCardsHeader } from "../../DeckCardsHeader";
+import { CardGrid } from "../CardGrid";
+import { EmptyState } from "../EmptyState";
+import { ErrorState } from "../../../common/ErrorState";
+import { LoadingState } from "../../../common/LoadingState";
+import { Pagination } from "../Pagination";
+import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
+import { useCardList } from "@/hooks/useCardList";
+import * as deckApi from "@/lib/api/decks";
+import type { CardViewModel, DeckDTO, DeckViewModel } from "@/types";
 
 interface DeckCardsListPageProps {
-  deckId: string; 
+  deckId: string;
 }
 
 export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
@@ -35,45 +34,45 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     changePage,
     exportToPdf,
     shareDeck,
-    toggleCardSide
   } = useCardList(deckId);
 
   const [deck, setDeck] = useState<DeckDTO | null>(null);
   const [deckError, setDeckError] = useState<string | null>(null);
   const [isDeckLoading, setIsDeckLoading] = useState(true);
-  const [cardTitle, setCardTitle] = useState<string>('');
+  const [cardTitle, setCardTitle] = useState<string>("");
 
   // Fetch deck details
   useEffect(() => {
     async function fetchDeckData() {
       setIsDeckLoading(true);
       setDeckError(null);
-      
+
       try {
         const deckData = await deckApi.getDeckById(deckId);
         setDeck(deckData);
       } catch (err) {
-        setDeckError(err instanceof Error ? err.message : 'Failed to fetch deck');
-        console.error('Error fetching deck:', err);
+        setDeckError(err instanceof Error ? err.message : "Failed to fetch deck");
+        console.error("Error fetching deck:", err);
       } finally {
         setIsDeckLoading(false);
       }
     }
 
+    console.log("fetching deck data");
     fetchDeckData();
   }, [deckId]);
 
-  useEffect(() => {
-    fetchCards();
+  // useEffect(() => {
+  //   fetchCards();
 
-    // Find card title when a card is selected for deletion
-    if (cardToDelete) {
-      const card = cards.find((c: CardViewModel) => c.id === cardToDelete);
-      if (card) {
-        setCardTitle(card.title);
-      }
-    }
-  }, [fetchCards, cardToDelete, cards]);
+  //   // Find card title when a card is selected for deletion
+  //   if (cardToDelete) {
+  //     const card = cards.find((c: CardViewModel) => c.id === cardToDelete);
+  //     if (card) {
+  //       setCardTitle(card.title);
+  //     }
+  //   }
+  // }, [fetchCards, cardToDelete, cards]);
 
   // Handler for card options
   const handleCardOptionsClick = (option: string, card: CardViewModel) => {
@@ -93,73 +92,52 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
   };
 
   // Helper for card limit display info
-  const cardLimitInfo = {
+  const limitInfo = {
     totalCards: pagination.totalItems,
-    cardLimit: 100
+    cardLimit: 100,
   };
 
-  // Show combined loading state
-  if ((isLoading && !cards.length) || isDeckLoading) {
-    return <LoadingState />;
-  }
+  // Create deck view model if deck data is available
+  const deckViewModel: DeckViewModel | undefined = deck
+    ? {
+        ...deck,
+        cardCount: pagination.totalItems,
+        thumbnailUrl: deck.image_metadata_id ? `/api/images/${deck.image_metadata_id}` : "/placeholders/deck-cover.png",
+      }
+    : undefined;
 
-  // Show error state for card loading
-  if (error && !cards.length) {
-    return <ErrorState message={error} onRetry={fetchCards} />;
-  }
-
-  // Show error state for deck loading
-  if (deckError) {
-    return <ErrorState message={deckError} onRetry={() => window.location.reload()} />;
-  }
-
-  if (!deck) {
-    return <ErrorState message="Nie można załadować talii" onRetry={() => window.location.reload()} />;
-  }
-
-  // Create deck view model
-  const deckViewModel: DeckViewModel = {
-    ...deck,
-    cardCount: pagination.totalItems,
-    thumbnailUrl: deck.image_metadata_id 
-      ? `/api/images/${deck.image_metadata_id}` 
-      : '/placeholders/deck-cover.png'
-  };
+  // Determine if we're ready to show content
+  const isContentReady = !isDeckLoading && deck !== null && !deckError;
+  const isEmpty = !isLoading && !error && (!cards || cards.length === 0);
 
   return (
-    <div>
-      <DeckCardsHeader 
-        deck={deckViewModel}
-        cardLimitInfo={cardLimitInfo}
-        onExport={exportToPdf}
-        onShare={shareDeck}
-        exportStatus={exportStatus}
-      />
-
-      {/* <CardActionBar 
-        cardCount={pagination.totalItems}
-        maxLimit={100}
-        isCardSideBack={filters.isCardSideBack}
-        onAddCard={addCard}
-        onToggleCardSide={toggleCardSide}
-      />
-
-      {cards.length > 0 ? (
+    <div className="container mx-auto py-6 space-y-6">
+      {isContentReady && deckViewModel && (
         <>
-          <CardGrid
-            cards={cards}
-            isCardSideBack={filters.isCardSideBack}
-            onCardOptionsClick={handleCardOptionsClick}
-          />
-          
-          <Pagination 
-            pagination={pagination}
-            onPageChange={changePage}
-            itemName="kart"
+          <DeckCardsHeader
+            deck={deckViewModel}
+            totalCards={limitInfo.totalCards}
+            cardLimit={limitInfo.cardLimit}
+            onExport={exportToPdf}
+            onShare={shareDeck}
+            exportStatus={exportStatus}
+            onCreateCard={addCard}
           />
         </>
-      ) : (
+      )}
+
+      {isLoading ? (
+        <LoadingState />
+      ) : error ? (
+        <ErrorState message={error} onRetry={fetchCards} />
+      ) : isEmpty ? (
         <EmptyState onAddCard={addCard} />
+      ) : (
+        <>
+          <CardGrid cards={cards} onCardOptionsClick={handleCardOptionsClick} />
+
+          <Pagination pagination={pagination} onPageChange={changePage} itemName="kart" />
+        </>
       )}
 
       {showDeleteDialog && (
@@ -169,7 +147,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
           onConfirm={confirmDelete}
           onCancel={cancelDelete}
         />
-      )} */}
+      )}
     </div>
   );
-} 
+}

@@ -27,7 +27,7 @@ export function EmptyState({ onAddCard }: EmptyStateProps) {
         </div>
         <h3 className="text-lg font-medium mb-2">Brak kart w talii</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
-          Ta talia nie zawiera jeszcze żadnych kart. Dodaj swoją pierwszą kartę, aby rozpocząć budowanie talii.
+          Dodaj swoją pierwszą kartę, aby rozpocząć budowanie talii.
         </p>
         <Button onClick={onAddCard} size="lg">
           <svg
@@ -37,16 +37,11 @@ export function EmptyState({ onAddCard }: EmptyStateProps) {
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           Dodaj pierwszą kartę
         </Button>
       </CardContent>
     </Card>
   );
-} 
+}
