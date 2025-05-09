@@ -12,4 +12,7 @@ export const createCardSchema = z.object({
   description: z.string().trim().optional()
 });
 
-export type CreateCardSchema = z.infer<typeof createCardSchema>; 
+export type CreateCardSchema = z.infer<typeof createCardSchema>;
+
+export const cardIdSchema = z.string().uuid('Identyfikator karty musi być poprawnym UUID');
+export type CardIdSchema = z.infer<typeof cardIdSchema>; 

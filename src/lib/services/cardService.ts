@@ -133,4 +133,62 @@ export async function createCard(
   }
 
   return mapToCardDTO(card as Card);
+}
+
+/**
+ * Deletes a card from the specified deck.
+ * Verifies that the card exists, is part of the specified deck, 
+ * and the user is the owner of the deck.
+ */
+export async function deleteCard(
+  supabase: SupabaseClient, 
+  userId: string,
+  deckId: string,
+  cardId: string
+): Promise<void> {
+  // First check if the deck exists and belongs to the user
+  const { data: deck, error: deckError } = await supabase
+    .from('decks')
+    .select('id, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (deckError) {
+    if (deckError.code === 'PGRST116') {
+      throw new Error('Deck not found');
+    }
+    throw deckError;
+  }
+
+  // Check if user is the owner
+  if (deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // Check if the card exists and belongs to the specified deck
+  const { data: card, error: cardError } = await supabase
+    .from('cards')
+    .select('id')
+    .eq('id', cardId)
+    .eq('deck_id', deckId)
+    .single();
+
+  if (cardError) {
+    if (cardError.code === 'PGRST116') {
+      throw new Error('Card not found or does not belong to this deck');
+    }
+    throw cardError;
+  }
+
+  // Delete the card (card_attributes will be deleted via cascade)
+  const { error } = await supabase
+    .from('cards')
+    .delete()
+    .eq('id', cardId)
+    .eq('deck_id', deckId);
+
+  if (error) {
+    console.error('Error deleting card:', error);
+    throw error;
+  }
 } 
