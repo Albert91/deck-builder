@@ -12,17 +12,13 @@ import type { CardViewModel } from "@/types";
 interface CardItemProps {
   card: CardViewModel;
   isCardSideBack: boolean;
-  onEdit: () => void;
-  onDuplicate: () => void;
-  onDelete: () => void;
+  onOptionsClick: (option: string, card: CardViewModel) => void;
 }
 
 export function CardItem({
   card,
   isCardSideBack,
-  onEdit,
-  onDuplicate,
-  onDelete
+  onOptionsClick
 }: CardItemProps) {
   const [isHovered, setIsHovered] = useState(false);
   const thumbnailUrl = isCardSideBack ? card.backThumbnailUrl : card.thumbnailUrl;
@@ -82,7 +78,7 @@ export function CardItem({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit}>
+                <DropdownMenuItem onClick={() => onOptionsClick("edit", card)}>
                   <svg 
                     className="mr-2 h-4 w-4" 
                     fill="none" 
@@ -99,7 +95,7 @@ export function CardItem({
                   </svg>
                   Edytuj
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDuplicate}>
+                <DropdownMenuItem onClick={() => onOptionsClick("duplicate", card)}>
                   <svg 
                     className="mr-2 h-4 w-4" 
                     fill="none" 
@@ -117,7 +113,7 @@ export function CardItem({
                   Duplikuj
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={onDelete}
+                  onClick={() => onOptionsClick("delete", card)}
                   className="text-red-500 focus:text-red-500"
                 >
                   <svg 

@@ -11,11 +11,11 @@ import { useCardList } from '@/hooks/useCardList';
 import * as deckApi from '@/lib/api/decks';
 import type { CardViewModel, DeckDTO, DeckViewModel } from '@/types';
 
-interface DeckCardsPageProps {
-  deckId: string;
+interface DeckCardsListPageProps {
+  deckId: string; 
 }
 
-export default function DeckCardsPage({ deckId }: DeckCardsPageProps) {
+export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
   const {
     cards,
     pagination,
@@ -75,6 +75,23 @@ export default function DeckCardsPage({ deckId }: DeckCardsPageProps) {
     }
   }, [fetchCards, cardToDelete, cards]);
 
+  // Handler for card options
+  const handleCardOptionsClick = (option: string, card: CardViewModel) => {
+    switch (option) {
+      case "edit":
+        editCard(card.id);
+        break;
+      case "duplicate":
+        duplicateCard(card.id);
+        break;
+      case "delete":
+        showDeleteConfirmation(card.id);
+        break;
+      default:
+        console.warn(`Unknown card option: ${option}`);
+    }
+  };
+
   // Helper for card limit display info
   const cardLimitInfo = {
     totalCards: pagination.totalItems,
@@ -132,9 +149,7 @@ export default function DeckCardsPage({ deckId }: DeckCardsPageProps) {
           <CardGrid
             cards={cards}
             isCardSideBack={filters.isCardSideBack}
-            onCardEdit={editCard}
-            onCardDuplicate={duplicateCard}
-            onCardDelete={showDeleteConfirmation}
+            onCardOptionsClick={handleCardOptionsClick}
           />
           
           <Pagination 

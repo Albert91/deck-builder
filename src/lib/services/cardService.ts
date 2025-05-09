@@ -1,0 +1,61 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { CardDTO, CardListResponseDTO, PaginationParams, Card } from '../../types';
+import { mapToCardDTO } from '../../types';
+
+/**
+ * Retrieves a list of cards for a specific deck.
+ * Supports pagination with page and limit parameters.
+ */
+export async function listCards(
+  supabase: SupabaseClient,
+  userId: string,
+  deckId: string,
+  params: PaginationParams
+): Promise<CardListResponseDTO> {
+  // First check if the deck exists and belongs to the user
+  const { data: deck, error: deckError } = await supabase
+    .from('decks')
+    .select('id, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (deckError) {
+    if (deckError.code === 'PGRST116') {
+      throw new Error('Deck not found');
+    }
+    throw deckError;
+  }
+
+  // Check if user is the owner
+  if (deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // Set default pagination values if not provided
+  const page = params.page || 1;
+  const limit = params.limit || 20;
+  const offset = (page - 1) * limit;
+
+  // Get cards with pagination
+  const { data: cards, count, error } = await supabase
+    .from('cards')
+    .select('*', { count: 'exact' })
+    .eq('deck_id', deckId)
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) {
+    console.error('Error fetching cards:', error);
+    throw error;
+  }
+
+  // Convert database results to DTOs
+  const items: CardDTO[] = (cards || []).map(card => mapToCardDTO(card as Card));
+
+  return {
+    items,
+    totalCount: count || 0,
+    page,
+    limit
+  };
+} 
