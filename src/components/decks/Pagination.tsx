@@ -8,15 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { PaginationModel } from '../../types';
+import type { PaginationModel } from '@/types';
 
 interface PaginationProps {
   pagination: PaginationModel;
   onPageChange: (page: number) => void;
-  onLimitChange: (limit: number) => void;
+  onLimitChange?: (limit: number) => void;
+  itemName?: string;
 }
 
-export function Pagination({ pagination, onPageChange, onLimitChange }: PaginationProps) {
+export function Pagination({ 
+  pagination, 
+  onPageChange, 
+  onLimitChange,
+  itemName = 'elementów'
+}: PaginationProps) {
   const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
   
   // Generate array of page numbers to display
@@ -43,7 +49,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange }: Paginati
   
   // Handle limit change
   const handleLimitChange = (value: string) => {
-    onLimitChange(Number(value));
+    onLimitChange?.(Number(value));
   };
   
   // Calculate range of items being displayed
@@ -55,7 +61,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange }: Paginati
       <div className="text-sm text-muted-foreground">
         {totalItems > 0 ? (
           <>
-            Pokazano <span className="font-medium">{startItem}-{endItem}</span> z <span className="font-medium">{totalItems}</span> talii
+            Pokazano <span className="font-medium">{startItem}-{endItem}</span> z <span className="font-medium">{totalItems}</span> {itemName}
           </>
         ) : (
           <>Brak wyników</>
@@ -63,24 +69,26 @@ export function Pagination({ pagination, onPageChange, onLimitChange }: Paginati
       </div>
       
       <div className="flex items-center gap-2">
-        {/* Items per page selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Na stronie</span>
-          <Select 
-            value={String(itemsPerPage)} 
-            onValueChange={handleLimitChange}
-          >
-            <SelectTrigger className="w-[70px]">
-              <SelectValue placeholder={itemsPerPage} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="12">12</SelectItem>
-              <SelectItem value="24">24</SelectItem>
-              <SelectItem value="36">36</SelectItem>
-              <SelectItem value="48">48</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Items per page selector - only display if onLimitChange is provided */}
+        {onLimitChange && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Na stronie</span>
+            <Select 
+              value={String(itemsPerPage)} 
+              onValueChange={handleLimitChange}
+            >
+              <SelectTrigger className="w-[70px]">
+                <SelectValue placeholder={itemsPerPage} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="12">12</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="40">40</SelectItem>
+                <SelectItem value="60">60</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         
         {/* Page navigation */}
         <div className="flex gap-1">

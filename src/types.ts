@@ -23,7 +23,7 @@ export type UserDTO = {
 
 // =================== DECK TYPES ===================
 
-export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at'>;
+export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at' | 'image_metadata_id'>;
 
 export interface CreateDeckCommand {
   name: string;
@@ -166,6 +166,39 @@ export interface DeckLimitInfo {
   deckLimit: number;       // maksymalna liczba talii (5)
 }
 
+// =================== CARD LIST VIEW TYPES ===================
+
+// Model widoku dla pojedynczej karty
+export interface CardViewModel extends CardDTO {
+  thumbnailUrl: string;       // URL miniatury karty (awers)
+  backThumbnailUrl: string;   // URL miniatury karty (rewers)
+}
+
+// Parametry listy kart (rozszerzenie PaginationParams)
+export interface CardListParams extends PaginationParams {
+  viewMode?: 'front' | 'back'; // tryb wyświetlania (awers/rewers)
+}
+
+// Stan filtrów widoku kart
+export interface CardFilterState {
+  page: number;              // aktualna strona
+  limit: number;             // liczba kart na stronę
+  isCardSideBack: boolean;   // czy pokazywać rewersy kart
+}
+
+// Informacje o limicie kart
+export interface CardLimitInfo {
+  totalCards: number;       // aktualna liczba kart
+  cardLimit: number;        // maksymalna liczba kart (100)
+}
+
+// Stan operacji eksportu
+export interface ExportStatus {
+  isExporting: boolean;    // czy eksport jest w trakcie
+  progress?: number;       // opcjonalny postęp eksportu (0-100)
+  error?: string;          // opcjonalny błąd eksportu
+}
+
 // Mapping helpers for converting database rows to DTOs
 export const mapToCardDTO = (card: Card, attributes?: CardAttribute[]): CardDTO => ({
   id: card.id,
@@ -186,5 +219,6 @@ export const mapToDeckDTO = (deck: Deck): DeckDTO => ({
   name: deck.name,
   share_hash: deck.share_hash,
   created_at: deck.created_at,
-  updated_at: deck.updated_at
+  updated_at: deck.updated_at,
+  image_metadata_id: deck.image_metadata_id
 });

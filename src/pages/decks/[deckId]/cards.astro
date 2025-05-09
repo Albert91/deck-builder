@@ -1,0 +1,13 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import DeckCardsPage from '@/components/decks/DeckCardsPage';
+
+const { deckId } = Astro.params;
+if (!deckId) {
+  return Astro.redirect('/decks');
+}
+---
+
+<Layout title="Karty talii">
+  <DeckCardsPage client:load deckId={deckId} />
+</Layout> 
