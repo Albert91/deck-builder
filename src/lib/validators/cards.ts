@@ -14,5 +14,14 @@ export const createCardSchema = z.object({
 
 export type CreateCardSchema = z.infer<typeof createCardSchema>;
 
+export const updateCardSchema = z.object({
+  title: z.string().trim().min(1).max(100).optional(),
+  description: z.string().trim().max(500).nullable().optional(),
+}).refine(data => data.title !== undefined || data.description !== undefined, {
+  message: "Należy podać tytuł lub opis karty"
+});
+
+export type UpdateCardSchema = z.infer<typeof updateCardSchema>;
+
 export const cardIdSchema = z.string().uuid('Identyfikator karty musi być poprawnym UUID');
 export type CardIdSchema = z.infer<typeof cardIdSchema>; 

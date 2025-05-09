@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand } from '../../types';
+import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand, UpdateCardCommand } from '../../types';
 import { mapToCardDTO } from '../../types';
 
 /**
@@ -191,4 +191,91 @@ export async function deleteCard(
     console.error('Error deleting card:', error);
     throw error;
   }
+}
+
+/**
+ * Updates an existing card in the specified deck.
+ * Verifies that the card exists, is part of the specified deck,
+ * and the user is the owner of the deck.
+ */
+export async function updateCard(
+  supabase: SupabaseClient,
+  userId: string,
+  deckId: string,
+  cardId: string,
+  data: UpdateCardCommand
+): Promise<CardDTO> {
+  // 1. Sprawdź czy talia istnieje i należy do użytkownika
+  const { data: deck, error: deckError } = await supabase
+    .from('decks')
+    .select('id, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (deckError) {
+    if (deckError.code === 'PGRST116') {
+      throw new Error('Deck not found');
+    }
+    throw deckError;
+  }
+
+  // Sprawdź czy użytkownik jest właścicielem talii
+  if (deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // 2. Sprawdź czy karta istnieje i należy do tej talii
+  const { data: existingCard, error: cardError } = await supabase
+    .from('cards')
+    .select('id')
+    .eq('id', cardId)
+    .eq('deck_id', deckId)
+    .single();
+
+  if (cardError) {
+    if (cardError.code === 'PGRST116') {
+      throw new Error('Card not found in this deck');
+    }
+    throw cardError;
+  }
+
+  // 3. Aktualizuj kartę
+  const updateData: any = {};
+  if (data.title !== undefined) updateData.title = data.title;
+  if (data.description !== undefined) updateData.description = data.description;
+  updateData.updated_at = new Date().toISOString();
+
+  const { error: updateError } = await supabase
+    .from('cards')
+    .update(updateData)
+    .eq('id', cardId)
+    .eq('deck_id', deckId);
+
+  if (updateError) {
+    throw updateError;
+  }
+
+  // 4. Pobierz zaktualizowaną kartę z atrybutami
+  const { data: updatedCard, error: fetchError } = await supabase
+    .from('cards')
+    .select('*')
+    .eq('id', cardId)
+    .single();
+
+  if (fetchError) {
+    throw fetchError;
+  }
+
+  // Pobierz atrybuty karty
+  const { data: attributes, error: attrError } = await supabase
+    .from('card_attributes')
+    .select('*')
+    .eq('card_id', cardId);
+
+  if (attrError) {
+    throw attrError;
+  }
+
+  // 5. Zwróć dane w formacie CardDTO
+  return mapToCardDTO(updatedCard, attributes || []);
 } 
