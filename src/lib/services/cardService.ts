@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { CardDTO, CardListResponseDTO, PaginationParams, Card } from '../../types';
+import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand } from '../../types';
 import { mapToCardDTO } from '../../types';
 
 /**
@@ -58,4 +58,79 @@ export async function listCards(
     page,
     limit
   };
+}
+
+/**
+ * Gets the count of cards in a specific deck.
+ * Used to validate that the card limit (100) is not exceeded.
+ */
+export async function getCardCount(
+  supabase: SupabaseClient,
+  deckId: string
+): Promise<number> {
+  const { count, error } = await supabase
+    .from('cards')
+    .select('id', { count: 'exact', head: true })
+    .eq('deck_id', deckId);
+
+  if (error) {
+    console.error('Error getting card count:', error);
+    throw error;
+  }
+
+  return count || 0;
+}
+
+/**
+ * Creates a new card in the specified deck.
+ * Returns the created card as a CardDTO.
+ */
+export async function createCard(
+  supabase: SupabaseClient,
+  userId: string,
+  deckId: string,
+  cardData: CreateCardCommand
+): Promise<CardDTO> {
+  // First check if the deck exists and belongs to the user
+  const { data: deck, error: deckError } = await supabase
+    .from('decks')
+    .select('id, owner_id')
+    .eq('id', deckId)
+    .single();
+
+  if (deckError) {
+    if (deckError.code === 'PGRST116') {
+      throw new Error('Deck not found');
+    }
+    throw deckError;
+  }
+
+  // Check if user is the owner
+  if (deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // Check card limit
+  const cardCount = await getCardCount(supabase, deckId);
+  if (cardCount >= 100) {
+    throw new Error('Card limit reached (100)');
+  }
+
+  // Insert the new card
+  const { data: card, error } = await supabase
+    .from('cards')
+    .insert({
+      deck_id: deckId,
+      title: cardData.title,
+      description: cardData.description || null
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating card:', error);
+    throw error;
+  }
+
+  return mapToCardDTO(card as Card);
 } 
