@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { DeckCardsHeader } from './DeckCardsHeader';
-import { CardActionBar } from './CardActionBar';
-import { CardGrid } from './CardGrid';
-import { EmptyState } from './EmptyState';
+import { CardActionBar } from './cards/CardActionBar';
+import { CardGrid } from './cards/CardGrid';
+import { EmptyState } from './cards/EmptyState';
 import { ErrorState } from './ErrorState';
 import { LoadingState } from './LoadingState';
-import { Pagination } from './Pagination';
-import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
+import { Pagination } from './cards/Pagination';
+import { DeleteConfirmationDialog } from './cards/DeleteConfirmationDialog';
 import { useCardList } from '@/hooks/useCardList';
 import * as deckApi from '@/lib/api/decks';
 import type { CardViewModel, DeckDTO, DeckViewModel } from '@/types';

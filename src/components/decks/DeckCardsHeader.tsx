@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tooltip } from "@/components/ui/tooltip";
-import { CardLimitDisplay } from "./CardLimitDisplay";
+import { CardLimitDisplay } from "./cards/CardLimitDisplay";
 import type { DeckViewModel, CardLimitInfo, ExportStatus } from "@/types";
 
 interface DeckCardsHeaderProps {
