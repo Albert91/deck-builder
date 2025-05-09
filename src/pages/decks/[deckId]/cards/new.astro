@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CardEditorPage from '@/components/cards/CardEditorPage';
+
+const { deckId } = Astro.params;
+
+if (!deckId) {
+  return Astro.redirect('/decks');
+}
+---
+
+<Layout title="Nowa karta">
+  <CardEditorPage client:load deckId={deckId} />
+</Layout> 

@@ -1,0 +1,181 @@
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { useDebounce } from '@/hooks/useDebounce';
+import { updateCard } from '@/lib/api/cards';
+import type { CardDTO } from '@/types';
+import CardTitleInput from './CardTitleInput';
+import CardDescriptionTextarea from './CardDescriptionTextarea';
+import CardAttributesSliders from './CardAttributesSliders';
+import CardActionButtons from './CardActionButtons';
+
+interface CardAttributes {
+  strength: number;
+  defense: number;
+  health: number;
+}
+
+interface CardFormData {
+  title: string;
+  description: string | null;
+  attributes: CardAttributes;
+  isDirty?: boolean;
+}
+
+interface CardEditorFormProps {
+  deckId: string;
+  card: CardDTO | null;
+  isLoading: boolean;
+  initialData: CardFormData;
+  onUpdate: (data: Partial<CardFormData>) => void;
+}
+
+export default function CardEditorForm({
+  deckId,
+  card,
+  isLoading,
+  initialData,
+  onUpdate,
+}: CardEditorFormProps) {
+  const [formData, setFormData] = useState<CardFormData>(initialData);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Update local form data when initialData changes
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
+
+  // Create a debounced version of saveChanges
+  const debouncedSave = useDebounce(async (data: CardFormData) => {
+    if (!card || !card.id) return;
+    
+    try {
+      setIsSaving(true);
+      await updateCard(deckId, card.id, {
+        title: data.title,
+        description: data.description,
+        // Eventually will add attributes saving
+      });
+    } catch (err) {
+      console.error('Error saving card:', err);
+      // Set error here if needed
+    } finally {
+      setIsSaving(false);
+    }
+  }, 1000);
+
+  // Save changes when form data changes
+  useEffect(() => {
+    if (formData.isDirty && card) {
+      debouncedSave(formData);
+    }
+  }, [formData, card, debouncedSave]);
+
+  // Handle form field changes
+  const handleFieldChange = (field: keyof CardFormData, value: any) => {
+    // Validate inputs
+    let fieldErrors = { ...errors };
+    
+    if (field === 'title') {
+      if (!value) {
+        fieldErrors.title = 'Tytuł jest wymagany';
+      } else if (value.length > 100) {
+        fieldErrors.title = 'Tytuł nie może być dłuższy niż 100 znaków';
+      } else {
+        delete fieldErrors.title;
+      }
+    }
+    
+    if (field === 'description') {
+      if (value && value.length > 500) {
+        fieldErrors.description = 'Opis nie może być dłuższy niż 500 znaków';
+      } else {
+        delete fieldErrors.description;
+      }
+    }
+
+    setErrors(fieldErrors);
+    
+    // Update form data
+    const updatedData = { 
+      ...formData,
+      [field]: value,
+      isDirty: true 
+    };
+    
+    setFormData(updatedData);
+    onUpdate({ [field]: value });
+  };
+
+  // Handle attribute changes
+  const handleAttributeChange = (attribute: keyof CardAttributes, value: number) => {
+    const updatedAttributes = {
+      ...formData.attributes,
+      [attribute]: value
+    };
+    
+    setFormData({
+      ...formData,
+      attributes: updatedAttributes,
+      isDirty: true
+    });
+    
+    onUpdate({ attributes: updatedAttributes });
+  };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-center h-64">
+            <p className="text-muted-foreground">Ładowanie...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {card ? 'Edycja karty' : 'Nowa karta'}
+          {isSaving && <span className="ml-2 text-sm text-muted-foreground">(Zapisywanie...)</span>}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <CardTitleInput
+            value={formData.title}
+            onChange={(value) => handleFieldChange('title', value)}
+            error={errors.title}
+          />
+          
+          <CardDescriptionTextarea
+            value={formData.description || ''}
+            onChange={(value) => handleFieldChange('description', value)}
+            error={errors.description}
+          />
+          
+          <CardAttributesSliders
+            attributes={formData.attributes}
+            onChange={handleAttributeChange}
+          />
+          
+          <CardActionButtons
+            deckId={deckId}
+            cardId={card?.id}
+            isNewCard={!card?.id}
+            isDirty={!!formData.isDirty}
+            onSave={() => console.log('Saving...')} // Will implement later
+            onCancel={() => window.history.back()}
+            onDelete={() => console.log('Deleting...')} // Will implement later
+          />
+        </div>
+      </CardContent>
+    </Card>
+  );
+} 
