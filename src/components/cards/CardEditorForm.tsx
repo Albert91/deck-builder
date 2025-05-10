@@ -1,28 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { useDebounce } from '@/hooks/useDebounce';
 import { updateCard } from '@/lib/api/cards';
 import type { CardDTO } from '@/types';
 import CardTitleInput from './CardTitleInput';
 import CardDescriptionTextarea from './CardDescriptionTextarea';
 import CardAttributesSliders from './CardAttributesSliders';
-import CardActionButtons from './CardActionButtons';
-
-interface CardAttributes {
-  strength: number;
-  defense: number;
-  health: number;
-}
-
-interface CardFormData {
-  title: string;
-  description: string | null;
-  attributes: CardAttributes;
-  isDirty?: boolean;
-}
+import type { CardFormData } from '@/hooks/useCardForm';
 
 interface CardEditorFormProps {
   deckId: string;
@@ -42,6 +26,8 @@ export default function CardEditorForm({
   const [formData, setFormData] = useState<CardFormData>(initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // Local dirty state for debounced save
+  const [isDirty, setIsDirty] = useState(false);
   
   // Update local form data when initialData changes
   useEffect(() => {
@@ -51,7 +37,6 @@ export default function CardEditorForm({
   // Create a debounced version of saveChanges
   const debouncedSave = useDebounce(async (data: CardFormData) => {
     if (!card || !card.id) return;
-    
     try {
       setIsSaving(true);
       await updateCard(deckId, card.id, {
@@ -69,10 +54,11 @@ export default function CardEditorForm({
 
   // Save changes when form data changes
   useEffect(() => {
-    if (formData.isDirty && card) {
+    if (isDirty && card) {
       debouncedSave(formData);
+      setIsDirty(false);
     }
-  }, [formData, card, debouncedSave]);
+  }, [formData, card, debouncedSave, isDirty]);
 
   // Handle form field changes
   const handleFieldChange = (field: keyof CardFormData, value: any) => {
@@ -102,27 +88,24 @@ export default function CardEditorForm({
     // Update form data
     const updatedData = { 
       ...formData,
-      [field]: value,
-      isDirty: true 
+      [field]: value
     };
-    
     setFormData(updatedData);
+    setIsDirty(true);
     onUpdate({ [field]: value });
   };
 
   // Handle attribute changes
-  const handleAttributeChange = (attribute: keyof CardAttributes, value: number) => {
+  const handleAttributeChange = (attribute: keyof CardFormData['attributes'], value: number) => {
     const updatedAttributes = {
       ...formData.attributes,
       [attribute]: value
     };
-    
     setFormData({
       ...formData,
-      attributes: updatedAttributes,
-      isDirty: true
+      attributes: updatedAttributes
     });
-    
+    setIsDirty(true);
     onUpdate({ attributes: updatedAttributes });
   };
 
@@ -163,16 +146,6 @@ export default function CardEditorForm({
           <CardAttributesSliders
             attributes={formData.attributes}
             onChange={handleAttributeChange}
-          />
-          
-          <CardActionButtons
-            deckId={deckId}
-            cardId={card?.id}
-            isNewCard={!card?.id}
-            isDirty={!!formData.isDirty}
-            onSave={() => console.log('Saving...')} // Will implement later
-            onCancel={() => window.history.back()}
-            onDelete={() => console.log('Deleting...')} // Will implement later
           />
         </div>
       </CardContent>
