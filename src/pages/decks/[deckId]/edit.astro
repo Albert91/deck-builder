@@ -1,10 +1,10 @@
 ---
-import DeckFormPage from "@/components/decks/pages/DeckFormPage";
-import Layout from "@/layouts/Layout.astro";
+import DeckFormPage from '@/components/decks/pages/DeckFormPage';
+import Layout from '@/layouts/Layout.astro';
 
 const { deckId } = Astro.params;
 ---
 
 <Layout title="Edit Deck">
   <DeckFormPage deckId={deckId} client:load />
-</Layout> 
+</Layout>

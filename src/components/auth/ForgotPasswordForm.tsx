@@ -1,59 +1,59 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertCircle } from "lucide-react";
-import { forgotPasswordSchema } from "@/lib/validators/auth";
-import { ZodError } from "zod";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle, AlertCircle } from 'lucide-react';
+import { forgotPasswordSchema } from '@/lib/validators/auth';
+import { ZodError } from 'zod';
 
 export function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     // Validate with Zod schema
     try {
       forgotPasswordSchema.parse({ email });
     } catch (err) {
       const zodError = err as ZodError;
-      setError(zodError.errors?.[0]?.message || "Invalid email");
+      setError(zodError.errors?.[0]?.message || 'Invalid email');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
-      
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
+
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || "Failed to send reset link");
+        throw new Error(data.message || 'Failed to send reset link');
       }
-      
+
       // Show success message
       setSuccess(true);
-      setEmail("");
+      setEmail('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   if (success) {
     return (
       <Card className="w-full max-w-md mx-auto">
@@ -67,15 +67,12 @@ export function ForgotPasswordForm() {
             <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             <AlertTitle>Success!</AlertTitle>
             <AlertDescription>
-              If an account exists with that email, we've sent a password reset link.
-              Please check your inbox and follow the instructions.
+              If an account exists with that email, we&apos;ve sent a password reset link. Please check your inbox and
+              follow the instructions.
             </AlertDescription>
           </Alert>
           <div className="mt-6 text-center">
-            <a 
-              href="/login" 
-              className="text-primary hover:underline font-medium"
-            >
+            <a href="/login" className="text-primary hover:underline font-medium">
               Return to Login
             </a>
           </div>
@@ -83,16 +80,14 @@ export function ForgotPasswordForm() {
       </Card>
     );
   }
-  
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
           Forgot Password
         </CardTitle>
-        <CardDescription className="text-center">
-          Enter your email to receive a password reset link
-        </CardDescription>
+        <CardDescription className="text-center">Enter your email to receive a password reset link</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -102,7 +97,7 @@ export function ForgotPasswordForm() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -116,23 +111,18 @@ export function ForgotPasswordForm() {
               disabled={isSubmitting}
             />
           </div>
-          
-          <Button 
-            type="submit"
-            className="w-full"
-            variant="gradient"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Sending..." : "Send Reset Link"}
+
+          <Button type="submit" className="w-full" variant="gradient" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Send Reset Link'}
           </Button>
         </form>
       </CardContent>
       <div className="px-6 pb-6 text-center text-sm text-muted-foreground">
-        Remember your password?{" "}
+        Remember your password?{' '}
         <a href="/login" className="text-primary hover:underline">
           Sign in
         </a>
       </div>
     </Card>
   );
-} 
+}

@@ -1,61 +1,61 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertCircle } from "lucide-react";
-import { resetPasswordSchema } from "@/lib/validators/auth";
-import { ZodError } from "zod";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle, AlertCircle } from 'lucide-react';
+import { resetPasswordSchema } from '@/lib/validators/auth';
+import { ZodError } from 'zod';
 
 export function ResetPasswordForm() {
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [token, setToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    
+    const code = params.get('code');
+
     if (code) {
       setToken(code);
     } else {
-      setError("Invalid or expired password reset link. Please request a new one.");
+      setError('Invalid or expired password reset link. Please request a new one.');
     }
   }, []);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     // Validate with Zod schema
     try {
       resetPasswordSchema.parse({
         password,
         passwordConfirm,
-        token: token || ""
+        token: token || '',
       });
     } catch (err) {
       const zodError = err as ZodError;
-      setError(zodError.errors?.[0]?.message || "Invalid input");
+      setError(zodError.errors?.[0]?.message || 'Invalid input');
       return;
     }
-    
+
     if (!token) {
-      setError("Invalid reset token. Please request a new password reset link.");
+      setError('Invalid reset token. Please request a new password reset link.');
       return;
     }
-    
+
     try {
       setIsSubmitting(true);
-      
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
+
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           password,
@@ -63,24 +63,24 @@ export function ResetPasswordForm() {
           token,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || "Failed to reset password");
+        throw new Error(data.message || 'Failed to reset password');
       }
-      
+
       // Show success message
       setSuccess(true);
-      setPassword("");
-      setPasswordConfirm("");
+      setPassword('');
+      setPasswordConfirm('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   if (success) {
     return (
       <Card className="w-full max-w-md mx-auto">
@@ -93,15 +93,10 @@ export function ResetPasswordForm() {
           <Alert className="bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-900/30">
             <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             <AlertTitle>Success!</AlertTitle>
-            <AlertDescription>
-              Your password has been successfully reset.
-            </AlertDescription>
+            <AlertDescription>Your password has been successfully reset.</AlertDescription>
           </Alert>
           <div className="mt-6 text-center">
-            <a 
-              href="/login" 
-              className="text-primary hover:underline font-medium"
-            >
+            <a href="/login" className="text-primary hover:underline font-medium">
               Go to Login Page
             </a>
           </div>
@@ -109,16 +104,14 @@ export function ResetPasswordForm() {
       </Card>
     );
   }
-  
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
           Reset Password
         </CardTitle>
-        <CardDescription className="text-center">
-          Create a new password for your account
-        </CardDescription>
+        <CardDescription className="text-center">Create a new password for your account</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -128,7 +121,7 @@ export function ResetPasswordForm() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="new-password">New Password</Label>
@@ -154,23 +147,18 @@ export function ResetPasswordForm() {
               disabled={isSubmitting}
             />
           </div>
-          
-          <Button 
-            type="submit"
-            className="w-full"
-            variant="gradient"
-            disabled={isSubmitting || !token}
-          >
-            {isSubmitting ? "Resetting..." : "Reset Password"}
+
+          <Button type="submit" className="w-full" variant="gradient" disabled={isSubmitting || !token}>
+            {isSubmitting ? 'Resetting...' : 'Reset Password'}
           </Button>
         </form>
       </CardContent>
       <div className="px-6 pb-6 text-center text-sm text-muted-foreground">
-        Remember your password?{" "}
+        Remember your password?{' '}
         <a href="/login" className="text-primary hover:underline">
           Sign in
         </a>
       </div>
     </Card>
   );
-} 
+}

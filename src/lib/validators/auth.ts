@@ -7,14 +7,16 @@ export const loginSchema = z.object({
 });
 
 // Schema for user registration
-export const registerSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  passwordConfirm: z.string(),
-}).refine(data => data.password === data.passwordConfirm, {
-  message: "Passwords don't match",
-  path: ["passwordConfirm"]
-});
+export const registerSchema = z
+  .object({
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords don't match",
+    path: ['passwordConfirm'],
+  });
 
 // Schema for requesting OTP code
 export const otpRequestSchema = z.object({
@@ -33,11 +35,13 @@ export const forgotPasswordSchema = z.object({
 });
 
 // Schema for resetting password with token
-export const resetPasswordSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  passwordConfirm: z.string(),
-  token: z.string(),
-}).refine(data => data.password === data.passwordConfirm, {
-  message: "Passwords don't match",
-  path: ["passwordConfirm"]
-}); 
+export const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    passwordConfirm: z.string(),
+    token: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords don't match",
+    path: ['passwordConfirm'],
+  });

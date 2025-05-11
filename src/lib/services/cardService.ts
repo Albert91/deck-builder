@@ -1,5 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { CardDTO, CardListResponseDTO, PaginationParams, Card, CreateCardCommand, UpdateCardCommand, CardAttribute } from '../../types';
+import type {
+  CardDTO,
+  CardListResponseDTO,
+  PaginationParams,
+  Card,
+  CreateCardCommand,
+  UpdateCardCommand,
+  CardAttribute,
+} from '../../types';
 import { mapToCardDTO } from '../../types';
 
 /**
@@ -37,7 +45,11 @@ export async function listCards(
   const offset = (page - 1) * limit;
 
   // Get cards with pagination
-  const { data: cards, count, error } = await supabase
+  const {
+    data: cards,
+    count,
+    error,
+  } = await supabase
     .from('cards')
     .select('*', { count: 'exact' })
     .eq('deck_id', deckId)
@@ -50,13 +62,13 @@ export async function listCards(
   }
 
   // Convert database results to DTOs
-  const items: CardDTO[] = (cards || []).map(card => mapToCardDTO(card as Card));
+  const items: CardDTO[] = (cards || []).map((card) => mapToCardDTO(card as Card));
 
   return {
     items,
     totalCount: count || 0,
     page,
-    limit
+    limit,
   };
 }
 
@@ -64,10 +76,7 @@ export async function listCards(
  * Gets the count of cards in a specific deck.
  * Used to validate that the card limit (100) is not exceeded.
  */
-export async function getCardCount(
-  supabase: SupabaseClient,
-  deckId: string
-): Promise<number> {
+export async function getCardCount(supabase: SupabaseClient, deckId: string): Promise<number> {
   const { count, error } = await supabase
     .from('cards')
     .select('id', { count: 'exact', head: true })
@@ -122,7 +131,7 @@ export async function createCard(
     .insert({
       deck_id: deckId,
       title: cardData.title,
-      description: cardData.description || null
+      description: cardData.description || null,
     })
     .select()
     .single();
@@ -137,11 +146,11 @@ export async function createCard(
 
 /**
  * Deletes a card from the specified deck.
- * Verifies that the card exists, is part of the specified deck, 
+ * Verifies that the card exists, is part of the specified deck,
  * and the user is the owner of the deck.
  */
 export async function deleteCard(
-  supabase: SupabaseClient, 
+  supabase: SupabaseClient,
   userId: string,
   deckId: string,
   cardId: string
@@ -166,7 +175,7 @@ export async function deleteCard(
   }
 
   // Check if the card exists and belongs to the specified deck
-  const { data: card, error: cardError } = await supabase
+  const { error: cardError } = await supabase
     .from('cards')
     .select('id')
     .eq('id', cardId)
@@ -181,11 +190,7 @@ export async function deleteCard(
   }
 
   // Delete the card (card_attributes will be deleted via cascade)
-  const { error } = await supabase
-    .from('cards')
-    .delete()
-    .eq('id', cardId)
-    .eq('deck_id', deckId);
+  const { error } = await supabase.from('cards').delete().eq('id', cardId).eq('deck_id', deckId);
 
   if (error) {
     console.error('Error deleting card:', error);
@@ -225,7 +230,7 @@ export async function updateCard(
   }
 
   // 2. Sprawdź czy karta istnieje i należy do tej talii
-  const { data: existingCard, error: cardError } = await supabase
+  const { error: cardError } = await supabase
     .from('cards')
     .select('id')
     .eq('id', cardId)
@@ -245,22 +250,14 @@ export async function updateCard(
   if (data.description !== undefined) updateData.description = data.description;
   updateData.updated_at = new Date().toISOString();
 
-  const { error: updateError } = await supabase
-    .from('cards')
-    .update(updateData)
-    .eq('id', cardId)
-    .eq('deck_id', deckId);
+  const { error: updateError } = await supabase.from('cards').update(updateData).eq('id', cardId).eq('deck_id', deckId);
 
   if (updateError) {
     throw updateError;
   }
 
   // 4. Pobierz zaktualizowaną kartę z atrybutami
-  const { data: updatedCard, error: fetchError } = await supabase
-    .from('cards')
-    .select('*')
-    .eq('id', cardId)
-    .single();
+  const { data: updatedCard, error: fetchError } = await supabase.from('cards').select('*').eq('id', cardId).single();
 
   if (fetchError) {
     throw fetchError;
@@ -338,4 +335,4 @@ export async function getCard(
   }
 
   return mapToCardDTO(card as Card, attributes as CardAttribute[]);
-} 
+}

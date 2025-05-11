@@ -7,64 +7,64 @@ export class OpenRouterError extends Error {
 }
 
 export class OpenRouterAuthError extends OpenRouterError {
-  constructor(message: string = 'Authentication error with OpenRouter API') {
+  constructor(message = 'Authentication error with OpenRouter API') {
     super(message);
     this.name = 'OpenRouterAuthError';
   }
 }
 
 export class OpenRouterValidationError extends OpenRouterError {
-  constructor(message: string = 'Validation error with request or response data') {
+  constructor(message = 'Validation error with request or response data') {
     super(message);
     this.name = 'OpenRouterValidationError';
   }
 }
 
 export class OpenRouterRateLimitError extends OpenRouterError {
-  constructor(message: string = 'Rate limit exceeded for OpenRouter API') {
+  constructor(message = 'Rate limit exceeded for OpenRouter API') {
     super(message);
     this.name = 'OpenRouterRateLimitError';
   }
 }
 
 export class OpenRouterServerError extends OpenRouterError {
-  constructor(message: string = 'OpenRouter API server error') {
+  constructor(message = 'OpenRouter API server error') {
     super(message);
     this.name = 'OpenRouterServerError';
   }
 }
 
 // Types
-export type ResponseFormat = {
+export interface ResponseFormat {
   type: 'json_schema';
   json_schema: {
     name: string;
     strict: boolean;
     schema: Record<string, unknown>;
   };
-};
+}
 
-export type ChatCompletionInput = {
+export interface ChatCompletionInput {
   systemPrompt: string;
   userPrompt: string;
   model?: string;
   params?: Record<string, unknown>;
   responseFormat?: ResponseFormat;
-};
+}
 
-export type Message = {
+export interface Message {
   role: 'system' | 'user' | 'assistant';
   content: string;
-};
+}
 
-export type OpenRouterPayload = {
+export interface OpenRouterPayload {
   messages: Message[];
   model: string;
   response_format?: ResponseFormat;
   [key: string]: unknown;
-};
+}
 
-export type OpenRouterResponse = {
+export interface OpenRouterResponse {
   id: string;
   choices: {
     message: {
@@ -81,9 +81,9 @@ export type OpenRouterResponse = {
     total_tokens: number;
   };
   created: number;
-};
+}
 
-export type ChatCompletionResult = {
+export interface ChatCompletionResult {
   content: string | Record<string, unknown>;
   model: string;
   usage: {
@@ -92,4 +92,4 @@ export type ChatCompletionResult = {
     totalTokens: number;
   };
   id: string;
-}; 
+}

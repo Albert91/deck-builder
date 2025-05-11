@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import CardEditorForm from "./CardEditorForm";
-import CardPreview from "./CardPreview";
-import { AIGeneratorPanel } from "../decks/form/AIGeneratorPanel";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { LoadingOverlay } from "../common/LoadingOverlay";
-import { useCardForm } from "@/hooks/useCardForm";
-import type { CardFormData } from "@/hooks/useCardForm";
+import React, { useEffect, useState } from 'react';
+import CardEditorForm from './CardEditorForm';
+import CardPreview from './CardPreview';
+import { AIGeneratorPanel } from '../decks/form/AIGeneratorPanel';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { LoadingOverlay } from '../common/LoadingOverlay';
+import { useCardForm } from '@/hooks/useCardForm';
+import type { CardFormData } from '@/hooks/useCardForm';
 
 interface CardFormPageProps {
   deckId: string;
@@ -15,8 +15,8 @@ interface CardFormPageProps {
 }
 
 const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
-  const [loadingMessage, setLoadingMessage] = useState("Loading...");
-  const [aiPrompt, setAiPrompt] = useState("");
+  const [loadingMessage, setLoadingMessage] = useState('Loading...');
+  const [aiPrompt, setAiPrompt] = useState('');
 
   const {
     formData,
@@ -28,25 +28,21 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     updateCard,
     updateFormField,
     generateImage,
-    error,
   } = useCardForm(deckId, cardId);
 
   useEffect(() => {
     if (isGeneratingAI) {
-      setLoadingMessage("Generating image with AI... This may take a moment.");
+      setLoadingMessage('Generating image with AI... This may take a moment.');
     } else if (isLoading) {
-      setLoadingMessage(cardId ? "Loading card..." : "Creating card...");
+      setLoadingMessage(cardId ? 'Loading card...' : 'Creating card...');
     }
   }, [isLoading, isGeneratingAI, cardId]);
 
   useEffect(() => {
     if (formToast) {
-      toast[formToast.type === "success" ? "success" : "error"](
-        formToast.type === "success" ? "Success" : "Error",
-        {
-          description: formToast.message,
-        }
-      );
+      toast[formToast.type === 'success' ? 'success' : 'error'](formToast.type === 'success' ? 'Success' : 'Error', {
+        description: formToast.message,
+      });
       setToast(null);
     }
   }, [formToast, setToast]);
@@ -62,17 +58,17 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     window.location.href = `/decks/${deckId}`;
   };
 
-  const handleGenerate = async (prompt: string, type: "front" | "back") => {
+  const handleGenerate = async (prompt: string, type: 'front' | 'back') => {
     const imageUrl = await generateImage(prompt, type);
     if (imageUrl) {
-      toast.success(`${type === "front" ? "Front" : "Back"} image generated successfully`);
+      toast.success(`${type === 'front' ? 'Front' : 'Back'} image generated successfully`);
     }
-    return imageUrl || "";
+    return imageUrl || '';
   };
 
   const isFormValid = !!formData.title;
   const showLoading = isLoading || isGeneratingAI;
-  const pageTitle = cardId ? "Edit Card" : "Create New Card";
+  const pageTitle = cardId ? 'Edit Card' : 'Create New Card';
 
   return (
     <div className="container max-w-4xl mx-auto py-8">
@@ -87,15 +83,17 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
             card={null} // TODO: Pass actual card data if needed
             isLoading={isLoading}
             initialData={formData}
-            onUpdate={(data: Partial<CardFormData>) => { updateFormField(data); }}
+            onUpdate={(data: Partial<CardFormData>) => {
+              updateFormField(data);
+            }}
           />
           <CardPreview
             cardData={{
               title: formData.title,
               description: formData.description,
               attributes: formData.attributes,
-              frontImageUrl: formData.frontImageUrl ?? "/images/default-card-front.jpeg",
-              backImageUrl: formData.backImageUrl ?? "/images/default-card-back.jpeg",
+              frontImageUrl: formData.frontImageUrl ?? '/images/default-card-front.jpeg',
+              backImageUrl: formData.backImageUrl ?? '/images/default-card-back.jpeg',
             }}
             viewMode="front"
           />

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { DeckCardsHeader } from "../../DeckCardsHeader";
-import { CardGrid } from "../CardGrid";
-import { EmptyState } from "../EmptyState";
-import { ErrorState } from "../../../common/ErrorState";
-import { LoadingState } from "../../../common/LoadingState";
-import { Pagination } from "../Pagination";
-import { DeleteConfirmationDialog } from "../DeleteConfirmationDialog";
-import { useCardList } from "@/hooks/useCardList";
-import * as deckApi from "@/lib/api/decks";
-import type { CardViewModel, DeckDTO, DeckViewModel } from "@/types";
+import { useEffect, useState } from 'react';
+import { DeckCardsHeader } from '../../DeckCardsHeader';
+import { CardGrid } from '../CardGrid';
+import { EmptyState } from '../EmptyState';
+import { ErrorState } from '../../../common/ErrorState';
+import { LoadingState } from '../../../common/LoadingState';
+import { Pagination } from '../Pagination';
+import { DeleteConfirmationDialog } from '../DeleteConfirmationDialog';
+import { useCardList } from '@/hooks/useCardList';
+import * as deckApi from '@/lib/api/decks';
+import type { CardViewModel, DeckDTO, DeckViewModel } from '@/types';
 
 interface DeckCardsListPageProps {
   deckId: string;
@@ -18,11 +18,9 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
   const {
     cards,
     pagination,
-    filters,
     isLoading,
     error,
     showDeleteDialog,
-    cardToDelete,
     exportStatus,
     fetchCards,
     addCard,
@@ -39,7 +37,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
   const [deck, setDeck] = useState<DeckDTO | null>(null);
   const [deckError, setDeckError] = useState<string | null>(null);
   const [isDeckLoading, setIsDeckLoading] = useState(true);
-  const [cardTitle, setCardTitle] = useState<string>("");
+  const [cardTitle] = useState<string>('');
 
   // Fetch deck details
   useEffect(() => {
@@ -51,39 +49,26 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
         const deckData = await deckApi.getDeckById(deckId);
         setDeck(deckData);
       } catch (err) {
-        setDeckError(err instanceof Error ? err.message : "Failed to fetch deck");
-        console.error("Error fetching deck:", err);
+        setDeckError(err instanceof Error ? err.message : 'Failed to fetch deck');
+        console.error('Error fetching deck:', err);
       } finally {
         setIsDeckLoading(false);
       }
     }
 
-    console.log("fetching deck data");
     fetchDeckData();
   }, [deckId]);
-
-  // useEffect(() => {
-  //   fetchCards();
-
-  //   // Find card title when a card is selected for deletion
-  //   if (cardToDelete) {
-  //     const card = cards.find((c: CardViewModel) => c.id === cardToDelete);
-  //     if (card) {
-  //       setCardTitle(card.title);
-  //     }
-  //   }
-  // }, [fetchCards, cardToDelete, cards]);
 
   // Handler for card options
   const handleCardOptionsClick = (option: string, card: CardViewModel) => {
     switch (option) {
-      case "edit":
+      case 'edit':
         editCard(card.id);
         break;
-      case "duplicate":
+      case 'duplicate':
         duplicateCard(card.id);
         break;
-      case "delete":
+      case 'delete':
         showDeleteConfirmation(card.id);
         break;
       default:
@@ -102,7 +87,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     ? {
         ...deck,
         cardCount: pagination.totalItems,
-        thumbnailUrl: deck.image_metadata_id ? `/api/images/${deck.image_metadata_id}` : "/placeholders/deck-cover.png",
+        thumbnailUrl: deck.image_metadata_id ? `/api/images/${deck.image_metadata_id}` : '/placeholders/deck-cover.png',
       }
     : undefined;
 

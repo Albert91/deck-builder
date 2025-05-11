@@ -2,13 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Search, ArrowUpDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { DeckFilterState, DeckSortOption } from '../../types';
 
 interface DeckFilterBarProps {
@@ -19,7 +13,7 @@ interface DeckFilterBarProps {
 
 export function DeckFilterBar({ filters, onFilterChange, sortOptions }: DeckFilterBarProps) {
   const [searchInput, setSearchInput] = useState(filters.search || '');
-  
+
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,21 +21,24 @@ export function DeckFilterBar({ filters, onFilterChange, sortOptions }: DeckFilt
         onFilterChange({ ...filters, search: searchInput });
       }
     }, 300);
-    
+
     return () => clearTimeout(timer);
   }, [searchInput, filters, onFilterChange]);
-  
+
   // Handle sort option change
-  const handleSortChange = useCallback((sortBy: string) => {
-    onFilterChange({ ...filters, sortBy });
-  }, [filters, onFilterChange]);
-  
+  const handleSortChange = useCallback(
+    (sortBy: string) => {
+      onFilterChange({ ...filters, sortBy });
+    },
+    [filters, onFilterChange]
+  );
+
   // Toggle sort direction (asc/desc)
   const toggleSortDirection = useCallback(() => {
     const newDirection = filters.sortOrder === 'asc' ? 'desc' : 'asc';
     onFilterChange({ ...filters, sortOrder: newDirection });
   }, [filters, onFilterChange]);
-  
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 py-4">
       {/* Search input */}
@@ -55,13 +52,10 @@ export function DeckFilterBar({ filters, onFilterChange, sortOptions }: DeckFilt
           onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
-      
+
       {/* Sort options */}
       <div className="flex items-center gap-2">
-        <Select
-          value={filters.sortBy}
-          onValueChange={handleSortChange}
-        >
+        <Select value={filters.sortBy} onValueChange={handleSortChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Sortuj według" />
           </SelectTrigger>
@@ -73,7 +67,7 @@ export function DeckFilterBar({ filters, onFilterChange, sortOptions }: DeckFilt
             ))}
           </SelectContent>
         </Select>
-        
+
         <Button
           variant="outline"
           size="icon"
@@ -85,4 +79,4 @@ export function DeckFilterBar({ filters, onFilterChange, sortOptions }: DeckFilt
       </div>
     </div>
   );
-} 
+}

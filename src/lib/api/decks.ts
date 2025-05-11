@@ -6,11 +6,11 @@ import type { DeckLimitInfo, DeckDTO, DeckListResponseDTO, CreateDeckCommand, Up
 export async function fetchDeckLimit(): Promise<DeckLimitInfo> {
   try {
     const response = await fetch('/api/decks/count');
-    
+
     if (!response.ok) {
       throw new Error('Nie udało się pobrać informacji o limicie');
     }
-    
+
     const data: DeckLimitInfo = await response.json();
     return data;
   } catch (error) {
@@ -23,27 +23,33 @@ export async function fetchDeckLimit(): Promise<DeckLimitInfo> {
 /**
  * Fetches a list of decks with pagination
  */
-export async function getDeckList(page: number = 1, limit: number = 12, search?: string, sortBy?: string, sortOrder?: 'asc' | 'desc'): Promise<DeckListResponseDTO> {
+export async function getDeckList(
+  page = 1,
+  limit = 12,
+  search?: string,
+  sortBy?: string,
+  sortOrder?: 'asc' | 'desc'
+): Promise<DeckListResponseDTO> {
   let url = `/api/decks?page=${page}&limit=${limit}`;
-  
+
   if (search) {
     url += `&search=${encodeURIComponent(search)}`;
   }
-  
+
   if (sortBy) {
     url += `&sortBy=${sortBy}`;
   }
-  
+
   if (sortOrder) {
     url += `&sortOrder=${sortOrder}`;
   }
-  
+
   const response = await fetch(url);
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch decks');
   }
-  
+
   return await response.json();
 }
 
@@ -52,7 +58,7 @@ export async function getDeckList(page: number = 1, limit: number = 12, search?:
  */
 export async function getDeckById(deckId: string): Promise<DeckDTO> {
   const response = await fetch(`/api/decks/${deckId}`);
-  
+
   if (!response.ok) {
     if (response.status === 404) {
       throw new Error('Talia nie istnieje');
@@ -62,7 +68,7 @@ export async function getDeckById(deckId: string): Promise<DeckDTO> {
       throw new Error('Wystąpił błąd podczas pobierania talii');
     }
   }
-  
+
   return await response.json();
 }
 
@@ -77,7 +83,7 @@ export async function createDeck(data: CreateDeckCommand): Promise<DeckDTO> {
     },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
     if (response.status === 403) {
       throw new Error('Osiągnięto limit talii');
@@ -85,7 +91,7 @@ export async function createDeck(data: CreateDeckCommand): Promise<DeckDTO> {
       throw new Error('Nie udało się utworzyć talii');
     }
   }
-  
+
   return await response.json();
 }
 
@@ -100,11 +106,11 @@ export async function updateDeck(deckId: string, data: UpdateDeckCommand): Promi
     },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
     throw new Error('Nie udało się zaktualizować talii');
   }
-  
+
   return await response.json();
 }
 
@@ -115,7 +121,7 @@ export async function deleteDeck(deckId: string): Promise<void> {
   const response = await fetch(`/api/decks/${deckId}`, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     throw new Error('Nie udało się usunąć talii');
   }
@@ -128,10 +134,10 @@ export async function shareDeck(deckId: string): Promise<{ shareUrl: string }> {
   const response = await fetch(`/api/decks/${deckId}/share`, {
     method: 'POST',
   });
-  
+
   if (!response.ok) {
     throw new Error('Nie udało się udostępnić talii');
   }
-  
+
   return await response.json();
-} 
+}

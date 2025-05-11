@@ -6,22 +6,12 @@ interface CardImageGenerateButtonProps {
   title: string;
 }
 
-export default function CardImageGenerateButton({
-  onGenerate,
-  isGenerating,
-  title
-}: CardImageGenerateButtonProps) {
+export default function CardImageGenerateButton({ onGenerate, isGenerating, title }: CardImageGenerateButtonProps) {
   return (
     <div className="space-y-2">
-      <p className="text-sm text-center text-muted-foreground">
-        Wygeneruj obraz dla karty przy pomocy AI
-      </p>
+      <p className="text-sm text-center text-muted-foreground">Wygeneruj obraz dla karty przy pomocy AI</p>
       <div className="flex justify-center">
-        <Button
-          onClick={onGenerate}
-          disabled={isGenerating || !title}
-          className="w-full sm:w-auto"
-        >
+        <Button onClick={onGenerate} disabled={isGenerating || !title} className="w-full sm:w-auto">
           {isGenerating ? (
             <>
               <svg
@@ -30,14 +20,7 @@ export default function CardImageGenerateButton({
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
@@ -51,11 +34,7 @@ export default function CardImageGenerateButton({
           )}
         </Button>
       </div>
-      {!title && (
-        <p className="text-xs text-center text-red-500">
-          Najpierw dodaj tytuł karty
-        </p>
-      )}
+      {!title && <p className="text-xs text-center text-red-500">Najpierw dodaj tytuł karty</p>}
     </div>
   );
-} 
+}

@@ -27,13 +27,13 @@ export default function ThemeToggle() {
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const root = document.documentElement;
-      
+
       if (theme === 'dark') {
         root.classList.add('dark');
       } else {
         root.classList.remove('dark');
       }
-      
+
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('theme', theme);
       }
@@ -41,7 +41,7 @@ export default function ThemeToggle() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
   };
 
   return (
@@ -56,4 +56,4 @@ export default function ThemeToggle() {
       <Moon className="h-5 w-5 hidden dark:block text-gray-800" />
     </Button>
   );
-} 
+}

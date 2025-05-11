@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface EmptyStateProps {
   onCreateDeck: () => void;
@@ -26,14 +26,11 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium mb-2">
-          {hasFilters ? 'Nie znaleziono talii' : 'Brak talii'}
-        </h3>
+        <h3 className="text-lg font-medium mb-2">{hasFilters ? 'Nie znaleziono talii' : 'Brak talii'}</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
-          {hasFilters 
+          {hasFilters
             ? 'Nie znaleziono żadnych talii spełniających kryteria wyszukiwania. Zmień filtry lub utwórz nową talię.'
-            : 'Nie masz jeszcze żadnych talii. Utwórz swoją pierwszą talię, aby rozpocząć.'
-          }
+            : 'Nie masz jeszcze żadnych talii. Utwórz swoją pierwszą talię, aby rozpocząć.'}
         </p>
         <Button onClick={onCreateDeck} size="lg">
           <svg
@@ -43,16 +40,11 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           {hasFilters ? 'Utwórz nową talię' : 'Utwórz pierwszą talię'}
         </Button>
       </CardContent>
     </Card>
   );
-} 
+}

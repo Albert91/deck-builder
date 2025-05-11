@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const searchDecksSchema = z.object({
   search: z.string().trim().optional(),
   sortBy: z.string().optional(),
-  sortOrder: z.enum(['asc', 'desc']).optional()
+  sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
 export type SearchDecksSchema = z.infer<typeof searchDecksSchema>;
@@ -15,4 +15,4 @@ export const createDeckSchema = z.object({
 export type CreateDeckSchema = z.infer<typeof createDeckSchema>;
 
 export const deckIdSchema = z.string().uuid('Identyfikator talii musi być poprawnym UUID');
-export type DeckIdSchema = z.infer<typeof deckIdSchema>; 
+export type DeckIdSchema = z.infer<typeof deckIdSchema>;

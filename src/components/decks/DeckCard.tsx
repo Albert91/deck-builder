@@ -3,13 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { pl } from 'date-fns/locale';
 import { Pencil, Copy, Share2, Trash2 } from 'lucide-react';
 import type { DeckViewModel } from '../../types';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -21,7 +15,7 @@ export interface DeckCardProps {
 
 export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
   const [isImageError, setIsImageError] = useState(false);
-  
+
   // Format date as "X time ago" in Polish
   const formattedDate = formatDistanceToNow(new Date(deck.updated_at), {
     addSuffix: true,
@@ -30,17 +24,20 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
 
   // Format card count with proper Polish plural form
   const cardCountText = `${deck.cardCount} ${
-    deck.cardCount === 1 ? 'karta' : 
-    deck.cardCount % 10 >= 2 && deck.cardCount % 10 <= 4 && (deck.cardCount % 100 < 10 || deck.cardCount % 100 >= 20) ? 'karty' : 'kart'
+    deck.cardCount === 1
+      ? 'karta'
+      : deck.cardCount % 10 >= 2 &&
+          deck.cardCount % 10 <= 4 &&
+          (deck.cardCount % 100 < 10 || deck.cardCount % 100 >= 20)
+        ? 'karty'
+        : 'kart'
   }`;
 
   // Determine the fallback image if the thumbnail fails to load
-  const thumbnailUrl = isImageError 
-    ? '/assets/deck-placeholder.jpg'
-    : deck.thumbnailUrl;
+  const thumbnailUrl = isImageError ? '/images/default-card-back.jpeg' : deck.thumbnailUrl;
 
   return (
-    <Card 
+    <Card
       className="group h-full overflow-hidden transition-all hover:shadow-md cursor-pointer"
       onClick={(e) => {
         // Prevent click when clicking on action buttons
@@ -52,18 +49,18 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
     >
       <div className="relative overflow-hidden">
         <img
-          src={'/images/default-card-back.jpeg'}
+          src={thumbnailUrl}
           alt={`Miniatura talii ${deck.name}`}
           className="h-full w-full"
           onError={() => setIsImageError(true)}
         />
       </div>
-      
+
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-xl line-clamp-1">{deck.name}</CardTitle>
-          
-          <div className="flex space-x-1" onClick={(e) => e.stopPropagation()}>
+
+          <div className="flex space-x-1">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -82,7 +79,7 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                   <p>Edytuj talię</p>
                 </TooltipContent>
               </Tooltip>
-              
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -100,7 +97,7 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                   <p>Duplikuj talię</p>
                 </TooltipContent>
               </Tooltip>
-              
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -118,7 +115,7 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                   <p>Udostępnij talię</p>
                 </TooltipContent>
               </Tooltip>
-              
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -140,16 +137,14 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="pb-2">
         <p className="text-sm text-muted-foreground">{cardCountText}</p>
       </CardContent>
-      
+
       <CardFooter className="pt-0">
-        <p className="text-xs text-muted-foreground">
-          Aktualizacja: {formattedDate}
-        </p>
+        <p className="text-xs text-muted-foreground">Aktualizacja: {formattedDate}</p>
       </CardFooter>
     </Card>
   );
-} 
+}

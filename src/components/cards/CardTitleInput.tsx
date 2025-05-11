@@ -14,9 +14,7 @@ export default function CardTitleInput({ value, onChange, error }: CardTitleInpu
         <Label htmlFor="title" className="text-sm font-medium">
           Tytuł karty
         </Label>
-        <span className="text-xs text-muted-foreground">
-          {value.length}/100
-        </span>
+        <span className="text-xs text-muted-foreground">{value.length}/100</span>
       </div>
       <Input
         id="title"
@@ -35,4 +33,4 @@ export default function CardTitleInput({ value, onChange, error }: CardTitleInpu
       )}
     </div>
   );
-} 
+}

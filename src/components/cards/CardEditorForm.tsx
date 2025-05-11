@@ -16,19 +16,13 @@ interface CardEditorFormProps {
   onUpdate: (data: Partial<CardFormData>) => void;
 }
 
-export default function CardEditorForm({
-  deckId,
-  card,
-  isLoading,
-  initialData,
-  onUpdate,
-}: CardEditorFormProps) {
+export default function CardEditorForm({ deckId, card, isLoading, initialData, onUpdate }: CardEditorFormProps) {
   const [formData, setFormData] = useState<CardFormData>(initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   // Local dirty state for debounced save
   const [isDirty, setIsDirty] = useState(false);
-  
+
   // Update local form data when initialData changes
   useEffect(() => {
     setFormData(initialData);
@@ -63,8 +57,8 @@ export default function CardEditorForm({
   // Handle form field changes
   const handleFieldChange = (field: keyof CardFormData, value: any) => {
     // Validate inputs
-    let fieldErrors = { ...errors };
-    
+    const fieldErrors = { ...errors };
+
     if (field === 'title') {
       if (!value) {
         fieldErrors.title = 'Tytuł jest wymagany';
@@ -74,7 +68,7 @@ export default function CardEditorForm({
         delete fieldErrors.title;
       }
     }
-    
+
     if (field === 'description') {
       if (value && value.length > 500) {
         fieldErrors.description = 'Opis nie może być dłuższy niż 500 znaków';
@@ -84,11 +78,11 @@ export default function CardEditorForm({
     }
 
     setErrors(fieldErrors);
-    
+
     // Update form data
-    const updatedData = { 
+    const updatedData = {
       ...formData,
-      [field]: value
+      [field]: value,
     };
     setFormData(updatedData);
     setIsDirty(true);
@@ -99,11 +93,11 @@ export default function CardEditorForm({
   const handleAttributeChange = (attribute: keyof CardFormData['attributes'], value: number) => {
     const updatedAttributes = {
       ...formData.attributes,
-      [attribute]: value
+      [attribute]: value,
     };
     setFormData({
       ...formData,
-      attributes: updatedAttributes
+      attributes: updatedAttributes,
     });
     setIsDirty(true);
     onUpdate({ attributes: updatedAttributes });
@@ -136,19 +130,16 @@ export default function CardEditorForm({
             onChange={(value) => handleFieldChange('title', value)}
             error={errors.title}
           />
-          
+
           <CardDescriptionTextarea
             value={formData.description || ''}
             onChange={(value) => handleFieldChange('description', value)}
             error={errors.description}
           />
-          
-          <CardAttributesSliders
-            attributes={formData.attributes}
-            onChange={handleAttributeChange}
-          />
+
+          <CardAttributesSliders attributes={formData.attributes} onChange={handleAttributeChange} />
         </div>
       </CardContent>
     </Card>
   );
-} 
+}

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ErrorStateProps {
   message: string;
@@ -48,4 +48,4 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
       </CardContent>
     </Card>
   );
-} 
+}

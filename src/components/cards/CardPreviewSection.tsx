@@ -25,27 +25,22 @@ interface CardPreviewSectionProps {
   onImageGenerated?: (imageUrl: string) => void;
 }
 
-export default function CardPreviewSection({
-  deckId,
-  cardId,
-  cardData,
-  onImageGenerated,
-}: CardPreviewSectionProps) {
+export default function CardPreviewSection({ cardId, cardData, onImageGenerated }: CardPreviewSectionProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
 
   // Handle image generation
   const handleGenerateImage = async () => {
     if (!cardId) return;
-    
+
     try {
       setIsGenerating(true);
       // Will implement actual image generation later
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Mock generated URL for now
       const mockImageUrl = `https://example.com/generated-image-${Date.now()}.jpg`;
-      
+
       if (onImageGenerated) {
         onImageGenerated(mockImageUrl);
       }
@@ -69,11 +64,7 @@ export default function CardPreviewSection({
             >
               Awers
             </Button>
-            <Button
-              size="sm"
-              variant={viewMode === 'back' ? 'default' : 'outline'}
-              onClick={() => setViewMode('back')}
-            >
+            <Button size="sm" variant={viewMode === 'back' ? 'default' : 'outline'} onClick={() => setViewMode('back')}>
               Rewers
             </Button>
           </div>
@@ -81,11 +72,8 @@ export default function CardPreviewSection({
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <CardPreview
-            cardData={cardData}
-            viewMode={viewMode}
-          />
-          
+          <CardPreview cardData={cardData} viewMode={viewMode} />
+
           {cardId && (
             <CardImageGenerateButton
               onGenerate={handleGenerateImage}
@@ -97,4 +85,4 @@ export default function CardPreviewSection({
       </CardContent>
     </Card>
   );
-} 
+}

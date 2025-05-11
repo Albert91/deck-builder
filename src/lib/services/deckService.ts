@@ -12,7 +12,7 @@ export async function listDecks(
   params: SearchParams
 ): Promise<DeckListResponseDTO> {
   const { search } = params;
-  
+
   const query = supabase
     .from('decks')
     .select('id, name, share_hash, created_at, updated_at', { count: 'exact' })
@@ -21,7 +21,7 @@ export async function listDecks(
   if (search) {
     query.textSearch('name_tsv', search, { config: 'english' });
   }
-  
+
   // Add sorting if specified in params
   if (params.sortBy) {
     const sortOrder = params.sortOrder === 'asc' ? 'asc' : 'desc';
@@ -39,19 +39,19 @@ export async function listDecks(
   }
 
   // Convert the database results to DeckDTO objects
-  const items: DeckDTO[] = (data || []).map(deck => ({
+  const items: DeckDTO[] = (data || []).map((deck) => ({
     id: deck.id,
     name: deck.name,
     share_hash: deck.share_hash,
     created_at: deck.created_at,
-    updated_at: deck.updated_at
+    updated_at: deck.updated_at,
   }));
 
   return {
     items,
     totalCount: count || 0,
     page: 1,
-    limit: items.length
+    limit: items.length,
   };
 }
 
@@ -78,17 +78,14 @@ export async function deleteDeck(
 
   // Check if user is the owner
   if (deck.owner_id !== userId) {
-    return { 
-      success: false, 
-      error: 'User is not the owner of this deck' 
+    return {
+      success: false,
+      error: 'User is not the owner of this deck',
     };
   }
 
   // Delete the deck (cascade deletion will handle cards)
-  const { error: deleteError } = await supabase
-    .from('decks')
-    .delete()
-    .eq('id', deckId);
+  const { error: deleteError } = await supabase.from('decks').delete().eq('id', deckId);
 
   if (deleteError) {
     console.error('Error deleting deck:', deleteError);
@@ -102,10 +99,7 @@ export async function deleteDeck(
  * Gets the count of decks owned by a user.
  * Used to enforce the deck limit per user.
  */
-export async function getUserDeckCount(
-  supabase: SupabaseClient,
-  userId: string
-): Promise<number> {
+export async function getUserDeckCount(supabase: SupabaseClient, userId: string): Promise<number> {
   const { count, error } = await supabase
     .from('decks')
     .select('*', { count: 'exact', head: true })
@@ -123,17 +117,13 @@ export async function getUserDeckCount(
  * Creates a new deck for a user.
  * The share_hash will be generated automatically by a database trigger.
  */
-export async function createDeck(
-  supabase: SupabaseClient,
-  userId: string,
-  data: CreateDeckCommand
-): Promise<DeckDTO> {
+export async function createDeck(supabase: SupabaseClient, userId: string, data: CreateDeckCommand): Promise<DeckDTO> {
   // Create the new deck
   const { data: deck, error } = await supabase
     .from('decks')
     .insert({
       name: data.name,
-      owner_id: userId
+      owner_id: userId,
     })
     .select('id, name, share_hash, created_at, updated_at')
     .single();
@@ -149,11 +139,7 @@ export async function createDeck(
 /**
  * Pobiera talię na podstawie ID z weryfikacją właściciela
  */
-export async function getDeckById(
-  supabase: SupabaseClient,
-  userId: string,
-  deckId: string
-): Promise<DeckDTO> {
+export async function getDeckById(supabase: SupabaseClient, userId: string, deckId: string): Promise<DeckDTO> {
   const { data, error } = await supabase
     .from('decks')
     .select('id, name, share_hash, created_at, updated_at, owner_id')
@@ -171,4 +157,4 @@ export async function getDeckById(
   }
 
   return mapToDeckDTO(data as Deck);
-} 
+}

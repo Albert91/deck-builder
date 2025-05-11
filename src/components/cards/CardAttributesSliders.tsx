@@ -11,14 +11,11 @@ interface CardAttributesSlidersProps {
   onChange: (attribute: keyof CardAttributes, value: number) => void;
 }
 
-export default function CardAttributesSliders({
-  attributes,
-  onChange,
-}: CardAttributesSlidersProps) {
+export default function CardAttributesSliders({ attributes, onChange }: CardAttributesSlidersProps) {
   return (
     <div className="space-y-4 pt-2">
       <h3 className="text-sm font-medium">Atrybuty karty</h3>
-      
+
       <div className="space-y-6">
         <AttributeSlider
           name="strength"
@@ -28,7 +25,7 @@ export default function CardAttributesSliders({
           min={0}
           max={99}
         />
-        
+
         <AttributeSlider
           name="defense"
           label="Obrona"
@@ -37,7 +34,7 @@ export default function CardAttributesSliders({
           min={0}
           max={99}
         />
-        
+
         <AttributeSlider
           name="health"
           label="Zdrowie"
@@ -49,4 +46,4 @@ export default function CardAttributesSliders({
       </div>
     </div>
   );
-} 
+}

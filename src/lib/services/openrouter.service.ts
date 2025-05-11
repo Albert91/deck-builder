@@ -5,14 +5,14 @@ import type {
   Message,
   OpenRouterPayload,
   OpenRouterResponse,
-  ResponseFormat
+  ResponseFormat,
 } from './openrouter.types';
 import {
   OpenRouterAuthError,
   OpenRouterError,
   OpenRouterRateLimitError,
   OpenRouterServerError,
-  OpenRouterValidationError
+  OpenRouterValidationError,
 } from './openrouter.types';
 
 // Validation schemas
@@ -21,8 +21,8 @@ const responseFormatSchema = z.object({
   json_schema: z.object({
     name: z.string(),
     strict: z.boolean(),
-    schema: z.record(z.unknown())
-  })
+    schema: z.record(z.unknown()),
+  }),
 });
 
 const chatCompletionInputSchema = z.object({
@@ -30,14 +30,14 @@ const chatCompletionInputSchema = z.object({
   userPrompt: z.string(),
   model: z.string().optional(),
   params: z.record(z.unknown()).optional(),
-  responseFormat: responseFormatSchema.optional()
+  responseFormat: responseFormatSchema.optional(),
 });
 
 // OpenRouter service
 export class OpenRouterService {
   private readonly _logger?: Console;
   private readonly _baseUrl = 'https://openrouter.ai/api/v1';
-  
+
   // Configuration state
   private _config: {
     apiKey: string;
@@ -49,7 +49,7 @@ export class OpenRouterService {
     apiKey,
     defaultModel,
     defaultParams,
-    logger = console
+    logger = console,
   }: {
     apiKey: string;
     defaultModel?: string;
@@ -59,13 +59,13 @@ export class OpenRouterService {
     if (!apiKey) {
       throw new OpenRouterAuthError('API key is required');
     }
-    
+
     this._config = {
       apiKey,
       defaultModel,
-      defaultParams
+      defaultParams,
     };
-    
+
     this._logger = logger;
   }
 
@@ -124,7 +124,7 @@ export class OpenRouterService {
     try {
       // Validate input
       const validatedInput = chatCompletionInputSchema.parse(input);
-      
+
       // Use model from input or default
       const model = validatedInput.model || this._config.defaultModel;
       if (!model) {
@@ -134,7 +134,7 @@ export class OpenRouterService {
       // Build request payload with validated input and model
       const inputWithModel = { ...validatedInput, model };
       const payload = this._buildRequestPayload(inputWithModel);
-      
+
       // Call OpenRouter API
       const response = await this._callOpenRouterApi(payload);
 
@@ -144,9 +144,10 @@ export class OpenRouterService {
       }
 
       // Extract content from response
-      const content = validatedInput.responseFormat?.type === 'json_schema'
-        ? JSON.parse(response.choices[0].message.content)
-        : response.choices[0].message.content;
+      const content =
+        validatedInput.responseFormat?.type === 'json_schema'
+          ? JSON.parse(response.choices[0].message.content)
+          : response.choices[0].message.content;
 
       // Return formatted result
       return {
@@ -155,9 +156,9 @@ export class OpenRouterService {
         usage: {
           promptTokens: response.usage.prompt_tokens,
           completionTokens: response.usage.completion_tokens,
-          totalTokens: response.usage.total_tokens
+          totalTokens: response.usage.total_tokens,
         },
-        id: response.id
+        id: response.id,
       };
     } catch (error) {
       return this._handleError(error);
@@ -174,7 +175,7 @@ export class OpenRouterService {
     // Create messages array with system and user prompts
     const messages: Message[] = [
       { role: 'system', content: input.systemPrompt },
-      { role: 'user', content: input.userPrompt }
+      { role: 'user', content: input.userPrompt },
     ];
 
     // Create base payload with required fields
@@ -190,9 +191,9 @@ export class OpenRouterService {
 
     // Merge default params with provided params
     const params = { ...this._config.defaultParams, ...input.params };
-    
+
     // Add all params to payload
-    Object.keys(params).forEach(key => {
+    Object.keys(params).forEach((key) => {
       payload[key] = params[key];
     });
 
@@ -207,23 +208,23 @@ export class OpenRouterService {
    */
   private async _callOpenRouterApi(payload: OpenRouterPayload): Promise<OpenRouterResponse> {
     const endpoint = `${this._baseUrl}/chat/completions`;
-    
+
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this._config.apiKey}`,
+          Authorization: `Bearer ${this._config.apiKey}`,
           'HTTP-Referer': 'https://deck-builder.app', // For tracking in OpenRouter
-          'X-Title': 'Deck Builder App' // For tracking in OpenRouter
+          'X-Title': 'Deck Builder App', // For tracking in OpenRouter
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       // Handle HTTP errors
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        
+
         // Handle specific error status codes
         switch (response.status) {
           case 401:
@@ -237,7 +238,9 @@ export class OpenRouterService {
           case 504:
             throw new OpenRouterServerError('OpenRouter server error');
           default:
-            throw new OpenRouterError(`API error (${response.status}): ${errorData?.error?.message || response.statusText}`);
+            throw new OpenRouterError(
+              `API error (${response.status}): ${errorData?.error?.message || response.statusText}`
+            );
         }
       }
 
@@ -249,7 +252,7 @@ export class OpenRouterService {
       if (error instanceof OpenRouterError) {
         throw error;
       }
-      
+
       // Handle network or parsing errors
       throw new OpenRouterError(`Network or parsing error: ${(error as Error).message}`);
     }
@@ -274,13 +277,13 @@ export class OpenRouterService {
       try {
         const content = response.choices[0].message.content;
         const parsedContent = JSON.parse(content);
-        
+
         // Basic check for JSON structure
         if (typeof parsedContent !== 'object' || parsedContent === null) {
           this._logger?.error('Invalid JSON response', { content });
           return false;
         }
-        
+
         // We could add more schema validation here if needed
         return true;
       } catch (error) {
@@ -301,22 +304,22 @@ export class OpenRouterService {
    */
   private _handleError(error: unknown): never {
     // Log the error (sanitize sensitive data)
-    this._logger?.error('OpenRouter service error', { 
+    this._logger?.error('OpenRouter service error', {
       name: error instanceof Error ? error.name : 'Unknown error',
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     });
-    
+
     // Re-throw OpenRouter errors
     if (error instanceof OpenRouterError) {
       throw error;
     }
-    
+
     // Handle validation errors from zod
     if (error instanceof z.ZodError) {
-      throw new OpenRouterValidationError(`Validation error: ${error.errors.map(e => e.message).join(', ')}`);
+      throw new OpenRouterValidationError(`Validation error: ${error.errors.map((e) => e.message).join(', ')}`);
     }
-    
+
     // Handle other errors
     throw new OpenRouterError(`Unexpected error: ${(error as Error)?.message || String(error)}`);
   }
-} 
+}

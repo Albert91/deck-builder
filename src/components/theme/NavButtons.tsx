@@ -10,25 +10,17 @@ export default function NavButtons() {
   // Check if current page is auth-related
   useEffect(() => {
     const pathname = window.location.pathname;
-    const authPages = [
-      '/login', 
-      '/register', 
-      '/forgot-password', 
-      '/reset-password'
-    ];
-    
+    const authPages = ['/login', '/register', '/forgot-password', '/reset-password'];
+
     // Check if the current path starts with any of the auth pages
-    const isAuth = authPages.some(page => 
-      pathname === page || 
-      pathname.startsWith(`${page}/`)
-    );
-    
+    const isAuth = authPages.some((page) => pathname === page || pathname.startsWith(`${page}/`));
+
     setIsAuthPage(isAuth);
   }, []);
 
   const handleLogout = async () => {
     setIsLoading(true);
-    
+
     try {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
@@ -36,7 +28,7 @@ export default function NavButtons() {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (response.ok) {
         window.location.href = '/login';
       } else {
@@ -66,4 +58,4 @@ export default function NavButtons() {
       <ThemeToggle />
     </div>
   );
-} 
+}

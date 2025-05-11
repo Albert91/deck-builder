@@ -1,23 +1,20 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CardLimitDisplayProps {
   currentCount: number;
   maxLimit?: number;
 }
 
-export function CardLimitDisplay({
-  currentCount,
-  maxLimit = 100
-}: CardLimitDisplayProps) {
+export function CardLimitDisplay({ currentCount, maxLimit = 100 }: CardLimitDisplayProps) {
   // Calculate progress percentage for the progress bar
   const progressPercentage = Math.min((currentCount / maxLimit) * 100, 100);
-  
+
   // Determine color based on progress
-  let progressColor = "bg-green-500";
+  let progressColor = 'bg-green-500';
   if (progressPercentage > 90) {
-    progressColor = "bg-red-500";
+    progressColor = 'bg-red-500';
   } else if (progressPercentage > 70) {
-    progressColor = "bg-yellow-500";
+    progressColor = 'bg-yellow-500';
   }
 
   return (
@@ -26,10 +23,12 @@ export function CardLimitDisplay({
         <div className="flex flex-col gap-1 w-full max-w-xs">
           <div className="flex  text-xs text-muted-foreground gap-2">
             <span>Karty</span>
-            <span aria-live="polite">{currentCount}/{maxLimit}</span>
+            <span aria-live="polite">
+              {currentCount}/{maxLimit}
+            </span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div 
+            <div
               className={`h-full rounded-full ${progressColor} transition-all duration-300 ease-in-out`}
               style={{ width: `${progressPercentage}%` }}
               role="progressbar"
@@ -41,10 +40,8 @@ export function CardLimitDisplay({
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        {currentCount === maxLimit 
-          ? "Osiągnięto limit kart" 
-          : `Możesz dodać jeszcze ${maxLimit - currentCount} kart`}
+        {currentCount === maxLimit ? 'Osiągnięto limit kart' : `Możesz dodać jeszcze ${maxLimit - currentCount} kart`}
       </TooltipContent>
     </Tooltip>
   );
-} 
+}

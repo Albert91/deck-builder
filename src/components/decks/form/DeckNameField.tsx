@@ -1,6 +1,6 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface DeckNameFieldProps {
   name: string;
@@ -8,11 +8,7 @@ interface DeckNameFieldProps {
   error?: string;
 }
 
-export const DeckNameField: React.FC<DeckNameFieldProps> = ({
-  name,
-  onChange,
-  error
-}) => {
+export const DeckNameField: React.FC<DeckNameFieldProps> = ({ name, onChange, error }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -28,9 +24,9 @@ export const DeckNameField: React.FC<DeckNameFieldProps> = ({
         value={name}
         onChange={handleChange}
         placeholder="Enter deck name"
-        className={error ? "border-red-500" : ""}
+        className={error ? 'border-red-500' : ''}
         aria-invalid={!!error}
-        aria-describedby={error ? "deck-name-error" : undefined}
+        aria-describedby={error ? 'deck-name-error' : undefined}
       />
       {error && (
         <p id="deck-name-error" className="text-sm text-red-500">
@@ -39,4 +35,4 @@ export const DeckNameField: React.FC<DeckNameFieldProps> = ({
       )}
     </div>
   );
-}; 
+};

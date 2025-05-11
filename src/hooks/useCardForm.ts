@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import type { CardDTO, Toast, CreateCardCommand, UpdateCardCommand, CardAttributeDTO } from "@/types";
+import { useState, useEffect } from 'react';
+import type { CardDTO, Toast, CreateCardCommand, UpdateCardCommand } from '@/types';
 
 export interface CardFormData {
   title: string;
@@ -15,11 +15,11 @@ export interface CardFormData {
 
 export const useCardForm = (deckId: string, cardId?: string) => {
   const [formData, setFormData] = useState<CardFormData>({
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     attributes: { strength: 0, defense: 0, health: 0 },
     frontImageUrl: undefined,
-    backImageUrl: undefined
+    backImageUrl: undefined,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
@@ -40,27 +40,27 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     try {
       const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`);
       if (!response.ok) {
-        throw new Error("Failed to load card");
+        throw new Error('Failed to load card');
       }
       const cardData: CardDTO = await response.json();
       setFormData({
         title: cardData.title,
-        description: cardData.description || "",
+        description: cardData.description || '',
         attributes: {
-          strength: cardData.attributes?.find(a => a.attribute_type === "strength")?.value || 0,
-          defense: cardData.attributes?.find(a => a.attribute_type === "defense")?.value || 0,
-          health: cardData.attributes?.find(a => a.attribute_type === "health")?.value || 0,
+          strength: cardData.attributes?.find((a) => a.attribute_type === 'strength')?.value || 0,
+          defense: cardData.attributes?.find((a) => a.attribute_type === 'defense')?.value || 0,
+          health: cardData.attributes?.find((a) => a.attribute_type === 'health')?.value || 0,
         },
         frontImageUrl: undefined, // To be loaded separately if needed
         backImageUrl: undefined,
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
       setError(errorMessage);
       setToast({
-        type: "error",
+        type: 'error',
         message: errorMessage,
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
       });
     } finally {
       setIsLoading(false);
@@ -70,11 +70,11 @@ export const useCardForm = (deckId: string, cardId?: string) => {
   // Create a new card
   const createCard = async (): Promise<string | null> => {
     if (!formData.title) {
-      setError("Title is required");
+      setError('Title is required');
       setToast({
-        type: "error",
-        message: "Please provide a title for your card",
-        id: crypto.randomUUID()
+        type: 'error',
+        message: 'Please provide a title for your card',
+        id: crypto.randomUUID(),
       });
       return null;
     }
@@ -83,30 +83,30 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     try {
       const createCommand: CreateCardCommand = {
         title: formData.title,
-        description: formData.description || null
+        description: formData.description || null,
       };
       const response = await fetch(`/api/decks/${deckId}/cards`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(createCommand)
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createCommand),
       });
       if (!response.ok) {
-        throw new Error("Failed to create card");
+        throw new Error('Failed to create card');
       }
       const newCard: CardDTO = await response.json();
       setToast({
-        type: "success",
-        message: "Card created successfully",
-        id: crypto.randomUUID()
+        type: 'success',
+        message: 'Card created successfully',
+        id: crypto.randomUUID(),
       });
       return newCard.id;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
       setError(errorMessage);
       setToast({
-        type: "error",
+        type: 'error',
         message: errorMessage,
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
       });
       return null;
     } finally {
@@ -118,7 +118,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
   const updateCard = async () => {
     if (!cardId) return;
     if (!formData.title) {
-      setError("Title is required");
+      setError('Title is required');
       return;
     }
     setIsLoading(true);
@@ -126,28 +126,28 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     try {
       const updateCommand: UpdateCardCommand = {
         title: formData.title,
-        description: formData.description || null
+        description: formData.description || null,
       };
       const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateCommand)
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateCommand),
       });
       if (!response.ok) {
-        throw new Error("Failed to update card");
+        throw new Error('Failed to update card');
       }
       setToast({
-        type: "success",
-        message: "Changes saved",
-        id: crypto.randomUUID()
+        type: 'success',
+        message: 'Changes saved',
+        id: crypto.randomUUID(),
       });
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
       setError(errorMessage);
       setToast({
-        type: "error",
+        type: 'error',
         message: errorMessage,
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
       });
     } finally {
       setIsLoading(false);
@@ -156,7 +156,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
 
   // Update a single form field
   const updateFormField = (data: Partial<CardFormData>) => {
-    setFormData(prev => ({ ...prev, ...data }));
+    setFormData((prev) => ({ ...prev, ...data }));
     // Auto-save if editing an existing card after a short delay
     if (cardId) {
       const debounceTimer = setTimeout(() => {
@@ -167,36 +167,36 @@ export const useCardForm = (deckId: string, cardId?: string) => {
   };
 
   // Generate image using AI
-  const generateImage = async (prompt: string, type: "front" | "back"): Promise<string | null> => {
+  const generateImage = async (prompt: string, type: 'front' | 'back'): Promise<string | null> => {
     if (!prompt) {
-      setError("Prompt is required");
+      setError('Prompt is required');
       return null;
     }
     setIsGeneratingAI(true);
     setError(null);
     try {
-      const response = await fetch("/api/ai/generate-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, type })
+      const response = await fetch('/api/ai/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, type }),
       });
       if (!response.ok) {
-        throw new Error("Failed to generate image");
+        throw new Error('Failed to generate image');
       }
       const result = await response.json();
       const imageUrl = result.imageUrl;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [type === "front" ? "frontImageUrl" : "backImageUrl"]: imageUrl
+        [type === 'front' ? 'frontImageUrl' : 'backImageUrl']: imageUrl,
       }));
       return imageUrl;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
       setError(errorMessage);
       setToast({
-        type: "error",
+        type: 'error',
         message: errorMessage,
-        id: crypto.randomUUID()
+        id: crypto.randomUUID(),
       });
       return null;
     } finally {
@@ -215,6 +215,6 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     createCard,
     updateCard,
     updateFormField,
-    generateImage
+    generateImage,
   };
-}; 
+};

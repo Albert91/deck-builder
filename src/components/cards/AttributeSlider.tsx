@@ -12,14 +12,7 @@ interface AttributeSliderProps {
   max: number;
 }
 
-export default function AttributeSlider({
-  name,
-  label,
-  value,
-  onChange,
-  min,
-  max,
-}: AttributeSliderProps) {
+export default function AttributeSlider({ name, label, value, onChange, min, max }: AttributeSliderProps) {
   const [localValue, setLocalValue] = useState<number>(value);
 
   const handleSliderChange = (newValue: number[]) => {
@@ -30,24 +23,24 @@ export default function AttributeSlider({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    
+
     // Allow empty input for easier editing
     if (inputValue === '') {
       setLocalValue(0);
       return;
     }
-    
+
     // Parse and validate the value
     let numericValue = parseInt(inputValue, 10);
-    
+
     // Ensure it's a valid number
     if (isNaN(numericValue)) {
       return;
     }
-    
+
     // Clamp the value between min and max
     numericValue = Math.max(min, Math.min(max, numericValue));
-    
+
     setLocalValue(numericValue);
     onChange(numericValue);
   };
@@ -83,4 +76,4 @@ export default function AttributeSlider({
       />
     </div>
   );
-} 
+}

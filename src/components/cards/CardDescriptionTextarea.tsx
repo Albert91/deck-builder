@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 
 interface CardDescriptionTextareaProps {
@@ -14,9 +13,7 @@ export default function CardDescriptionTextarea({ value, onChange, error }: Card
         <Label htmlFor="description" className="text-sm font-medium">
           Opis karty
         </Label>
-        <span className="text-xs text-muted-foreground">
-          {value.length}/500
-        </span>
+        <span className="text-xs text-muted-foreground">{value.length}/500</span>
       </div>
       <textarea
         id="description"
@@ -37,4 +34,4 @@ export default function CardDescriptionTextarea({ value, onChange, error }: Card
       )}
     </div>
   );
-} 
+}

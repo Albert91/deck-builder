@@ -1,14 +1,11 @@
-import React from "react";
+import React from 'react';
 
 interface LoadingOverlayProps {
   isLoading: boolean;
   message: string;
 }
 
-export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
-  isLoading,
-  message
-}) => {
+export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ isLoading, message }) => {
   if (!isLoading) return null;
 
   return (
@@ -17,11 +14,11 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
         <div className="flex flex-col items-center gap-4">
           {/* Spinner */}
           <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full" />
-          
+
           {/* Message */}
           <p className="text-lg font-medium">{message}</p>
         </div>
       </div>
     </div>
   );
-}; 
+};

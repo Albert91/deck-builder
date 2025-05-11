@@ -15,35 +15,33 @@ const PUBLIC_PATHS = [
   '/api/auth/forgot-password',
 ];
 
-export const onRequest = defineMiddleware(
-  async ({ locals, cookies, url, request, redirect }, next) => {
-    // Tworzenie klienta Supabase dla tego żądania
-    const supabase = createSupabaseServerClient({
-      cookies,
-      headers: request.headers,
-    });
-    
-    // Dodanie klienta Supabase do kontekstu
-    locals.supabase = supabase;
+export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
+  // Tworzenie klienta Supabase dla tego żądania
+  const supabase = createSupabaseServerClient({
+    cookies,
+    headers: request.headers,
+  });
 
-    // Sprawdzenie, czy ścieżka jest publiczna
-    const isPublicPath = PUBLIC_PATHS.some(path => 
-      url.pathname === path || url.pathname.startsWith('/assets/')
-    );
+  // Dodanie klienta Supabase do kontekstu
+  locals.supabase = supabase;
 
-    // Pobieranie informacji o użytkowniku
-    const { data: { user } } = await supabase.auth.getUser();
+  // Sprawdzenie, czy ścieżka jest publiczna
+  const isPublicPath = PUBLIC_PATHS.some((path) => url.pathname === path || url.pathname.startsWith('/assets/'));
 
-    if (user) {
-      // Jeśli użytkownik jest zalogowany, dodaj go do kontekstu
-      locals.user = {
-        id: user.id,
-      };
-    } else if (!isPublicPath) {
-      // Jeśli użytkownik nie jest zalogowany i próbuje uzyskać dostęp do chronionej trasy
-      return redirect('/login');
-    }
+  // Pobieranie informacji o użytkowniku
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-    return next();
+  if (user) {
+    // Jeśli użytkownik jest zalogowany, dodaj go do kontekstu
+    locals.user = {
+      id: user.id,
+    };
+  } else if (!isPublicPath) {
+    // Jeśli użytkownik nie jest zalogowany i próbuje uzyskać dostęp do chronionej trasy
+    return redirect('/login');
   }
-); 
+
+  return next();
+});

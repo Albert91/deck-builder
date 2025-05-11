@@ -7,7 +7,7 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     setIsLoading(true);
-    
+
     try {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
@@ -15,7 +15,7 @@ export default function LogoutButton() {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (response.ok) {
         window.location.href = '/login';
       } else {
@@ -40,4 +40,4 @@ export default function LogoutButton() {
       <LogOut className="h-5 w-5 text-white" />
     </Button>
   );
-} 
+}

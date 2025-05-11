@@ -5,5 +5,5 @@ export const mapToDeckDTO = (deck: Deck): DeckDTO => ({
   name: deck.name,
   share_hash: deck.share_hash,
   created_at: deck.created_at,
-  updated_at: deck.updated_at
-}); 
+  updated_at: deck.updated_at,
+});

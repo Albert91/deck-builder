@@ -7,35 +7,35 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       cookies,
       headers: request.headers,
     });
-    
+
     const { error } = await supabase.auth.signOut();
-    
+
     if (error) {
       console.error('Logout error:', error);
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          message: "Wystąpił błąd podczas wylogowywania" 
+        JSON.stringify({
+          success: false,
+          message: 'Wystąpił błąd podczas wylogowywania',
         }),
         { status: 500 }
       );
     }
-    
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: "Wylogowano pomyślnie" 
+      JSON.stringify({
+        success: true,
+        message: 'Wylogowano pomyślnie',
       }),
       { status: 200 }
     );
   } catch (error) {
     console.error('Unexpected error during logout:', error);
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        message: "Wystąpił nieoczekiwany błąd" 
+      JSON.stringify({
+        success: false,
+        message: 'Wystąpił nieoczekiwany błąd',
       }),
       { status: 500 }
     );
   }
-}; 
+};

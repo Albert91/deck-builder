@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { CardLimitDisplay } from "./cards/CardLimitDisplay";
-import type { DeckViewModel, CardLimitInfo, ExportStatus } from "@/types";
-import { Plus } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { CardLimitDisplay } from './cards/CardLimitDisplay';
+import type { DeckViewModel, ExportStatus } from '@/types';
+import { Plus } from 'lucide-react';
 
 interface DeckCardsHeaderProps {
   deck: DeckViewModel;
@@ -90,7 +90,7 @@ export function DeckCardsHeader({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {totalCards === 0 ? "Nie można eksportować pustej talii" : "Eksportuj karty do pliku PDF"}
+            {totalCards === 0 ? 'Nie można eksportować pustej talii' : 'Eksportuj karty do pliku PDF'}
           </TooltipContent>
         </Tooltip>
 
@@ -115,7 +115,7 @@ export function DeckCardsHeader({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {totalCards === 0 ? "Nie można udostępnić pustej talii" : "Udostępnij talię innym"}
+            {totalCards === 0 ? 'Nie można udostępnić pustej talii' : 'Udostępnij talię innym'}
           </TooltipContent>
         </Tooltip>
       </div>

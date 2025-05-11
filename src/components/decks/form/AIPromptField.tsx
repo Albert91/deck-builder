@@ -1,6 +1,6 @@
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface AIPromptFieldProps {
   prompt: string;
@@ -9,12 +9,7 @@ interface AIPromptFieldProps {
   error?: string;
 }
 
-export const AIPromptField: React.FC<AIPromptFieldProps> = ({
-  prompt,
-  onChange,
-  isDisabled = false,
-  error
-}) => {
+export const AIPromptField: React.FC<AIPromptFieldProps> = ({ prompt, onChange, isDisabled = false, error }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
@@ -30,10 +25,10 @@ export const AIPromptField: React.FC<AIPromptFieldProps> = ({
         value={prompt}
         onChange={handleChange}
         placeholder="Describe the image you want to generate..."
-        className={`${error ? "border-red-500" : ""}`}
+        className={`${error ? 'border-red-500' : ''}`}
         disabled={isDisabled}
         aria-invalid={!!error}
-        aria-describedby={error ? "ai-prompt-error" : undefined}
+        aria-describedby={error ? 'ai-prompt-error' : undefined}
       />
       {error && (
         <p id="ai-prompt-error" className="text-sm text-red-500">
@@ -41,8 +36,9 @@ export const AIPromptField: React.FC<AIPromptFieldProps> = ({
         </p>
       )}
       <p className="text-xs text-gray-500">
-        Provide a detailed description of the image you want to generate. The more specific you are, the better the results will be.
+        Provide a detailed description of the image you want to generate. The more specific you are, the better the
+        results will be.
       </p>
     </div>
   );
-}; 
+};
