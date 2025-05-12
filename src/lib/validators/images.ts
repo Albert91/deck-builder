@@ -5,4 +5,4 @@ export const generateImageSchema = z.object({
   type: z.enum(['front', 'back']),
 });
 
-export type GenerateImageSchema = z.infer<typeof generateImageSchema>; 
+export type GenerateImageSchema = z.infer<typeof generateImageSchema>;

@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let body;
   try {
     body = await request.json();
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: 'Invalid request body' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
@@ -40,17 +40,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const { prompt, type } = validationResult.data;
 
   try {
-    // Check for OpenRouter API key in environment variables
-    const openRouterApiKey = import.meta.env.OPENROUTER_API_KEY;
-    if (!openRouterApiKey) {
-      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured' }), {
+    // Check for OpenAI API key in environment variables
+    const openaiApiKey = import.meta.env.OPENAI_API_KEY;
+    if (!openaiApiKey) {
+      return new Response(JSON.stringify({ error: 'OpenAI API key is not configured' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     // Create image service and generate image
-    const imageService = new ImageService(openRouterApiKey);
+    const imageService = new ImageService(openaiApiKey);
     const imageUrl = await imageService.generateImage({ prompt, type });
 
     // Return success response

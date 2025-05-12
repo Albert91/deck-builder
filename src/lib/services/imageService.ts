@@ -1,20 +1,23 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-import { OpenRouterService } from './openrouter.service';
+import { OpenAIService } from './openai.service';
 import type { GenerateImageSchema } from '../validators/images';
 
 export class ImageService {
-  private _openRouter: OpenRouterService;
+  private _openai: OpenAIService;
+  private readonly _logger: Console;
 
-  constructor(openRouterApiKey: string) {
-    this._openRouter = new OpenRouterService({
-      apiKey: openRouterApiKey,
-      defaultModel: 'google/gemini-flash-1.5',
-      defaultParams: {
-        temperature: 0.7,
-        max_tokens: 4096,
+  constructor(openaiApiKey: string, logger = console) {
+    this._openai = new OpenAIService({
+      apiKey: openaiApiKey,
+      defaultModel: 'dall-e-3',
+      defaultOptions: {
+        size: '300x180',
+        quality: 'standard',
+        responseFormat: 'url',
+        style: 'vivid',
       },
+      logger,
     });
+    this._logger = logger;
   }
 
   /**
@@ -28,78 +31,35 @@ export class ImageService {
     }
 
     try {
-      // Determine which template image to use based on type
-      const templateImagePath = join(
-        process.cwd(),
-        'public',
-        'images',
-        params.type === 'front' ? 'default-card-front.jpeg' : 'default-card-back.jpeg'
-      );
+      // Determine which template to use based on type
+      const templateType = params.type === 'front' ? 'front card' : 'back card';
 
-      // Read the image file
-      const imageBuffer = await readFile(templateImagePath);
-      const base64Image = imageBuffer.toString('base64');
-
-      // Create system prompt
-      const systemPrompt = `
-        You are an expert image generator that creates high-quality card images for a trading card game.
-        You must generate a detailed, professional-looking image based on the user's description.
-        The image should fit well on a card and have good composition.
-        Use the provided template as reference for style and dimensions.
+      // Prepare a detailed prompt with image type
+      const enhancedPrompt = `
+        Create a high-quality ${templateType} image for a trading card game with the following description:
+        ${params.prompt}
+        
+        The image should be detailed, vibrant, and suitable for a card game.
+        Make sure the image has good composition and works well on a ${params.type} card.
       `;
 
-      // Create JSON schema for response
-      const responseFormat = {
-        type: 'json_schema' as const,
-        json_schema: {
-          name: 'imageGeneration',
-          strict: true,
-          schema: {
-            type: 'object',
-            properties: {
-              imageBase64: { type: 'string' },
-            },
-            required: ['imageBase64'],
-          },
+      // Generate image with OpenAI
+      const result = await this._openai.generateImage({
+        prompt: enhancedPrompt,
+        options: {
+          size: '300x180',
+          style: 'vivid',
         },
-      };
-
-      // Call OpenRouter API with special parameters for image generation
-      const result = await this._openRouter.generateChatCompletion({
-        systemPrompt,
-        userPrompt: `
-          Generate a high-quality image for a ${params.type} card based on this description: "${params.prompt}".
-          Apply these parameters:
-          - Size: 1024x1024
-          - Guidance scale: 7.5
-          - Image generation model: google/gemini-flash-1.5
-        `,
-        params: {
-          tools: [
-            {
-              type: 'image_generation',
-              image_generation: {
-                model: 'google/gemini-flash-1.5',
-                size: '1024x1024',
-                guidance_scale: 7.5,
-              },
-            },
-          ],
-        },
-        // responseFormat,
       });
 
-      console.log(result);
-      // Extract image URL from response
-      const { imageUrl } = result.content as { imageUrl: string };
-
-      if (!imageUrl || typeof imageUrl !== 'string') {
-        throw new Error('Invalid response from image generation service');
+      // Check if we have an image URL
+      if (!result.imageUrl) {
+        throw new Error('No image URL returned from generation service');
       }
 
-      return imageUrl;
+      return result.imageUrl;
     } catch (error) {
-      console.error('Image generation error:', error);
+      this._logger.error('Image generation error:', error);
       throw new Error(`Failed to generate image: ${(error as Error).message}`);
     }
   }

@@ -143,9 +143,6 @@ export class OpenRouterService {
         throw new OpenRouterValidationError('Invalid response from OpenRouter API');
       }
 
-      console.log(response);
-      console.log(response.choices[0].message);
-
       // Extract content from response
       const content =
         validatedInput.responseFormat?.type === 'json_schema'
