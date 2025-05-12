@@ -13,10 +13,9 @@ interface CardEditorFormProps {
   card: CardDTO | null;
   isLoading: boolean;
   initialData: CardFormData;
-  onUpdate: (data: Partial<CardFormData>) => void;
 }
 
-export default function CardEditorForm({ deckId, card, isLoading, initialData, onUpdate }: CardEditorFormProps) {
+export default function CardEditorForm({ deckId, card, isLoading, initialData }: CardEditorFormProps) {
   const [formData, setFormData] = useState<CardFormData>(initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -86,7 +85,6 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
     };
     setFormData(updatedData);
     setIsDirty(true);
-    onUpdate({ [field]: value });
   };
 
   // Handle attribute changes
@@ -100,7 +98,6 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
       attributes: updatedAttributes,
     });
     setIsDirty(true);
-    onUpdate({ attributes: updatedAttributes });
   };
 
   if (isLoading) {

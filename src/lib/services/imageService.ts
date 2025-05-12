@@ -8,11 +8,9 @@ export class ImageService {
   constructor(openaiApiKey: string, logger = console) {
     this._openai = new OpenAIService({
       apiKey: openaiApiKey,
-      defaultModel: 'dall-e-2',
+      defaultModel: 'dall-e-3',
       defaultOptions: {
-        quality: 'standard',
         responseFormat: 'url',
-        style: 'vivid',
       },
       logger,
     });
@@ -46,9 +44,6 @@ export class ImageService {
       // Generate image with OpenAI
       const result = await this._openai.generateImage({
         prompt: enhancedPrompt,
-        options: {
-          style: 'vivid',
-        },
       });
 
       // Check if we have an image URL

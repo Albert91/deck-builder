@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { LoadingOverlay } from '../common/LoadingOverlay';
 import { useCardForm } from '@/hooks/useCardForm';
-import type { CardFormData } from '@/hooks/useCardForm';
 
 interface CardFormPageProps {
   deckId: string;
@@ -26,7 +25,6 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     setToast,
     createCard,
     updateCard,
-    updateFormField,
     generateImage,
   } = useCardForm(deckId, cardId);
 
@@ -83,9 +81,6 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
             card={null} // TODO: Pass actual card data if needed
             isLoading={isLoading}
             initialData={formData}
-            onUpdate={(data: Partial<CardFormData>) => {
-              updateFormField(data);
-            }}
           />
           <CardPreview
             cardData={{

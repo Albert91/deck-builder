@@ -154,18 +154,6 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     }
   };
 
-  // Update a single form field
-  const updateFormField = (data: Partial<CardFormData>) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    // Auto-save if editing an existing card after a short delay
-    if (cardId) {
-      const debounceTimer = setTimeout(() => {
-        updateCard();
-      }, 1000);
-      return () => clearTimeout(debounceTimer);
-    }
-  };
-
   // Generate image using AI
   const generateImage = async (prompt: string, type: 'front' | 'back'): Promise<string | null> => {
     if (!prompt) {
@@ -214,7 +202,6 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     loadCard,
     createCard,
     updateCard,
-    updateFormField,
     generateImage,
   };
 };

@@ -44,7 +44,7 @@ export class OpenAIService {
    */
   constructor({
     apiKey,
-    defaultModel = 'dall-e-2',
+    defaultModel = 'dall-e-3',
     defaultOptions = {
       quality: 'standard',
       responseFormat: 'url',
