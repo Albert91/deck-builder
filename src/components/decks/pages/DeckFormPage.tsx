@@ -32,7 +32,7 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
   // Update loading message based on state
   useEffect(() => {
     if (isGeneratingAI) {
-      setLoadingMessage('Generating image with AI... This may take a moment.');
+      setLoadingMessage('Generating image with AI. This may take a moment.');
     } else if (isLoading) {
       setLoadingMessage(deckId ? 'Loading deck...' : 'Creating deck...');
     }

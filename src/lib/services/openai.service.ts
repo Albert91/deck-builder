@@ -46,7 +46,6 @@ export class OpenAIService {
     apiKey,
     defaultModel = 'dall-e-2',
     defaultOptions = {
-      n: 1,
       quality: 'standard',
       responseFormat: 'url',
     },
@@ -156,8 +155,8 @@ export class OpenAIService {
       const params: OpenAI.Images.ImageGenerateParams = {
         model,
         prompt,
-        n: options.n || 1,
-        size: '256x256',
+        n: 1,
+        size: '1024x1024',
         style: options.style,
         response_format: options.responseFormat,
         quality: options.quality,

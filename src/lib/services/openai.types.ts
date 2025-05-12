@@ -37,7 +37,6 @@ export class OpenAIServerError extends OpenAIError {
 // Types for image generation
 export interface ImageGenerationOptions {
   model?: string;
-  n?: number;
   style?: 'vivid' | 'natural';
   responseFormat?: 'url' | 'b64_json';
   quality?: 'standard' | 'hd';

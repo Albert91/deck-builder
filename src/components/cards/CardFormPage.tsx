@@ -32,7 +32,7 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
 
   useEffect(() => {
     if (isGeneratingAI) {
-      setLoadingMessage('Generating image with AI... This may take a moment.');
+      setLoadingMessage('Generating image with AI. This may take a moment.');
     } else if (isLoading) {
       setLoadingMessage(cardId ? 'Loading card...' : 'Creating card...');
     }
