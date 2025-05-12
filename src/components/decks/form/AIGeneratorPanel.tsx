@@ -8,11 +8,13 @@ interface AIGeneratorPanelProps {
   isGenerating: boolean;
   prompt: string;
   onPromptChange: (prompt: string) => void;
+  isCardGenerator?: boolean;
 }
 
 export const AIGeneratorPanel: React.FC<AIGeneratorPanelProps> = ({
   onGenerate,
   isGenerating,
+  isCardGenerator,
   prompt,
   onPromptChange,
 }) => {
@@ -43,7 +45,9 @@ export const AIGeneratorPanel: React.FC<AIGeneratorPanelProps> = ({
 
         <div className="flex flex-wrap gap-3 justify-end">
           <GenerateButton type="front" onClick={() => handleGenerate('front')} isGenerating={isGenerating} />
-          <GenerateButton type="back" onClick={() => handleGenerate('back')} isGenerating={isGenerating} />
+          {!isCardGenerator && (
+            <GenerateButton type="back" onClick={() => handleGenerate('back')} isGenerating={isGenerating} />
+          )}
         </div>
 
         <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded">

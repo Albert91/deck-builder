@@ -11,7 +11,7 @@ interface PaginationProps {
   itemName?: string;
 }
 
-export function Pagination({ pagination, onPageChange, onLimitChange, itemName = 'elementów' }: PaginationProps) {
+export function Pagination({ pagination, onPageChange, onLimitChange, itemName = 'items' }: PaginationProps) {
   const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
 
   // Generate array of page numbers to display
@@ -50,14 +50,14 @@ export function Pagination({ pagination, onPageChange, onLimitChange, itemName =
       <div className="text-sm text-muted-foreground">
         {totalItems > 0 ? (
           <>
-            Pokazano{' '}
+            Showing{' '}
             <span className="font-medium">
               {startItem}-{endItem}
             </span>{' '}
-            z <span className="font-medium">{totalItems}</span> {itemName}
+            of <span className="font-medium">{totalItems}</span> {itemName}
           </>
         ) : (
-          <>Brak wyników</>
+          <>No results</>
         )}
       </div>
 
@@ -65,7 +65,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange, itemName =
         {/* Items per page selector - only display if onLimitChange is provided */}
         {onLimitChange && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Na stronie</span>
+            <span className="text-sm text-muted-foreground">Per page</span>
             <Select value={String(itemsPerPage)} onValueChange={handleLimitChange}>
               <SelectTrigger className="w-[70px]">
                 <SelectValue placeholder={itemsPerPage} />
@@ -87,7 +87,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange, itemName =
             size="icon"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1}
-            aria-label="Poprzednia strona"
+            aria-label="Previous page"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -99,7 +99,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange, itemName =
               size="icon"
               onClick={() => onPageChange(page)}
               disabled={page === currentPage}
-              aria-label={`Strona ${page}`}
+              aria-label={`Page ${page}`}
               aria-current={page === currentPage ? 'page' : undefined}
             >
               {page}
@@ -111,7 +111,7 @@ export function Pagination({ pagination, onPageChange, onLimitChange, itemName =
             size="icon"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            aria-label="Następna strona"
+            aria-label="Next page"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

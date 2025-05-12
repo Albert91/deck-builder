@@ -108,15 +108,15 @@ export const GET: APIRoute = async ({ params, locals }) => {
       return new Response(JSON.stringify(deck), { status: 200, headers: { 'Content-Type': 'application/json' } });
     } catch (error: any) {
       // Handle specific errors
-      if (error.message === 'Talia nie została znaleziona') {
-        return new Response(JSON.stringify({ error: 'Talia nie została znaleziona' }), {
+      if (error.message === 'Deck not found') {
+        return new Response(JSON.stringify({ error: 'Deck not found' }), {
           status: 404,
           headers: { 'Content-Type': 'application/json' },
         });
       }
 
-      if (error.message === 'Brak uprawnień do wyświetlenia tej talii') {
-        return new Response(JSON.stringify({ error: 'Brak uprawnień do wyświetlenia tej talii' }), {
+      if (error.message === 'No permission to view this deck') {
+        return new Response(JSON.stringify({ error: 'No permission to view this deck' }), {
           status: 403,
           headers: { 'Content-Type': 'application/json' },
         });

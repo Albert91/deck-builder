@@ -55,17 +55,17 @@ export default function CardPreviewSection({ cardId, cardData, onImageGenerated 
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Podgląd karty</CardTitle>
+          <CardTitle>Card Preview</CardTitle>
           <div className="flex space-x-2">
             <Button
               size="sm"
               variant={viewMode === 'front' ? 'default' : 'outline'}
               onClick={() => setViewMode('front')}
             >
-              Awers
+              Front
             </Button>
             <Button size="sm" variant={viewMode === 'back' ? 'default' : 'outline'} onClick={() => setViewMode('back')}>
-              Rewers
+              Back
             </Button>
           </div>
         </div>

@@ -210,7 +210,7 @@ export async function updateCard(
   cardId: string,
   data: UpdateCardCommand
 ): Promise<CardDTO> {
-  // 1. Sprawdź czy talia istnieje i należy do użytkownika
+  // 1. Check if the deck exists and belongs to the user
   const { data: deck, error: deckError } = await supabase
     .from('decks')
     .select('id, owner_id')
@@ -224,12 +224,12 @@ export async function updateCard(
     throw deckError;
   }
 
-  // Sprawdź czy użytkownik jest właścicielem talii
+  // Check if user is the owner of the deck
   if (deck.owner_id !== userId) {
     throw new Error('User is not the owner of this deck');
   }
 
-  // 2. Sprawdź czy karta istnieje i należy do tej talii
+  // 2. Check if the card exists and belongs to this deck
   const { error: cardError } = await supabase
     .from('cards')
     .select('id')
@@ -244,7 +244,7 @@ export async function updateCard(
     throw cardError;
   }
 
-  // 3. Aktualizuj kartę
+  // 3. Update the card
   const updateData: any = {};
   if (data.title !== undefined) updateData.title = data.title;
   if (data.description !== undefined) updateData.description = data.description;
@@ -256,14 +256,14 @@ export async function updateCard(
     throw updateError;
   }
 
-  // 4. Pobierz zaktualizowaną kartę z atrybutami
+  // 4. Get the updated card with attributes
   const { data: updatedCard, error: fetchError } = await supabase.from('cards').select('*').eq('id', cardId).single();
 
   if (fetchError) {
     throw fetchError;
   }
 
-  // Pobierz atrybuty karty
+  // Get card attributes
   const { data: attributes, error: attrError } = await supabase
     .from('card_attributes')
     .select('*')
@@ -273,7 +273,7 @@ export async function updateCard(
     throw attrError;
   }
 
-  // 5. Zwróć dane w formacie CardDTO
+  // 5. Return data in CardDTO format
   return mapToCardDTO(updatedCard, attributes || []);
 }
 

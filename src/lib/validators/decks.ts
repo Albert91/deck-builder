@@ -14,5 +14,5 @@ export const createDeckSchema = z.object({
 
 export type CreateDeckSchema = z.infer<typeof createDeckSchema>;
 
-export const deckIdSchema = z.string().uuid('Identyfikator talii musi być poprawnym UUID');
+export const deckIdSchema = z.string().uuid('Deck ID must be a valid UUID');
 export type DeckIdSchema = z.infer<typeof deckIdSchema>;

@@ -8,10 +8,9 @@ interface GenerateButtonProps {
 }
 
 export const GenerateButton: React.FC<GenerateButtonProps> = ({ onClick, isGenerating, type }) => {
-  const label = type === 'front' ? 'Generate Front' : 'Generate Back';
+  const label = type === 'front' ? 'Generate front image' : 'Generate back image';
   const icon =
     type === 'front' ? (
-      // Simple front card icon
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -27,7 +26,6 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({ onClick, isGener
         <path d="M7 21v-2a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2" />
       </svg>
     ) : (
-      // Simple back card icon
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

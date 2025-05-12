@@ -102,6 +102,7 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
             onPromptChange={setAiPrompt}
             onGenerate={handleGenerate}
             isGenerating={isGeneratingAI}
+            isCardGenerator={true}
           />
           <div className="flex justify-end gap-4 pt-4">
             <Button variant="outline" onClick={handleCancel} disabled={showLoading}>

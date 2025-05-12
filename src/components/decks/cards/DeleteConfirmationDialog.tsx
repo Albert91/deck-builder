@@ -16,18 +16,18 @@ export function DeleteConfirmationDialog({ isOpen, cardTitle, onConfirm, onCance
       <div className="w-full max-w-md rounded-lg border bg-background p-6 shadow-lg">
         <Alert variant="destructive">
           <div className="flex flex-col space-y-4">
-            <AlertTitle className="text-lg font-semibold">Czy na pewno chcesz usunąć tę kartę?</AlertTitle>
+            <AlertTitle className="text-lg font-semibold">Are you sure you want to delete this card?</AlertTitle>
             <AlertDescription>
-              Zamierzasz usunąć kartę <strong className="font-medium">{cardTitle}</strong>. Ta operacja jest
-              nieodwracalna i spowoduje trwałe usunięcie karty z talii.
+              You are about to delete the card <strong className="font-medium">{cardTitle}</strong>. This action is
+              irreversible and will permanently remove the card from the deck.
             </AlertDescription>
 
             <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <Button variant="outline" onClick={onCancel}>
-                Anuluj
+                Cancel
               </Button>
               <Button variant="destructive" onClick={onConfirm} className="bg-red-500 hover:bg-red-600">
-                Usuń
+                Delete
               </Button>
             </div>
           </div>

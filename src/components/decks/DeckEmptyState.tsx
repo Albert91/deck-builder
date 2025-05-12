@@ -26,11 +26,11 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium mb-2">{hasFilters ? 'Nie znaleziono talii' : 'Brak talii'}</h3>
+        <h3 className="text-lg font-medium mb-2">{hasFilters ? 'No decks found' : 'No decks'}</h3>
         <p className="text-muted-foreground mb-6 max-w-md">
           {hasFilters
-            ? 'Nie znaleziono żadnych talii spełniających kryteria wyszukiwania. Zmień filtry lub utwórz nową talię.'
-            : 'Nie masz jeszcze żadnych talii. Utwórz swoją pierwszą talię, aby rozpocząć.'}
+            ? 'No decks were found matching your search criteria. Change the filters or create a new deck.'
+            : 'You don\'t have any decks yet. Create your first deck to get started.'}
         </p>
         <Button onClick={onCreateDeck} size="lg">
           <svg
@@ -42,7 +42,7 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          {hasFilters ? 'Utwórz nową talię' : 'Utwórz pierwszą talię'}
+          {hasFilters ? 'Create new deck' : 'Create first deck'}
         </Button>
       </CardContent>
     </Card>

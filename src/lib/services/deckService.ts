@@ -137,7 +137,7 @@ export async function createDeck(supabase: SupabaseClient, userId: string, data:
 }
 
 /**
- * Pobiera talię na podstawie ID z weryfikacją właściciela
+ * Gets a deck by ID with owner verification
  */
 export async function getDeckById(supabase: SupabaseClient, userId: string, deckId: string): Promise<DeckDTO> {
   const { data, error } = await supabase
@@ -151,9 +151,9 @@ export async function getDeckById(supabase: SupabaseClient, userId: string, deck
     throw error;
   }
 
-  // Sprawdzenie czy użytkownik jest właścicielem talii
+  // Check if user is the owner of the deck
   if (data.owner_id !== userId) {
-    throw new Error('Brak uprawnień do wyświetlenia tej talii');
+    throw new Error('No permission to view this deck');
   }
 
   return mapToDeckDTO(data as Deck);

@@ -126,76 +126,76 @@ export interface SearchParams {
 
 // =================== DECK LIST VIEW TYPES ===================
 
-// Model widoku dla pojedynczej talii
+// View model for a single deck
 export interface DeckViewModel extends DeckDTO {
-  cardCount: number; // liczba kart w talii
-  thumbnailUrl: string; // URL miniatury talii
+  cardCount: number; // number of cards in the deck
+  thumbnailUrl: string; // URL of the deck thumbnail
 }
 
-// Parametry listy talii (rozszerzenie SearchParams)
+// Deck list parameters (extension of SearchParams)
 export interface DeckListParams extends SearchParams {
-  sortBy?: string; // pole po którym sortujemy
-  sortOrder?: 'asc' | 'desc'; // kierunek sortowania
+  sortBy?: string; // field to sort by
+  sortOrder?: 'asc' | 'desc'; // sort direction
 }
 
-// Model paginacji
+// Pagination model
 export interface PaginationModel {
-  currentPage: number; // aktualna strona
-  totalPages: number; // całkowita liczba stron
-  totalItems: number; // całkowita liczba elementów
-  itemsPerPage: number; // liczba elementów na stronę
+  currentPage: number; // current page
+  totalPages: number; // total number of pages
+  totalItems: number; // total number of items
+  itemsPerPage: number; // number of items per page
 }
 
-// Opcje sortowania talii
+// Deck sorting options
 export interface DeckSortOption {
-  id: string; // identyfikator opcji
-  label: string; // etykieta wyświetlana użytkownikowi
-  value: string; // wartość używana w API
+  id: string; // option identifier
+  label: string; // label displayed to the user
+  value: string; // value used in API
 }
 
-// Stan filtrów
+// Filter state
 export interface DeckFilterState {
-  search: string; // tekst wyszukiwania
-  sortBy: string; // pole sortowania
-  sortOrder: 'asc' | 'desc'; // kierunek sortowania
+  search: string; // search text
+  sortBy: string; // sort field
+  sortOrder: 'asc' | 'desc'; // sort direction
 }
 
-// Informacje o limicie talii
+// Deck limit information
 export interface DeckLimitInfo {
-  totalDecks: number; // aktualna liczba talii
-  deckLimit: number; // maksymalna liczba talii (5)
+  totalDecks: number; // current number of decks
+  deckLimit: number; // maximum number of decks (5)
 }
 
 // =================== CARD LIST VIEW TYPES ===================
 
-// Model widoku dla pojedynczej karty
+// View model for a single card
 export interface CardViewModel extends CardDTO {
-  thumbnailUrl: string; // URL miniatury karty (awers)
-  backThumbnailUrl: string; // URL miniatury karty (rewers)
+  thumbnailUrl: string; // URL of the card thumbnail (front)
+  backThumbnailUrl: string; // URL of the card thumbnail (back)
 }
 
-// Parametry listy kart (rozszerzenie PaginationParams)
+// Card list parameters (extension of PaginationParams)
 export interface CardListParams extends PaginationParams {
-  viewMode?: 'front' | 'back'; // tryb wyświetlania (awers/rewers)
+  viewMode?: 'front' | 'back'; // display mode (front/back)
 }
 
-// Stan filtrów widoku kart
+// Card view filter state
 export interface CardFilterState {
-  page: number; // aktualna strona
-  limit: number; // liczba kart na stronę
+  page: number; // current page
+  limit: number; // number of cards per page
 }
 
-// Informacje o limicie kart
+// Card limit information
 export interface CardLimitInfo {
-  totalCards: number; // aktualna liczba kart
-  cardLimit: number; // maksymalna liczba kart (100)
+  totalCards: number; // current number of cards
+  cardLimit: number; // maximum number of cards (100)
 }
 
-// Stan operacji eksportu
+// Export operation state
 export interface ExportStatus {
-  isExporting: boolean; // czy eksport jest w trakcie
-  progress?: number; // opcjonalny postęp eksportu (0-100)
-  error?: string; // opcjonalny błąd eksportu
+  isExporting: boolean; // whether export is in progress
+  progress?: number; // optional export progress (0-100)
+  error?: string; // optional export error
 }
 
 // Mapping helpers for converting database rows to DTOs

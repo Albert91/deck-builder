@@ -19,8 +19,8 @@ export function LoadingState() {
             ></path>
           </svg>
         </div>
-        <h3 className="text-lg font-medium mb-2">Ładowanie...</h3>
-        <p className="text-muted-foreground max-w-md">Trwa ładowanie kart talii.</p>
+        <h3 className="text-lg font-medium mb-2">Loading...</h3>
+        <p className="text-muted-foreground max-w-md">Loading deck cards.</p>
       </CardContent>
     </Card>
   );

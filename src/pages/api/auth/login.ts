@@ -3,13 +3,13 @@ import { createSupabaseServerClient } from '@/db/supabase.client';
 import { z } from 'zod';
 
 const loginSchema = z.object({
-  email: z.string().email('Nieprawidłowy format adresu email'),
-  password: z.string().min(1, 'Hasło jest wymagane'),
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    // Parsowanie i walidacja danych
+    // Parsing and validating data
     const body = await request.json();
     const result = loginSchema.safeParse(body);
 
@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Nieprawidłowe dane logowania',
+          message: 'Invalid login data',
         }),
         { status: 400 }
       );
@@ -25,13 +25,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const { email, password } = result.data;
 
-    // Utworzenie klienta Supabase
+    // Creating Supabase client
     const supabase = createSupabaseServerClient({
       cookies,
       headers: request.headers,
     });
 
-    // Próba logowania
+    // Login attempt
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -42,7 +42,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Konto nie istnieje',
+          message: 'Account does not exist',
         }),
         { status: 401 }
       );
@@ -60,7 +60,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: 'Wystąpił nieoczekiwany błąd',
+        message: 'An unexpected error occurred',
       }),
       { status: 500 }
     );

@@ -61,9 +61,9 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
 
     if (field === 'title') {
       if (!value) {
-        fieldErrors.title = 'Tytuł jest wymagany';
+        fieldErrors.title = 'Title is required';
       } else if (value.length > 100) {
-        fieldErrors.title = 'Tytuł nie może być dłuższy niż 100 znaków';
+        fieldErrors.title = 'Title cannot be longer than 100 characters';
       } else {
         delete fieldErrors.title;
       }
@@ -71,7 +71,7 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
 
     if (field === 'description') {
       if (value && value.length > 500) {
-        fieldErrors.description = 'Opis nie może być dłuższy niż 500 znaków';
+        fieldErrors.description = 'Description cannot be longer than 500 characters';
       } else {
         delete fieldErrors.description;
       }
@@ -108,7 +108,7 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Ładowanie...</p>
+            <p className="text-muted-foreground">Loading...</p>
           </div>
         </CardContent>
       </Card>
@@ -119,8 +119,8 @@ export default function CardEditorForm({ deckId, card, isLoading, initialData, o
     <Card>
       <CardHeader>
         <CardTitle>
-          {card ? 'Edycja karty' : 'Nowa karta'}
-          {isSaving && <span className="ml-2 text-sm text-muted-foreground">(Zapisywanie...)</span>}
+          {card ? 'Edit Card' : 'New Card'}
+          {isSaving && <span className="ml-2 text-sm text-muted-foreground">(Saving...)</span>}
         </CardTitle>
       </CardHeader>
       <CardContent>

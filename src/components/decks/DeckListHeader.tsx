@@ -13,9 +13,9 @@ export function DeckListHeader({ totalDecks, deckLimit, onCreateDeck }: DeckList
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 mb-2">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Moje talie</h1>
+        <h1 className="text-3xl font-bold tracking-tight">My Decks</h1>
         <p className="text-muted-foreground mt-1">
-          Wykorzystano:{' '}
+          Used:{' '}
           <span className={`font-medium ${hasReachedLimit ? 'text-destructive' : ''}`}>
             {totalDecks}/{deckLimit}
           </span>
@@ -24,12 +24,12 @@ export function DeckListHeader({ totalDecks, deckLimit, onCreateDeck }: DeckList
 
       <Button onClick={onCreateDeck} disabled={hasReachedLimit} className="gap-2">
         <Plus className="h-4 w-4" />
-        Utwórz nową talię
+        Create new deck
       </Button>
 
       {hasReachedLimit && (
         <p className="text-xs text-destructive mt-1 sm:hidden">
-          Osiągnięto limit talii. Usuń jedną z istniejących talii, aby utworzyć nową.
+          Deck limit reached. Delete one of the existing decks to create a new one.
         </p>
       )}
     </div>

@@ -1,7 +1,7 @@
 import { defineMiddleware } from 'astro:middleware';
 import { createSupabaseServerClient } from '../db/supabase.client';
 
-// Ścieżki, które są dostępne bez logowania
+// Paths that are accessible without login
 const PUBLIC_PATHS = [
   '/login',
   '/register',
@@ -16,30 +16,30 @@ const PUBLIC_PATHS = [
 ];
 
 export const onRequest = defineMiddleware(async ({ locals, cookies, url, request, redirect }, next) => {
-  // Tworzenie klienta Supabase dla tego żądania
+  // Creating Supabase client for this request
   const supabase = createSupabaseServerClient({
     cookies,
     headers: request.headers,
   });
 
-  // Dodanie klienta Supabase do kontekstu
+  // Adding Supabase client to context
   locals.supabase = supabase;
 
-  // Sprawdzenie, czy ścieżka jest publiczna
+  // Checking if the path is public
   const isPublicPath = PUBLIC_PATHS.some((path) => url.pathname === path || url.pathname.startsWith('/assets/'));
 
-  // Pobieranie informacji o użytkowniku
+  // Getting user information
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (user) {
-    // Jeśli użytkownik jest zalogowany, dodaj go do kontekstu
+    // If user is logged in, add them to context
     locals.user = {
       id: user.id,
     };
   } else if (!isPublicPath) {
-    // Jeśli użytkownik nie jest zalogowany i próbuje uzyskać dostęp do chronionej trasy
+    // If user is not logged in and trying to access a protected route
     return redirect('/login');
   }
 

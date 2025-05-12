@@ -8,11 +8,11 @@ export async function getCardList(deckId: string, page = 1, limit = 20): Promise
 
   if (!response.ok) {
     if (response.status === 403) {
-      throw new Error('Brak dostępu do talii');
+      throw new Error('No access to deck');
     } else if (response.status === 404) {
-      throw new Error('Talia nie istnieje');
+      throw new Error('Deck does not exist');
     } else {
-      throw new Error('Wystąpił błąd podczas pobierania kart');
+      throw new Error('Error occurred while fetching cards');
     }
   }
 
@@ -27,9 +27,9 @@ export async function getCardById(deckId: string, cardId: string): Promise<CardD
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error('Karta nie istnieje');
+      throw new Error('Card does not exist');
     } else {
-      throw new Error('Wystąpił błąd podczas pobierania karty');
+      throw new Error('Error occurred while fetching the card');
     }
   }
 
@@ -50,9 +50,9 @@ export async function createCard(deckId: string, data: CreateCardCommand): Promi
 
   if (!response.ok) {
     if (response.status === 403) {
-      throw new Error('Osiągnięto limit 100 kart');
+      throw new Error('Card limit of 100 cards reached');
     } else {
-      throw new Error('Wystąpił błąd podczas tworzenia karty');
+      throw new Error('Error occurred while creating the card');
     }
   }
 
@@ -72,7 +72,7 @@ export async function updateCard(deckId: string, cardId: string, data: UpdateCar
   });
 
   if (!response.ok) {
-    throw new Error('Wystąpił błąd podczas aktualizacji karty');
+    throw new Error('Error occurred while updating the card');
   }
 
   return await response.json();
@@ -87,7 +87,7 @@ export async function deleteCard(deckId: string, cardId: string): Promise<void> 
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się usunąć karty');
+    throw new Error('Failed to delete the card');
   }
 }
 
@@ -101,9 +101,9 @@ export async function duplicateCard(deckId: string, cardId: string): Promise<Car
 
   if (!response.ok) {
     if (response.status === 403) {
-      throw new Error('Osiągnięto limit 100 kart');
+      throw new Error('Card limit of 100 cards reached');
     } else {
-      throw new Error('Nie udało się zduplikować karty');
+      throw new Error('Failed to duplicate the card');
     }
   }
 
@@ -119,7 +119,7 @@ export async function exportDeckToPdf(deckId: string): Promise<Blob> {
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się wyeksportować talii');
+    throw new Error('Failed to export deck');
   }
 
   return await response.blob();

@@ -28,13 +28,13 @@ export function DeckCardsHeader({
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 mb-2">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight">Talia: {deck.name}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Deck: {deck.name}</h1>
         <CardLimitDisplay currentCount={totalCards} maxLimit={cardLimit} />
       </div>
       <div className="flex items-center gap-2">
         <Button onClick={onCreateCard} disabled={hasReachedLimit} className="gap-2">
           <Plus className="h-4 w-4" />
-          Utwórz nową kartę
+          Create new card
         </Button>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -66,7 +66,7 @@ export function DeckCardsHeader({
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Eksportowanie...
+                  Exporting...
                 </>
               ) : (
                 <>
@@ -84,13 +84,13 @@ export function DeckCardsHeader({
                       d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
-                  Eksportuj do PDF
+                  Export to PDF
                 </>
               )}
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {totalCards === 0 ? 'Nie można eksportować pustej talii' : 'Eksportuj karty do pliku PDF'}
+            {totalCards === 0 ? 'Cannot export empty deck' : 'Export cards to PDF file'}
           </TooltipContent>
         </Tooltip>
 
@@ -111,11 +111,11 @@ export function DeckCardsHeader({
                   d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
                 />
               </svg>
-              Udostępnij
+              Share
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            {totalCards === 0 ? 'Nie można udostępnić pustej talii' : 'Udostępnij talię innym'}
+            {totalCards === 0 ? 'Cannot share empty deck' : 'Share deck with others'}
           </TooltipContent>
         </Tooltip>
       </div>

@@ -8,13 +8,13 @@ export async function fetchDeckLimit(): Promise<DeckLimitInfo> {
     const response = await fetch('/api/decks/count');
 
     if (!response.ok) {
-      throw new Error('Nie udało się pobrać informacji o limicie');
+      throw new Error('Failed to retrieve limit information');
     }
 
     const data: DeckLimitInfo = await response.json();
     return data;
   } catch (error) {
-    console.error('Błąd podczas pobierania limitu talii:', error);
+    console.error('Error while fetching deck limit:', error);
     // Default values in case of error
     return { totalDecks: 0, deckLimit: 5 };
   }
@@ -61,11 +61,11 @@ export async function getDeckById(deckId: string): Promise<DeckDTO> {
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new Error('Talia nie istnieje');
+      throw new Error('Deck does not exist');
     } else if (response.status === 403) {
-      throw new Error('Brak dostępu do talii');
+      throw new Error('No access to deck');
     } else {
-      throw new Error('Wystąpił błąd podczas pobierania talii');
+      throw new Error('Error occurred while fetching the deck');
     }
   }
 
@@ -86,9 +86,9 @@ export async function createDeck(data: CreateDeckCommand): Promise<DeckDTO> {
 
   if (!response.ok) {
     if (response.status === 403) {
-      throw new Error('Osiągnięto limit talii');
+      throw new Error('Deck limit reached');
     } else {
-      throw new Error('Nie udało się utworzyć talii');
+      throw new Error('Failed to create deck');
     }
   }
 
@@ -108,7 +108,7 @@ export async function updateDeck(deckId: string, data: UpdateDeckCommand): Promi
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się zaktualizować talii');
+    throw new Error('Failed to update deck');
   }
 
   return await response.json();
@@ -123,7 +123,7 @@ export async function deleteDeck(deckId: string): Promise<void> {
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się usunąć talii');
+    throw new Error('Failed to delete deck');
   }
 }
 
@@ -136,7 +136,7 @@ export async function shareDeck(deckId: string): Promise<{ shareUrl: string }> {
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się udostępnić talii');
+    throw new Error('Failed to share deck');
   }
 
   return await response.json();

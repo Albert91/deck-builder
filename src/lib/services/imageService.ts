@@ -8,9 +8,8 @@ export class ImageService {
   constructor(openaiApiKey: string, logger = console) {
     this._openai = new OpenAIService({
       apiKey: openaiApiKey,
-      defaultModel: 'dall-e-3',
+      defaultModel: 'dall-e-2',
       defaultOptions: {
-        size: '300x180',
         quality: 'standard',
         responseFormat: 'url',
         style: 'vivid',
@@ -41,13 +40,13 @@ export class ImageService {
         
         The image should be detailed, vibrant, and suitable for a card game.
         Make sure the image has good composition and works well on a ${params.type} card.
+        Always make a picture from profile view.
       `;
 
       // Generate image with OpenAI
       const result = await this._openai.generateImage({
         prompt: enhancedPrompt,
         options: {
-          size: '300x180',
           style: 'vivid',
         },
       });

@@ -14,12 +14,12 @@ interface CardAttributesSlidersProps {
 export default function CardAttributesSliders({ attributes, onChange }: CardAttributesSlidersProps) {
   return (
     <div className="space-y-4 pt-2">
-      <h3 className="text-sm font-medium">Atrybuty karty</h3>
+      <h3 className="text-sm font-medium">Card Attributes</h3>
 
       <div className="space-y-6">
         <AttributeSlider
           name="strength"
-          label="Siła"
+          label="Strength"
           value={attributes.strength}
           onChange={(value) => onChange('strength', value)}
           min={0}
@@ -28,7 +28,7 @@ export default function CardAttributesSliders({ attributes, onChange }: CardAttr
 
         <AttributeSlider
           name="defense"
-          label="Obrona"
+          label="Defense"
           value={attributes.defense}
           onChange={(value) => onChange('defense', value)}
           min={0}
@@ -37,7 +37,7 @@ export default function CardAttributesSliders({ attributes, onChange }: CardAttr
 
         <AttributeSlider
           name="health"
-          label="Zdrowie"
+          label="Health"
           value={attributes.health}
           onChange={(value) => onChange('health', value)}
           min={0}

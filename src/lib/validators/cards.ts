@@ -20,10 +20,10 @@ export const updateCardSchema = z
     description: z.string().trim().max(500).nullable().optional(),
   })
   .refine((data) => data.title !== undefined || data.description !== undefined, {
-    message: 'Należy podać tytuł lub opis karty',
+    message: 'You must provide a title or description for the card',
   });
 
 export type UpdateCardSchema = z.infer<typeof updateCardSchema>;
 
-export const cardIdSchema = z.string().uuid('Identyfikator karty musi być poprawnym UUID');
+export const cardIdSchema = z.string().uuid('Card ID must be a valid UUID');
 export type CardIdSchema = z.infer<typeof cardIdSchema>;

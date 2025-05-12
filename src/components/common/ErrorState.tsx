@@ -26,7 +26,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium mb-2">Wystąpił błąd</h3>
+        <h3 className="text-lg font-medium mb-2">An error occurred</h3>
         <p className="text-red-500 mb-6 max-w-md">{message}</p>
         <Button onClick={onRetry}>
           <svg
@@ -43,7 +43,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
-          Spróbuj ponownie
+          Try again
         </Button>
       </CardContent>
     </Card>
