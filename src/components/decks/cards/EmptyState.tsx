@@ -26,9 +26,7 @@ export function EmptyState({ onAddCard }: EmptyStateProps) {
           </svg>
         </div>
         <h3 className="text-lg font-medium mb-2">No cards in deck</h3>
-        <p className="text-muted-foreground mb-6 max-w-md">
-          Add your first card to start building your deck.
-        </p>
+        <p className="text-muted-foreground mb-6 max-w-md">Add your first card to start building your deck.</p>
         <Button onClick={onAddCard} size="lg">
           <svg
             className="mr-2 h-5 w-5"

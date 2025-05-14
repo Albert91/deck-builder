@@ -30,7 +30,7 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
         <p className="text-muted-foreground mb-6 max-w-md">
           {hasFilters
             ? 'No decks were found matching your search criteria. Change the filters or create a new deck.'
-            : 'You don\'t have any decks yet. Create your first deck to get started.'}
+            : "You don't have any decks yet. Create your first deck to get started."}
         </p>
         <Button onClick={onCreateDeck} size="lg">
           <svg

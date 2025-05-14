@@ -89,9 +89,7 @@ export function DeckCardsHeader({
               )}
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
-            {totalCards === 0 ? 'Cannot export empty deck' : 'Export cards to PDF file'}
-          </TooltipContent>
+          <TooltipContent>{totalCards === 0 ? 'Cannot export empty deck' : 'Export cards to PDF file'}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -114,9 +112,7 @@ export function DeckCardsHeader({
               Share
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
-            {totalCards === 0 ? 'Cannot share empty deck' : 'Share deck with others'}
-          </TooltipContent>
+          <TooltipContent>{totalCards === 0 ? 'Cannot share empty deck' : 'Share deck with others'}</TooltipContent>
         </Tooltip>
       </div>
     </div>
