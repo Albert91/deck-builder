@@ -1,0 +1,264 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Plan Testów - Aplikacja do Tworzenia Talii Kart
+
+## 1. Wprowadzenie i cele testowania
+
+Plan testów obejmuje kompleksową strategię testowania aplikacji do tworzenia talii kart, wykorzystującej AI do generowania obrazów. Główne cele testowania to:
+
+- Potwierdzenie, że aplikacja spełnia wszystkie wymagania funkcjonalne
+- Weryfikacja poprawności integracji ze Supabase i usługami AI
+- Zapewnienie wysokiej jakości doświadczenia użytkownika na różnych urządzeniach
+- Wykrycie potencjalnych problemów z wydajnością i skalowalnością
+- Zapewnienie bezpieczeństwa danych użytkowników
+
+## 2. Zakres testów
+
+Testy obejmują następujące obszary:
+
+### 2.1. Frontend
+- Strony Astro i komponenty React
+- Funkcjonalność tworzenia i edycji talii kart
+- Generowanie obrazów za pomocą AI
+- Interfejs użytkownika i responsywność
+- Dostępność (accessibility)
+
+### 2.2. Backend
+- Integracja ze Supabase (autentykacja, baza danych)
+- Komunikacja z API do generowania obrazów (OpenAI/OpenRouter)
+- Middleware Astro
+- Obsługa zapytań API
+
+### 2.3. Ograniczenia
+- 5 talii na użytkownika
+- 100 kart na talię
+- Limity użycia API dla generowania obrazów
+
+## 3. Typy testów do przeprowadzenia
+
+### 3.1. Testy jednostkowe
+- Testy komponentów React z wykorzystaniem Vitest i React Testing Library
+- Testy modułów i serwisów (np. imageService, openai.service)
+- Testy walidatorów i funkcji pomocniczych
+
+### 3.2. Testy integracyjne
+- Testy integracji komponentów React z Astro
+- Testy komunikacji między frontendem a endpointami API
+- Testy integracji z Supabase (autentykacja, operacje CRUD)
+- Testy integracji z serwisami AI (generowanie obrazów)
+
+### 3.3. Testy end-to-end (E2E)
+- Testy przepływów użytkownika (rejestracja, logowanie, tworzenie talii, dodawanie kart)
+- Testy scenariuszy krytycznych (np. generowanie obrazu, eksport talii)
+
+### 3.4. Testy wydajnościowe
+- Testy obciążeniowe generowania obrazów AI
+- Testy czasu ładowania strony
+- Testy czasu odpowiedzi API
+
+### 3.5. Testy bezpieczeństwa
+- Testy zabezpieczeń autentykacji
+- Testy walidacji danych wejściowych
+- Testy ochrony kluczy API
+
+### 3.6. Testy dostępności
+- Zgodność z wytycznymi WCAG 2.1
+- Testy czytników ekranu
+- Testy nawigacji klawiaturą
+
+### 3.7. Testy lokalizacji
+- Testy interfejsu w języku polskim
+- Testy formatowania dat i liczb
+
+## 4. Scenariusze testowe dla kluczowych funkcjonalności
+
+### 4.1. Autentykacja i zarządzanie użytkownikami
+1. Rejestracja nowego użytkownika
+2. Logowanie istniejącego użytkownika
+3. Reset hasła
+4. Wylogowanie użytkownika
+5. Próba nieautoryzowanego dostępu do obszarów chronionych
+
+### 4.2. Zarządzanie taliami kart
+1. Tworzenie nowej talii
+2. Edycja nazwy talii
+3. Usuwanie talii
+4. Generowanie tła dla talii za pomocą AI
+5. Generowanie tylnej strony talii za pomocą AI
+6. Udostępnianie talii przez link
+
+### 4.3. Zarządzanie kartami
+1. Dodawanie nowej karty do talii
+2. Edycja tytułu i opisu karty
+3. Usuwanie karty z talii
+4. Ustawianie atrybutów karty (siła, obrona, zdrowie)
+5. Generowanie obrazu karty za pomocą AI na podstawie tytułu
+
+### 4.4. Generowanie obrazów z AI
+1. Generowanie obrazu z poprawnym promptem
+2. Obsługa błędów API podczas generowania obrazów
+3. Weryfikacja limitów generowania obrazów
+4. Testowanie czasu odpowiedzi API generowania obrazów
+5. Testowanie różnych typów generowanych obrazów (front, back, card_image)
+
+### 4.5. Eksport i udostępnianie
+1. Eksport talii do PDF
+2. Udostępnianie talii poprzez link
+3. Przeglądanie udostępnionej talii bez logowania
+
+## 5. Środowisko testowe
+
+### 5.1. Środowisko deweloperskie
+- Lokalna instancja aplikacji Astro
+- Lokalna instancja Supabase (lub połączenie z instancją deweloperską)
+- Klucze API dla testowych środowisk AI
+
+### 5.2. Środowisko testowe
+- Dedykowana instancja aplikacji na serwerze testowym
+- Instancja testowa Supabase
+- Testowe klucze API dla serwisów AI z limitami testowymi
+
+### 5.3. Środowisko pre-produkcyjne
+- Konfiguracja identyczna z produkcyjną, ale na oddzielnej infrastrukturze
+- Instancja pre-produkcyjna Supabase
+- Produkcyjne klucze API z limitami testowymi
+
+### 5.4. Konfiguracje do testowania
+- Desktop (różne przeglądarki: Chrome, Firefox, Safari, Edge)
+- Mobile (iOS, Android, różne rozmiary ekranów)
+- Tablet (różne rozmiary ekranów)
+
+## 6. Narzędzia do testowania
+
+### 6.1. Frameworki i biblioteki testowe
+- Vitest - framework do testów jednostkowych
+- React Testing Library - testowanie komponentów React
+- Playwright - testy end-to-end
+- Lighthouse - testy wydajności i dostępności
+- k6 - testy obciążeniowe
+
+### 6.2. Narzędzia do CI/CD
+- GitHub Actions - automatyzacja testów w pipeline
+- Docker - konteneryzacja środowisk testowych
+
+### 6.3. Narzędzia do monitorowania
+- Supabase Analytics - monitorowanie bazy danych
+- OpenRouter/OpenAI Dashboard - monitorowanie użycia API AI
+
+### 6.4. Narzędzia do raportowania
+- Vitest UI - wizualna reprezentacja wyników testów
+- GitHub Issues - śledzenie i raportowanie błędów
+- Playwright Report - raporty z testów end-to-end
+
+## 7. Harmonogram testów
+
+### 7.1. Testy jednostkowe
+- Wykonywane przez programistów podczas rozwoju funkcjonalności
+- Uruchamiane automatycznie przy każdym commit/pull request
+
+### 7.2. Testy integracyjne
+- Wykonywane po zakończeniu implementacji funkcjonalności
+- Uruchamiane automatycznie przy merge do gałęzi develop
+
+### 7.3. Testy end-to-end
+- Wykonywane przed każdym wydaniem
+- Manualne testy krytycznych ścieżek przed deploymentem na produkcję
+
+### 7.4. Testy wydajnościowe i bezpieczeństwa
+- Wykonywane co dwa tygodnie
+- Dodatkowe testy przy znaczących zmianach w architekturze
+
+## 8. Kryteria akceptacji testów
+
+### 8.1. Testy funkcjonalne
+- 100% pokrycie scenariuszy testowych dla krytycznych funkcjonalności
+- Wszystkie testy jednostkowe przechodzą
+- Wszystkie testy integracyjne przechodzą
+- Wszystkie testy end-to-end dla krytycznych ścieżek przechodzą
+
+### 8.2. Testy wydajnościowe
+- Czas ładowania strony poniżej 2 sekund
+- Generowanie obrazu za pomocą AI w czasie poniżej 5 sekund
+- Operacje CRUD na bazie danych poniżej 300ms
+
+### 8.3. Testy dostępności
+- Zgodność z WCAG 2.1 na poziomie AA
+- Wynik Lighthouse dla dostępności co najmniej 90%
+
+### 8.4. Testy bezpieczeństwa
+- Brak krytycznych podatności
+- Prawidłowa walidacja wszystkich danych wejściowych
+- Bezpieczna obsługa kluczy API
+
+## 9. Role i odpowiedzialności w procesie testowania
+
+### 9.1. Deweloperzy
+- Pisanie i utrzymywanie testów jednostkowych
+- Naprawianie błędów znalezionych podczas testów
+- Utrzymywanie środowiska deweloperskiego
+
+### 9.2. Testerzy QA
+- Projektowanie i wykonywanie testów manualnych
+- Tworzenie i utrzymywanie testów automatycznych (E2E, integracyjne)
+- Raportowanie błędów
+
+### 9.3. DevOps
+- Utrzymanie infrastruktury testowej
+- Konfiguracja i utrzymanie pipeline CI/CD
+- Monitorowanie wydajności i bezpieczeństwa
+
+### 9.4. Product Owner
+- Definiowanie kryteriów akceptacji
+- Zatwierdzanie wyników testów przed wydaniem
+- Priorytetyzacja naprawy błędów
+
+## 10. Procedury raportowania błędów
+
+### 10.1. Format raportu błędu
+- Tytuł: krótki opis problemu
+- Środowisko: informacje o środowisku, w którym wystąpił błąd
+- Kroki do odtworzenia: dokładne kroki prowadzące do błędu
+- Oczekiwane zachowanie: jak aplikacja powinna się zachować
+- Rzeczywiste zachowanie: jak aplikacja faktycznie się zachowuje
+- Załączniki: zrzuty ekranu, logi, filmy
+
+### 10.2. Proces obsługi błędów
+1. Zgłoszenie błędu w systemie śledzenia (GitHub Issues)
+2. Ocena priorytetów i przypisanie błędu
+3. Rozwiązanie błędu przez developera
+4. Weryfikacja poprawki przez testera
+5. Zamknięcie zgłoszenia po pozytywnej weryfikacji
+
+### 10.3. Kryteria priorytetyzacji błędów
+- Krytyczny: uniemożliwia działanie kluczowych funkcjonalności, wymaga natychmiastowej reakcji
+- Wysoki: znacząco utrudnia użytkowanie, ale istnieje obejście
+- Średni: niewygodny dla użytkownika, ale nie blokuje kluczowych funkcjonalności
+- Niski: kosmetyczny lub drobny problem, niski wpływ na użytkownika
+
+## 11. Załączniki
+
+### 11.1. Przykładowe scenariusze testowe
+Scenariusz: Generowanie obrazu karty za pomocą AI
+1. Zaloguj się jako użytkownik
+2. Przejdź do widoku talii
+3. Wybierz talię lub utwórz nową
+4. Dodaj nową kartę
+5. Wprowadź tytuł karty
+6. Kliknij przycisk "Generuj obraz"
+7. Poczekaj na wygenerowanie obrazu
+8. Zweryfikuj, czy obraz został poprawnie wygenerowany i zapisany
+
+### 11.2. Szablony raportów testowych
+Raport z testów powinien zawierać:
+- Datę wykonania testów
+- Środowisko testowe
+- Zakres przeprowadzonych testów
+- Wyniki testów (liczba przejść/niepowodzeń)
+- Lista znalezionych błędów
+- Rekomendacje i następne kroki
+
+### 11.3. Matryca pokrycia testami
+Tabela pokazująca pokrycie testami poszczególnych funkcjonalności aplikacji, z oznaczeniem priorytetów i statusu implementacji.
