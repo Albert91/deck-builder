@@ -44,7 +44,13 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({ onClick, isGener
     );
 
   return (
-    <Button variant="secondary" onClick={onClick} disabled={isGenerating} className="flex items-center">
+    <Button
+      variant="secondary"
+      onClick={onClick}
+      disabled={isGenerating}
+      className="flex items-center"
+      data-test-id={`generate-${type}-image-button`}
+    >
       {isGenerating ? (
         <>
           <div className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full mr-2" />

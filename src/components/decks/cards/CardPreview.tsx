@@ -19,16 +19,17 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ frontImage, backImage 
   const backSrc = backImage || '/placeholder-card-back.png';
 
   return (
-    <div className="py-4">
+    <div className="py-4" data-test-id="card-preview-container">
       <h3 className="text-lg font-medium mb-3">Card Preview</h3>
 
       <div className="flex flex-col items-center">
         {/* Card Preview Image */}
-        <div className="relative w-64 h-96 rounded-lg overflow-hidden shadow-lg mb-4">
+        <div className="relative w-64 h-96 rounded-lg overflow-hidden shadow-lg mb-4" data-test-id="card-preview-image">
           <div
             className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${
               showingFront ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
+            data-test-id="card-front-preview"
           >
             <img src={frontSrc} alt="Card Front" className="w-full h-full object-cover" />
             <div className="absolute top-2 right-2 bg-gray-900/70 text-white text-xs px-2 py-1 rounded">Front</div>
@@ -38,6 +39,7 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ frontImage, backImage 
             className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${
               !showingFront ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
+            data-test-id="card-back-preview"
           >
             <img src={backSrc} alt="Card Back" className="w-full h-full object-cover" />
             <div className="absolute top-2 right-2 bg-gray-900/70 text-white text-xs px-2 py-1 rounded">Back</div>
@@ -45,7 +47,12 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ frontImage, backImage 
         </div>
 
         {/* Flip Button */}
-        <Button variant="outline" onClick={toggleSide} className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          onClick={toggleSide}
+          className="flex items-center gap-2"
+          data-test-id="flip-card-button"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

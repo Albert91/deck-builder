@@ -36,7 +36,7 @@ export const AIGeneratorPanel: React.FC<AIGeneratorPanelProps> = ({
   };
 
   return (
-    <Card className="mt-6">
+    <Card className="mt-6" data-test-id="ai-generator-panel">
       <CardHeader>
         <CardTitle className="text-lg">AI Image Generator</CardTitle>
       </CardHeader>

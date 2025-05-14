@@ -27,6 +27,7 @@ export const DeckNameField: React.FC<DeckNameFieldProps> = ({ name, onChange, er
         className={error ? 'border-red-500' : ''}
         aria-invalid={!!error}
         aria-describedby={error ? 'deck-name-error' : undefined}
+        data-test-id="deck-name-input"
       />
       {error && (
         <p id="deck-name-error" className="text-sm text-red-500">

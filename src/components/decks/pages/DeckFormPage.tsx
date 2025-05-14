@@ -82,7 +82,7 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
   const pageTitle = deckId ? 'Edit Deck' : 'Create New Deck';
 
   return (
-    <div className="container max-w-4xl mx-auto py-8">
+    <div className="container max-w-4xl mx-auto py-8" data-test-id="deck-form-container">
       {/* Loading Overlay */}
       <LoadingOverlay isLoading={showLoading} message={loadingMessage} />
 
@@ -115,16 +115,20 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-4 pt-4">
-            <Button variant="outline" onClick={handleCancel} disabled={showLoading}>
+            <Button variant="outline" onClick={handleCancel} disabled={showLoading} data-test-id="cancel-button">
               Cancel
             </Button>
 
             {!deckId ? (
-              <Button onClick={handleCreateDeck} disabled={!isFormValid || showLoading}>
+              <Button
+                onClick={handleCreateDeck}
+                disabled={!isFormValid || showLoading}
+                data-test-id="create-deck-button"
+              >
                 Create Deck
               </Button>
             ) : (
-              <Button onClick={updateDeck} disabled={!isFormValid || showLoading}>
+              <Button onClick={updateDeck} disabled={!isFormValid || showLoading} data-test-id="save-changes-button">
                 Save Changes
               </Button>
             )}

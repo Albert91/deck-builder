@@ -29,6 +29,7 @@ export const AIPromptField: React.FC<AIPromptFieldProps> = ({ prompt, onChange, 
         disabled={isDisabled}
         aria-invalid={!!error}
         aria-describedby={error ? 'ai-prompt-error' : undefined}
+        data-test-id="ai-prompt-input"
       />
       {error && (
         <p id="ai-prompt-error" className="text-sm text-red-500">
