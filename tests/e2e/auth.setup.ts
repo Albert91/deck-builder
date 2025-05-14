@@ -11,7 +11,7 @@ setup('authenticate', async ({ page }) => {
   await loginPage.goto();
 
   // Login with test credentials
-  await loginPage.login(process.env.E2E_USERNAME!, process.env.E2E_PASSWORD!);
+  await loginPage.login(process.env.E2E_USERNAME ?? '', process.env.E2E_PASSWORD ?? '');
 
   // Wait for navigation after successful login
   await page.waitForURL('/');
