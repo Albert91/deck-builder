@@ -33,3 +33,5 @@ html/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+playwright/.auth

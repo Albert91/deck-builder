@@ -39,7 +39,7 @@ describe('Button', () => {
   it('renderuje przycisk z tekstem', () => {
     // Arrange
     render(<Button>Kliknij mnie</Button>);
-    
+
     // Act & Assert
     expect(screen.getByText('Kliknij mnie')).toBeInTheDocument();
   });
@@ -101,11 +101,13 @@ test('użytkownik może się zalogować', async ({ page }) => {
 ## Najlepsze praktyki
 
 1. **Testy jednostkowe**:
+
    - Używaj mocków dla zależności zewnętrznych
    - Zachowaj testy małe i skupione na konkretnej funkcjonalności
    - Używaj snapshotów tylko w przypadkach, które mają sens
 
 2. **Testy E2E**:
+
    - Testuj rzeczywiste przepływy użytkownika
    - Używaj atrybutów `data-testid` dla elementów trudnych do zlokalizowania
    - Przygotuj dane testowe przed uruchomieniem testu
@@ -115,4 +117,4 @@ test('użytkownik może się zalogować', async ({ page }) => {
    - Pisz testy, które są łatwe w utrzymaniu
    - Nie testuj implementacji, testuj zachowanie
    - Upewnij się, że testy są deterministyczne (nie zawierają losowych elementów)
-   - Testy powinny być szybkie w uruchomieniu 
+   - Testy powinny być szybkie w uruchomieniu
