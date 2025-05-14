@@ -53,16 +53,64 @@ npm run build
 ```md
 .
 ├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   ├── lib/        # Services and utilities
-│   │   └── __tests__/ # Unit tests for services
-│   └── assets/     # Static assets
-├── public/         # Public assets
-├── tests/          # End-to-end tests with Playwright
+│ ├── layouts/ # Astro layouts
+│ ├── pages/ # Astro pages
+│ │ └── api/ # API endpoints
+│ ├── components/ # UI components (Astro & React)
+│ ├── lib/ # Services and utilities
+│ │ └── **tests**/ # Unit tests for services
+│ └── assets/ # Static assets
+├── public/ # Public assets
+├── tests/ # End-to-end tests with Playwright
 ```
+
+## Deployments & Releases
+
+This project is configured for optimal deployment with the following recommended options:
+
+### Recommended Hosting Solutions
+
+1. **Cloudflare Pages** - Recommended for production deployment
+
+   - Excellent performance with global CDN
+   - Generous free tier with unlimited bandwidth
+   - Easy integration with Astro SSR via Workers
+   - Automatic preview deployments for branches
+   - Simple CI/CD pipeline with GitHub integration
+
+2. **Vercel** - Great alternative with excellent Astro support
+
+   - Native integration with Astro and seamless deployments
+   - Free tier includes preview environments and CI/CD
+   - Optimized for React applications
+   - Limited to 100GB bandwidth on free tier
+
+3. **Netlify** - Solid option with good Astro compatibility
+   - Easy deployment workflow with GitHub integration
+   - Preview deployments for branches
+   - Similar pricing structure to Vercel
+
+### Alternative Hosting Solutions
+
+- **DigitalOcean App Platform** - For more control with containerization
+- **Google Cloud Run** - Serverless container deployment option
+
+### Deployment Strategy
+
+For this project, we recommend the following deployment strategy:
+
+1. Development: Local environment using `npm run dev`
+2. Staging: Automatic preview deployments on Cloudflare Pages for feature branches
+3. Production: Main branch deployment on Cloudflare Pages with custom domain
+
+### Environment Setup
+
+Each environment requires the following environment variables:
+
+- `SUPABASE_URL` - Supabase project URL
+- `SUPABASE_KEY` - Supabase project API key
+
+Additional environment variables should be documented here as they are added.
 
 ## AI Development Support
 
