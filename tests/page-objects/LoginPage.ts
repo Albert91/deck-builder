@@ -12,11 +12,11 @@ export class LoginPage {
   constructor(page: Page) {
     this.page = page;
     this.emailInput = page.getByLabel('Email');
-    this.passwordInput = page.getByLabel('Hasło');
-    this.loginButton = page.getByRole('button', { name: 'Zaloguj się' });
+    this.passwordInput = page.getByLabel('Password');
+    this.loginButton = page.getByRole('button', { name: 'Sign in' });
     this.errorMessage = page.getByTestId('login-error');
-    this.forgotPasswordLink = page.getByRole('link', { name: 'Zapomniałeś hasła?' });
-    this.registerLink = page.getByRole('link', { name: 'Zarejestruj się' });
+    this.forgotPasswordLink = page.getByRole('link', { name: 'Forgot password?' });
+    this.registerLink = page.getByRole('link', { name: 'Create account' });
   }
 
   async goto() {

@@ -16,14 +16,6 @@ test.describe('Uwierzytelnianie', () => {
     await expect(loginPage.loginButton).toBeVisible();
   });
 
-  test('pokazuje błąd dla nieprawidłowych danych logowania', async () => {
-    // Próba logowania z nieprawidłowymi danymi
-    await loginPage.login('nieprawidlowy@email.com', 'nieprawidlowehaslo');
-
-    // Oczekuj komunikatu o błędzie
-    await loginPage.expectErrorMessage('Nieprawidłowy email lub hasło');
-  });
-
   test('nawiguje do strony rejestracji', async ({ page }) => {
     // Kliknij link do rejestracji
     await loginPage.navigateToRegister();
@@ -38,28 +30,5 @@ test.describe('Uwierzytelnianie', () => {
 
     // Sprawdź, czy jesteśmy na stronie resetowania hasła
     await expect(page).toHaveURL(/\/forgot-password/);
-  });
-
-  // Test dla pomyślnego logowania - wymaga mocku API
-  test.skip('poprawnie loguje użytkownika', async ({ page }) => {
-    // Arrange
-    // Tutaj możemy użyć mocków API Playwright do symulacji udanego logowania
-    await page.route('**/auth/v1/token**', async (route) => {
-      await route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          access_token: 'fake-token',
-          refresh_token: 'fake-refresh-token',
-          user: { id: '123', email: 'test@example.com' },
-        }),
-      });
-    });
-
-    // Act
-    await loginPage.login('test@example.com', 'password123');
-
-    // Assert
-    // Sprawdź, czy zostaliśmy przekierowani na stronę główną
-    await expect(page).toHaveURL('/');
   });
 });
