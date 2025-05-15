@@ -12,7 +12,7 @@ export default defineConfig({
   integrations: [react(), sitemap()],
   server: { port: 3000 },
   vite: {
-    envPrefix: ['SUPABASE_'],
+    envPrefix: ['SUPABASE_', 'PUBLIC_'],
     plugins: [tailwindcss()],
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
