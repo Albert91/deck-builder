@@ -71,11 +71,10 @@ Główne sekcje aplikacji:
   - Responsywna siatka kart (2/4/flex kolumn)
   - Przycisk dodawania nowej karty (disabled gdy limit)
   - Akcje dla każdej karty (edycja, duplikacja, usunięcie)
-  - Przyciski eksportu PDF i udostępniania
+  - Przyciski udostępniania
 - **Względy UX/dostępności/bezpieczeństwa**:
   - Potwierdzenie usunięcia karty
   - Stan pusty (gdy brak kart)
-  - Wskaźnik statusu eksportu
 
 ### 2.5. Edytor karty
 - **Ścieżka**: `/decks/:deckId/cards/new` lub `/decks/:deckId/cards/:cardId/edit`
@@ -135,14 +134,11 @@ Główne sekcje aplikacji:
    - Dostosowuje atrybuty karty (suwaki 0-99)
    - Zmiany są automatycznie zapisywane
 4. Wraca do listy kart
-5. Dodaje więcej kart / duplikuje istniejące
+5. Dodaje więcej kart
 6. Edytuje/usuwa karty bezpośrednio z listy
 
-### 3.4. Eksport i udostępnianie
-1. Użytkownik klika przycisk "Eksportuj do PDF" na widoku listy kart
-   - System generuje PDF (wskaźnik postępu)
-   - Po zakończeniu, udostępnia link do pobrania
-2. Użytkownik klika przycisk "Udostępnij"
+### 3.4. Udostępnianie
+1. Użytkownik klika przycisk "Udostępnij"
    - System generuje unikalny URL
    - Użytkownik może skopiować link do schowka
 
@@ -171,7 +167,6 @@ Główne sekcje aplikacji:
 - Z dashboardu do tworzenia/edycji talii
 - Z edycji talii do listy kart
 - Z listy kart do tworzenia/edycji karty
-- Z listy kart do eksportu PDF
 - Z listy kart do generowania linku udostępniającego
 
 ## 5. Kluczowe komponenty

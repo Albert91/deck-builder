@@ -192,17 +192,6 @@
   { "image_metadata_id": "uuid", "file_path": "/path/to/card.png" }
   ```
 
-### 2.9 Export
-
-#### 2.9.1 Export to PDF
-- Method: `GET`
-- URL: `/decks/{deckId}/export/pdf`
-- Description: Generate PDF ready for print for entire deck.
-- Authentication: Required
-- Success Response (200): PDF binary stream (Content-Type: application/pdf)
-- Error Responses:
-  - 404 Not Found, 403 Forbidden
-
 ### 2.10 Analytics
 
 #### 2.10.1 Deck Analytics

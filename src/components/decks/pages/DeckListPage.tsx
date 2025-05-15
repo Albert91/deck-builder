@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDeckList } from '../../../hooks/useDeckList';
+import { useDeckForm } from '../../../hooks/useDeckForm';
 import { fetchDeckLimit } from '../../../lib/api/decks';
 import type { DeckLimitInfo, DeckSortOption, DeckViewModel } from '../../../types';
 
@@ -12,13 +13,14 @@ import { EmptyState } from '../DeckEmptyState';
 
 // Default sort options
 const sortOptions: DeckSortOption[] = [
-  { id: 'updated', label: 'Data aktualizacji', value: 'updated_at' },
-  { id: 'created', label: 'Data utworzenia', value: 'created_at' },
-  { id: 'name', label: 'Nazwa', value: 'name' },
+  { id: 'updated', label: 'Updated at', value: 'updated_at' },
+  { id: 'created', label: 'Created at', value: 'created_at' },
+  { id: 'name', label: 'Name', value: 'name' },
 ];
 
 export default function DeckListPage() {
   const [limitInfo, setLimitInfo] = useState<DeckLimitInfo>({ totalDecks: 0, deckLimit: 5 });
+  const { deleteDeck } = useDeckForm();
 
   // Get deck list data from custom hook
   const { decks, isLoading, error, params, setSearch, setSortBy, setSortOrder, refetch } = useDeckList({
@@ -51,7 +53,9 @@ export default function DeckListPage() {
   };
 
   // Handle deck options
-  const handleDeckOptions = (option: string, deck: DeckViewModel) => {
+  const handleDeckOptions = async (option: string, deck: DeckViewModel) => {
+    let success: boolean;
+
     switch (option) {
       case 'edit':
         window.location.href = `/decks/${deck.id}/edit`;
@@ -60,7 +64,10 @@ export default function DeckListPage() {
         // TODO: Implement sharing logic
         break;
       case 'delete':
-        // TODO: Implement deletion logic
+        success = await deleteDeck(deck.id);
+        if (success) {
+          refetch();
+        }
         break;
       default:
         break;

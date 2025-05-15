@@ -26,6 +26,7 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     createCard,
     updateCard,
     generateImage,
+    setFormData,
   } = useCardForm(deckId, cardId);
 
   useEffect(() => {
@@ -48,23 +49,22 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
   const handleCreateCard = async () => {
     const newCardId = await createCard();
     if (newCardId) {
-      window.location.href = `/decks/${deckId}/cards/${newCardId}/edit`;
+      window.location.href = `/decks/${deckId}/cards`;
     }
   };
 
   const handleCancel = () => {
-    window.location.href = `/decks/${deckId}`;
+    window.location.href = `/decks/${deckId}/cards`;
   };
 
   const handleGenerate = async (prompt: string, type: 'front' | 'back') => {
     const imageUrl = await generateImage(prompt, type);
     if (imageUrl) {
-      toast.success(`${type === 'front' ? 'Front' : 'Back'} image generated successfully`);
+      toast.success('Image generated successfully');
     }
     return imageUrl || '';
   };
 
-  const isFormValid = !!formData.title;
   const showLoading = isLoading || isGeneratingAI;
   const pageTitle = cardId ? 'Edit Card' : 'Create New Card';
 
@@ -80,15 +80,16 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
             deckId={deckId}
             card={null} // TODO: Pass actual card data if needed
             isLoading={isLoading}
-            initialData={formData}
+            formData={formData}
+            setFormData={setFormData}
           />
           <CardPreview
             cardData={{
               title: formData.title,
               description: formData.description,
               attributes: formData.attributes,
-              frontImageUrl: formData.frontImageUrl ?? '/images/default-card-front.jpeg',
-              backImageUrl: formData.backImageUrl ?? '/images/default-card-back.jpeg',
+              frontImageUrl: formData.image_metadata?.url ?? '/images/default-card-front.jpeg',
+              backImageUrl: '/images/default-card-back.jpeg',
             }}
             viewMode="front"
           />
@@ -104,11 +105,11 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
               Cancel
             </Button>
             {!cardId ? (
-              <Button onClick={handleCreateCard} disabled={!isFormValid || showLoading}>
+              <Button onClick={handleCreateCard} disabled={showLoading}>
                 Create Card
               </Button>
             ) : (
-              <Button onClick={updateCard} disabled={!isFormValid || showLoading}>
+              <Button onClick={updateCard} disabled={showLoading}>
                 Save Changes
               </Button>
             )}

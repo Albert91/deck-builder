@@ -23,7 +23,7 @@ export interface UserDTO {
 
 // =================== DECK TYPES ===================
 
-export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at' | 'image_metadata_id'>;
+export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at'>;
 
 export interface CreateDeckCommand {
   name: string;
@@ -64,16 +64,42 @@ export type CardAttributeDTO = Pick<CardAttribute, 'id' | 'attribute_type' | 'va
 
 export type CardDTO = Pick<Card, 'id' | 'title' | 'description' | 'image_metadata_id' | 'created_at' | 'updated_at'> & {
   attributes?: CardAttributeDTO[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 };
 
 export interface CreateCardCommand {
   title: string;
   description: string | null;
+  attributes?: {
+    attribute_type: 'strength' | 'defense' | 'health';
+    value: number;
+  }[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export interface UpdateCardCommand {
   title?: string;
   description?: string | null;
+  attributes?: {
+    attribute_type: 'strength' | 'defense' | 'health';
+    value: number;
+  }[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export interface CardListResponseDTO {
@@ -171,7 +197,6 @@ export interface DeckLimitInfo {
 // View model for a single card
 export interface CardViewModel extends CardDTO {
   thumbnailUrl: string; // URL of the card thumbnail (front)
-  backThumbnailUrl: string; // URL of the card thumbnail (back)
 }
 
 // Card list parameters (extension of PaginationParams)
@@ -189,13 +214,6 @@ export interface CardFilterState {
 export interface CardLimitInfo {
   totalCards: number; // current number of cards
   cardLimit: number; // maximum number of cards (100)
-}
-
-// Export operation state
-export interface ExportStatus {
-  isExporting: boolean; // whether export is in progress
-  progress?: number; // optional export progress (0-100)
-  error?: string; // optional export error
 }
 
 // Mapping helpers for converting database rows to DTOs
@@ -219,5 +237,4 @@ export const mapToDeckDTO = (deck: Deck): DeckDTO => ({
   share_hash: deck.share_hash,
   created_at: deck.created_at,
   updated_at: deck.updated_at,
-  image_metadata_id: deck.image_metadata_id,
 });

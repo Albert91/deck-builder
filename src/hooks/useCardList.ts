@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { CardViewModel, PaginationModel, CardFilterState, CardDTO, ExportStatus } from '@/types';
+import type { CardViewModel, PaginationModel, CardFilterState, CardDTO } from '@/types';
 import * as cardApi from '@/lib/api/cards';
 import * as deckApi from '@/lib/api/decks';
 
@@ -23,11 +23,6 @@ export function useCardList(deckId: string) {
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  // Export state
-  const [exportStatus, setExportStatus] = useState<ExportStatus>({
-    isExporting: false,
-  });
-
   // Data fetching function
   const fetchCards = useCallback(async () => {
     if (!deckId) return;
@@ -42,12 +37,7 @@ export function useCardList(deckId: string) {
       const transformedCards = data.items.map(
         (card: CardDTO): CardViewModel => ({
           ...card,
-          thumbnailUrl: card.image_metadata_id
-            ? `/api/images/${card.image_metadata_id}`
-            : '/placeholders/card-front.png',
-          backThumbnailUrl: card.image_metadata_id
-            ? `/api/images/${card.image_metadata_id}/back`
-            : '/placeholders/card-back.png',
+          thumbnailUrl: card.image_data?.url ?? '/images/default-card-back.jpeg',
         })
       );
 
@@ -77,27 +67,6 @@ export function useCardList(deckId: string) {
     [deckId]
   );
 
-  const duplicateCard = useCallback(
-    async (cardId: string) => {
-      if (!deckId || !cardId) return;
-
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        await cardApi.duplicateCard(deckId, cardId);
-
-        // Refresh the card list
-        await fetchCards();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Nieznany błąd');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [deckId, fetchCards]
-  );
-
   const deleteCard = useCallback(async () => {
     if (!deckId || !cardToDelete) return;
 
@@ -124,32 +93,6 @@ export function useCardList(deckId: string) {
   const changePage = useCallback((page: number) => {
     setFilters((prev: CardFilterState) => ({ ...prev, page }));
   }, []);
-
-  // Export functions
-  const exportToPdf = useCallback(async () => {
-    if (!deckId) return;
-
-    setExportStatus({ isExporting: true });
-
-    try {
-      const blob = await cardApi.exportDeckToPdf(deckId);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `talia-${deckId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      setExportStatus({ isExporting: false });
-    } catch (err) {
-      setExportStatus({
-        isExporting: false,
-        error: err instanceof Error ? err.message : 'Nieznany błąd',
-      });
-    }
-  }, [deckId]);
 
   const shareDeck = useCallback(async () => {
     if (!deckId) return;
@@ -195,16 +138,13 @@ export function useCardList(deckId: string) {
     error,
     showDeleteDialog,
     cardToDelete,
-    exportStatus,
     fetchCards,
     addCard,
     editCard,
-    duplicateCard,
     showDeleteConfirmation,
     cancelDelete,
     confirmDelete: deleteCard,
     changePage,
-    exportToPdf,
     shareDeck,
   };
 }

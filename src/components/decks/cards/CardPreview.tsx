@@ -15,8 +15,8 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ frontImage, backImage 
   };
 
   // Use placeholder images when no images are provided
-  const frontSrc = frontImage || '/placeholder-card-front.png';
-  const backSrc = backImage || '/placeholder-card-back.png';
+  const frontSrc = frontImage || '/images/default-card-front.jpeg';
+  const backSrc = backImage || '/images/default-card-back.jpeg';
 
   return (
     <div className="py-4" data-test-id="card-preview-container">

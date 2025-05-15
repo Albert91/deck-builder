@@ -21,16 +21,13 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     isLoading,
     error,
     showDeleteDialog,
-    exportStatus,
     fetchCards,
     addCard,
     editCard,
-    duplicateCard,
     showDeleteConfirmation,
     cancelDelete,
     confirmDelete,
     changePage,
-    exportToPdf,
     shareDeck,
   } = useCardList(deckId);
 
@@ -65,9 +62,6 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
       case 'edit':
         editCard(card.id);
         break;
-      case 'duplicate':
-        duplicateCard(card.id);
-        break;
       case 'delete':
         showDeleteConfirmation(card.id);
         break;
@@ -87,7 +81,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     ? {
         ...deck,
         cardCount: pagination.totalItems,
-        thumbnailUrl: deck.image_metadata_id ? `/api/images/${deck.image_metadata_id}` : '/placeholders/deck-cover.png',
+        thumbnailUrl: '/images/default-deck-cover.jpeg',
       }
     : undefined;
 
@@ -103,9 +97,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
             deck={deckViewModel}
             totalCards={limitInfo.totalCards}
             cardLimit={limitInfo.cardLimit}
-            onExport={exportToPdf}
             onShare={shareDeck}
-            exportStatus={exportStatus}
             onCreateCard={addCard}
           />
         </>
@@ -121,7 +113,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
         <>
           <CardGrid cards={cards} onCardOptionsClick={handleCardOptionsClick} />
 
-          <Pagination pagination={pagination} onPageChange={changePage} itemName="kart" />
+          <Pagination pagination={pagination} onPageChange={changePage} itemName="cards" />
         </>
       )}
 

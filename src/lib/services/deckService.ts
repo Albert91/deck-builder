@@ -19,7 +19,7 @@ export async function listDecks(
     .eq('owner_id', userId);
 
   if (search) {
-    query.textSearch('name_tsv', search, { config: 'english' });
+    query.ilike('name', `%${search}%`);
   }
 
   // Add sorting if specified in params

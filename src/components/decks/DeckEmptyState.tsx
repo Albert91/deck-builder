@@ -27,7 +27,7 @@ export function EmptyState({ onCreateDeck, hasFilters = false }: EmptyStateProps
           </svg>
         </div>
         <h3 className="text-lg font-medium mb-2">{hasFilters ? 'No decks found' : 'No decks'}</h3>
-        <p className="text-muted-foreground mb-6 max-w-md">
+        <p className="text-muted-foreground mb-6 max-w-lg">
           {hasFilters
             ? 'No decks were found matching your search criteria. Change the filters or create a new deck.'
             : "You don't have any decks yet. Create your first deck to get started."}

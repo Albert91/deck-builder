@@ -8,7 +8,6 @@
 5. Wyświetlanie wszystkich kart bez paginacji w układzie kolumnowym (2 na mobile, 4 na tablet, tyle kolumn ile możliwe na desktop)
 6. Panel administratora nie powinien być implementowany
 7. Generyczne informacje o błędach rozróżniające grupy błędów (2xx, 4xx, 5xx)
-8. Nie ma potrzeby podglądu całej talii na jednym ekranie przed eksportem do PDF
 10. Nie ma potrzeby zaawansowanego sortowania/filtrowania kart w ramach talii
 11. Użytkownik może edytować atrybuty karty (strength, defense, health)
 12. Podgląd rewersu karty potrzebny tylko na poziomie tworzenia talii
@@ -19,7 +18,6 @@
 17. Atrybuty karty pokazane jako suwaki z zakresem 0-99 i wartością domyślną 0
 18. Lista talii powinna umożliwiać edycję i usuwanie z poziomu listy
 19. Przycisk duplikacji powinien znajdować się obok przycisków edycji i usunięcia
-20. Nie ma potrzeby podglądu PDF przed generowaniem
 22. Limity powinny być pokazane jako paski postępu z tooltipami pokazującymi x/5 lub x/100 po najechaniu
 23. Nawigacja powinna zawierać zarówno menu jak i breadcrumbs (responsywne)
 24. Wymagany jest przełącznik trybu jasnego/ciemnego (bez respektowania preferencji systemowych)
@@ -38,7 +36,6 @@
 8. Zaprojektowanie dwuetapowego interfejsu generowania talii: wybór nazwy, a następnie generowanie awersu/rewersu z podglądem obu stron.
 10. Stworzenie przejrzystego systemu powiadomień toast dla komunikatów o błędach i sukcesach.
 11. Implementacja blokowania interfejsu podczas generowania AI z komunikatem "Tworzenie obrazu karty" i automatycznym odblokowaniem po zakończeniu lub błędzie.
-12. Zaprojektowanie interfejsu eksportu do PDF z prostym przepływem: przycisk eksportu → wskaźnik postępu → komunikat o sukcesie i link do pobrania.
 13. Stworzenie widoku udostępnionej talii z wyraźnym oznaczeniem trybu "tylko do odczytu" i responsywną siatką kart.
 </matched_recommendations>
 
@@ -86,10 +83,6 @@ Architektura UI będzie oparta na trzech głównych sekcjach, zgodnie z przepły
 - Widok talii w trybie "tylko do odczytu" z wyraźnym oznaczeniem
 - Responsywna siatka kart bez możliwości edycji
 - Kopiowanie linku do schowka
-
-### 3.6 Eksport do PDF
-- Prosty proces: przycisk eksportu → wskaźnik postępu → link do pobrania
-- Bez podglądu PDF przed generowaniem
 
 ## 4. Obsługa procesów AI i komunikacja błędów
 - Blokowanie interfejsu podczas procesów generowania AI

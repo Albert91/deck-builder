@@ -11,7 +11,7 @@ export default function CardDescriptionTextarea({ value, onChange, error }: Card
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <Label htmlFor="description" className="text-sm font-medium">
-          Opis karty
+          Card description
         </Label>
         <span className="text-xs text-muted-foreground">{value.length}/500</span>
       </div>
@@ -19,7 +19,7 @@ export default function CardDescriptionTextarea({ value, onChange, error }: Card
         id="description"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Wpisz opis karty (opcjonalnie)..."
+        placeholder="Enter card description (optional)..."
         maxLength={500}
         className={`w-full min-h-[100px] px-3 py-2 rounded-md border ${
           error ? 'border-red-500' : 'border-input'

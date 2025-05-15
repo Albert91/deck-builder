@@ -1,6 +1,12 @@
 import { OpenAIService } from './openai.service';
 import type { GenerateImageSchema } from '../validators/images';
 
+interface GenerateImageResult {
+  imageUrl: string;
+  model: string;
+  parameters: Record<string, unknown>;
+}
+
 export class ImageService {
   private _openai: OpenAIService;
   private readonly _logger: Console;
@@ -22,7 +28,7 @@ export class ImageService {
    * @param params Generation parameters
    * @returns URL to the generated image
    */
-  public async generateImage(params: GenerateImageSchema): Promise<string> {
+  public async generateImage(params: GenerateImageSchema): Promise<GenerateImageResult> {
     if (!params.prompt) {
       throw new Error('Prompt is required');
     }
@@ -51,7 +57,15 @@ export class ImageService {
         throw new Error('No image URL returned from generation service');
       }
 
-      return result.imageUrl;
+      return {
+        imageUrl: result.imageUrl,
+        model: result.model,
+        parameters: {
+          type: params.type,
+          style: 'vivid',
+          quality: 'hd',
+        },
+      };
     } catch (error) {
       this._logger.error('Image generation error:', error);
       throw new Error(`Failed to generate image: ${(error as Error).message}`);

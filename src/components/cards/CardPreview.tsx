@@ -19,7 +19,7 @@ interface CardPreviewProps {
 
 export default function CardPreview({ cardData, viewMode }: CardPreviewProps) {
   // Default placeholder image for when no image is available
-  const defaultImage = 'https://placehold.co/300x420/222/white?text=No+Image';
+  const defaultImage = '/images/default-card-front.jpeg';
 
   // Determine the image to show based on view mode
   const imageUrl =
@@ -40,34 +40,30 @@ export default function CardPreview({ cardData, viewMode }: CardPreviewProps) {
       <div className="relative w-[300px] h-[420px] rounded-xl overflow-hidden bg-gradient-to-b from-slate-800 to-slate-950 text-white shadow-lg">
         {/* Card image */}
         <div className="h-[180px] overflow-hidden">
-          <img
-            src={cardData.frontImageUrl || defaultImage}
-            alt={cardData.title}
-            className="w-full h-full object-cover"
-          />
+          <img src={imageUrl} alt={cardData.title} className="w-full h-full object-cover" />
         </div>
 
         {/* Card content */}
-        <div className="p-4 space-y-3">
+        <div className="p-4 space-y-4">
           {/* Title */}
-          <h3 className="text-xl font-bold truncate">{cardData.title || 'Untitled Card'}</h3>
+          <h3 className="text-lg font-bold truncate">{cardData.title}</h3>
 
           {/* Description */}
-          <p className="text-sm h-[80px] overflow-y-auto">{cardData.description || 'No description'}</p>
+          <p className="text-sm text-gray-300 line-clamp-3">{cardData.description || 'No description'}</p>
 
           {/* Attributes */}
-          <div className="grid grid-cols-3 gap-2 pt-2">
-            <div className="text-center">
-              <div className="text-xs text-gray-300">Siła</div>
-              <div className="text-xl font-bold">{cardData.attributes.strength}</div>
+          <div className="grid grid-cols-3 gap-2 text-center pt-2">
+            <div>
+              <div className="text-xs text-gray-400">STR</div>
+              <div className="font-bold">{cardData.attributes.strength}</div>
             </div>
-            <div className="text-center">
-              <div className="text-xs text-gray-300">Obrona</div>
-              <div className="text-xl font-bold">{cardData.attributes.defense}</div>
+            <div>
+              <div className="text-xs text-gray-400">DEF</div>
+              <div className="font-bold">{cardData.attributes.defense}</div>
             </div>
-            <div className="text-center">
-              <div className="text-xs text-gray-300">Zdrowie</div>
-              <div className="text-xl font-bold">{cardData.attributes.health}</div>
+            <div>
+              <div className="text-xs text-gray-400">HP</div>
+              <div className="font-bold">{cardData.attributes.health}</div>
             </div>
           </div>
         </div>

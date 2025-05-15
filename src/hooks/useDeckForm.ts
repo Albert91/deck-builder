@@ -219,6 +219,41 @@ export const useDeckForm = (deckId?: string) => {
     }
   };
 
+  // Delete deck
+  const deleteDeck = async (id: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/decks/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete deck');
+      }
+
+      setToast({
+        type: 'success',
+        message: 'Deck deleted successfully',
+        id: crypto.randomUUID(),
+      });
+
+      return true;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(errorMessage);
+      setToast({
+        type: 'error',
+        message: errorMessage,
+        id: crypto.randomUUID(),
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     formData,
     isLoading,
@@ -231,5 +266,6 @@ export const useDeckForm = (deckId?: string) => {
     updateDeck,
     updateFormField,
     generateImage,
+    deleteDeck,
   };
 };

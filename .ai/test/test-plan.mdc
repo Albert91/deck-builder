@@ -52,7 +52,7 @@ Testy obejmują następujące obszary:
 
 ### 3.3. Testy end-to-end (E2E)
 - Testy przepływów użytkownika (rejestracja, logowanie, tworzenie talii, dodawanie kart)
-- Testy scenariuszy krytycznych (np. generowanie obrazu, eksport talii)
+- Testy scenariuszy krytycznych (np. generowanie obrazu)
 
 ### 3.4. Testy wydajnościowe
 - Testy obciążeniowe generowania obrazów AI
@@ -104,8 +104,7 @@ Testy obejmują następujące obszary:
 4. Testowanie czasu odpowiedzi API generowania obrazów
 5. Testowanie różnych typów generowanych obrazów (front, back, card_image)
 
-### 4.5. Eksport i udostępnianie
-1. Eksport talii do PDF
+### 4.5. Udostępnianie
 2. Udostępnianie talii poprzez link
 3. Przeglądanie udostępnionej talii bez logowania
 

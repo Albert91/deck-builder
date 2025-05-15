@@ -90,37 +90,3 @@ export async function deleteCard(deckId: string, cardId: string): Promise<void> 
     throw new Error('Failed to delete the card');
   }
 }
-
-/**
- * Duplicates a card within a deck
- */
-export async function duplicateCard(deckId: string, cardId: string): Promise<CardDTO> {
-  const response = await fetch(`/api/decks/${deckId}/cards/${cardId}/duplicate`, {
-    method: 'POST',
-  });
-
-  if (!response.ok) {
-    if (response.status === 403) {
-      throw new Error('Card limit of 100 cards reached');
-    } else {
-      throw new Error('Failed to duplicate the card');
-    }
-  }
-
-  return await response.json();
-}
-
-/**
- * Exports a deck to PDF
- */
-export async function exportDeckToPdf(deckId: string): Promise<Blob> {
-  const response = await fetch(`/api/decks/${deckId}/export/pdf`, {
-    method: 'GET',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to export deck');
-  }
-
-  return await response.blob();
-}
