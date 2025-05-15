@@ -11,6 +11,16 @@ export interface CardFormData {
   };
   frontImageUrl?: string;
   backImageUrl?: string;
+  frontImageData?: {
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
+  backImageData?: {
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export const useCardForm = (deckId: string, cardId?: string) => {
@@ -20,6 +30,8 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     attributes: { strength: 0, defense: 0, health: 0 },
     frontImageUrl: undefined,
     backImageUrl: undefined,
+    frontImageData: undefined,
+    backImageData: undefined,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
@@ -53,6 +65,8 @@ export const useCardForm = (deckId: string, cardId?: string) => {
         },
         frontImageUrl: undefined, // To be loaded separately if needed
         backImageUrl: undefined,
+        frontImageData: undefined,
+        backImageData: undefined,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
@@ -64,6 +78,49 @@ export const useCardForm = (deckId: string, cardId?: string) => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Generate image using AI
+  const generateImage = async (prompt: string, type: 'front' | 'back'): Promise<string | null> => {
+    if (!prompt) {
+      setError('Prompt is required');
+      return null;
+    }
+    setIsGeneratingAI(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/ai/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, type }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
+      }
+      const result = await response.json();
+      const { imageUrl, model, parameters } = result;
+      setFormData((prev) => ({
+        ...prev,
+        [type === 'front' ? 'frontImageUrl' : 'backImageUrl']: imageUrl,
+        [type === 'front' ? 'frontImageData' : 'backImageData']: {
+          prompt,
+          model,
+          parameters,
+        },
+      }));
+      return imageUrl;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(errorMessage);
+      setToast({
+        type: 'error',
+        message: errorMessage,
+        id: crypto.randomUUID(),
+      });
+      return null;
+    } finally {
+      setIsGeneratingAI(false);
     }
   };
 
@@ -100,6 +157,14 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
+        image_data: formData.frontImageData
+          ? {
+              url: formData.frontImageUrl!,
+              prompt: formData.frontImageData.prompt,
+              model: formData.frontImageData.model,
+              parameters: formData.frontImageData.parameters,
+            }
+          : undefined,
       };
 
       const response = await fetch(`/api/decks/${deckId}/cards`, {
@@ -162,6 +227,14 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
+        image_data: formData.frontImageData
+          ? {
+              url: formData.frontImageUrl!,
+              prompt: formData.frontImageData.prompt,
+              model: formData.frontImageData.model,
+              parameters: formData.frontImageData.parameters,
+            }
+          : undefined,
       };
 
       const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, {
@@ -189,44 +262,6 @@ export const useCardForm = (deckId: string, cardId?: string) => {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Generate image using AI
-  const generateImage = async (prompt: string, type: 'front' | 'back'): Promise<string | null> => {
-    if (!prompt) {
-      setError('Prompt is required');
-      return null;
-    }
-    setIsGeneratingAI(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/ai/generate-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, type }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to generate image');
-      }
-      const result = await response.json();
-      const imageUrl = result.imageUrl;
-      setFormData((prev) => ({
-        ...prev,
-        [type === 'front' ? 'frontImageUrl' : 'backImageUrl']: imageUrl,
-      }));
-      return imageUrl;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(errorMessage);
-      setToast({
-        type: 'error',
-        message: errorMessage,
-        id: crypto.randomUUID(),
-      });
-      return null;
-    } finally {
-      setIsGeneratingAI(false);
     }
   };
 

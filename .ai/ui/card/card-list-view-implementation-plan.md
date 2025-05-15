@@ -1,7 +1,7 @@
 # Plan implementacji widoku Listy Kart w Talii
 
 ## 1. Przegląd
-Widok listy kart w talii służy do prezentacji wszystkich kart należących do wybranej talii oraz umożliwia zarządzanie nimi. Użytkownik może przeglądać, dodawać, edytować, duplikować oraz usuwać karty. Widok prezentuje również informacje o limicie kart (max 100) oraz umożliwia eksport talii do PDF i udostępnianie jej.
+Widok listy kart w talii służy do prezentacji wszystkich kart należących do wybranej talii oraz umożliwia zarządzanie nimi. Użytkownik może przeglądać, dodawać, edytować, duplikować oraz usuwać karty. Widok prezentuje również informacje o limicie kart (max 100) oraz umożliwia udostępnianie jej.
 
 ## 2. Routing widoku
 - Ścieżka: `/decks/:deckId/cards`
@@ -198,13 +198,6 @@ export interface CardLimitInfo {
   totalCards: number;       // aktualna liczba kart
   cardLimit: number;        // maksymalna liczba kart (100)
 }
-
-// Stan operacji eksportu
-export interface ExportStatus {
-  isExporting: boolean;    // czy eksport jest w trakcie
-  progress?: number;       // opcjonalny postęp eksportu (0-100)
-  error?: string;          // opcjonalny błąd eksportu
-}
 ```
 
 ## 6. Zarządzanie stanem
@@ -330,19 +323,6 @@ async function duplicateCard(deckId: string, cardId: string): Promise<CardDTO> {
   
   return await response.json();
 }
-
-// Eksport do PDF
-async function exportToPdf(deckId: string): Promise<Blob> {
-  const response = await fetch(`/api/decks/${deckId}/export/pdf`, {
-    method: 'GET'
-  });
-  
-  if (!response.ok) {
-    throw new Error('Nie udało się wyeksportować talii');
-  }
-  
-  return await response.blob();
-}
 ```
 
 ## 8. Interakcje użytkownika
@@ -376,13 +356,7 @@ async function exportToPdf(deckId: string): Promise<Blob> {
    - System wyświetla modal potwierdzenia
    - Po potwierdzeniu karta jest usuwana, lista jest odświeżana
 
-7. **Eksport do PDF**
-   - Użytkownik klika przycisk "Eksportuj do PDF"
-   - System inicjuje proces generowania PDF
-   - Podczas generowania wyświetlany jest wskaźnik postępu
-   - Po zakończeniu użytkownik może pobrać plik PDF
-
-8. **Udostępnianie talii**
+7. **Udostępnianie talii**
    - Użytkownik klika przycisk "Udostępnij"
    - System generuje link do udostępniania
    - Link jest wyświetlany użytkownikowi do skopiowania

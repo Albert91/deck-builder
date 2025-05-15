@@ -109,18 +109,3 @@ export async function duplicateCard(deckId: string, cardId: string): Promise<Car
 
   return await response.json();
 }
-
-/**
- * Exports a deck to PDF
- */
-export async function exportDeckToPdf(deckId: string): Promise<Blob> {
-  const response = await fetch(`/api/decks/${deckId}/export/pdf`, {
-    method: 'GET',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to export deck');
-  }
-
-  return await response.blob();
-}

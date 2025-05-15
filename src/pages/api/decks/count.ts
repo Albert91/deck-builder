@@ -38,4 +38,4 @@ export const GET: APIRoute = async ({ locals }) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-}; 
+};

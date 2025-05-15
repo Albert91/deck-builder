@@ -73,6 +73,12 @@ export interface CreateCardCommand {
     attribute_type: 'strength' | 'defense' | 'health';
     value: number;
   }[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export interface UpdateCardCommand {
@@ -82,6 +88,12 @@ export interface UpdateCardCommand {
     attribute_type: 'strength' | 'defense' | 'health';
     value: number;
   }[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 }
 
 export interface CardListResponseDTO {

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { LoadingOverlay } from '../common/LoadingOverlay';
-import { useCardForm, type CardFormData } from '@/hooks/useCardForm';
+import { useCardForm } from '@/hooks/useCardForm';
 
 interface CardFormPageProps {
   deckId: string;

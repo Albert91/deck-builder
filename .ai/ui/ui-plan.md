@@ -138,11 +138,8 @@ Główne sekcje aplikacji:
 5. Dodaje więcej kart / duplikuje istniejące
 6. Edytuje/usuwa karty bezpośrednio z listy
 
-### 3.4. Eksport i udostępnianie
-1. Użytkownik klika przycisk "Eksportuj do PDF" na widoku listy kart
-   - System generuje PDF (wskaźnik postępu)
-   - Po zakończeniu, udostępnia link do pobrania
-2. Użytkownik klika przycisk "Udostępnij"
+### 3.4. Udostępnianie
+1. Użytkownik klika przycisk "Udostępnij"
    - System generuje unikalny URL
    - Użytkownik może skopiować link do schowka
 

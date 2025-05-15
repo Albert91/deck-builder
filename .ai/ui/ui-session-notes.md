@@ -87,10 +87,6 @@ Architektura UI będzie oparta na trzech głównych sekcjach, zgodnie z przepły
 - Responsywna siatka kart bez możliwości edycji
 - Kopiowanie linku do schowka
 
-### 3.6 Eksport do PDF
-- Prosty proces: przycisk eksportu → wskaźnik postępu → link do pobrania
-- Bez podglądu PDF przed generowaniem
-
 ## 4. Obsługa procesów AI i komunikacja błędów
 - Blokowanie interfejsu podczas procesów generowania AI
 - Komunikat "Tworzenie obrazu karty" podczas generowania

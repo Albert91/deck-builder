@@ -92,7 +92,7 @@ export async function getCardCount(supabase: SupabaseClient, deckId: string): Pr
 
 /**
  * Creates a new card in a deck.
- * Also creates any associated card attributes.
+ * Also creates any associated card attributes and image metadata.
  */
 export async function createCard(
   supabase: SupabaseClient,
@@ -119,6 +119,30 @@ export async function createCard(
     throw new Error('User is not the owner of this deck');
   }
 
+  // Create image metadata if provided
+  let imageMetadataId: string | null = null;
+  if (data.image_data) {
+    const { data: imageMetadata, error: metadataError } = await supabase
+      .from('image_metadata')
+      .insert({
+        entity_type: 'card_image',
+        file_path: data.image_data.url,
+        model: data.image_data.model,
+        parameters: data.image_data.parameters,
+        prompt: data.image_data.prompt,
+        user_id: userId,
+      })
+      .select()
+      .single();
+
+    if (metadataError) {
+      console.error('Error creating image metadata:', metadataError);
+      throw new Error('Failed to save image metadata');
+    }
+
+    imageMetadataId = imageMetadata.id;
+  }
+
   // Create the card
   const { data: card, error: cardError } = await supabase
     .from('cards')
@@ -126,6 +150,7 @@ export async function createCard(
       title: data.title,
       description: data.description,
       deck_id: deckId,
+      image_metadata_id: imageMetadataId,
     })
     .select()
     .single();
@@ -136,28 +161,35 @@ export async function createCard(
   }
 
   // Create card attributes if provided
-  let attributes: CardAttribute[] = [];
   if (data.attributes && data.attributes.length > 0) {
-    const attributeInserts = data.attributes.map((attr) => ({
+    const cardAttributes = data.attributes.map((attr) => ({
       card_id: card.id,
       attribute_type: attr.attribute_type,
       value: attr.value,
     }));
 
-    const { data: createdAttributes, error: attrError } = await supabase
-      .from('card_attributes')
-      .insert(attributeInserts)
-      .select();
+    const { error: attributesError } = await supabase.from('card_attributes').insert(cardAttributes);
 
-    if (attrError) {
-      console.error('Error creating card attributes:', attrError);
-      throw attrError;
+    if (attributesError) {
+      console.error('Error creating card attributes:', attributesError);
+      throw attributesError;
     }
-
-    attributes = createdAttributes;
   }
 
-  return mapToCardDTO(card as Card, attributes);
+  // Update image metadata with card ID if it was created
+  if (imageMetadataId) {
+    const { error: updateError } = await supabase
+      .from('image_metadata')
+      .update({ entity_id: card.id })
+      .eq('id', imageMetadataId);
+
+    if (updateError) {
+      console.error('Error updating image metadata entity_id:', updateError);
+      // Don't throw here as the card was created successfully
+    }
+  }
+
+  return card;
 }
 
 /**
@@ -215,8 +247,8 @@ export async function deleteCard(
 }
 
 /**
- * Updates an existing card in the specified deck.
- * Also updates any associated card attributes.
+ * Updates an existing card.
+ * Also updates associated card attributes and image metadata.
  */
 export async function updateCard(
   supabase: SupabaseClient,
@@ -224,97 +256,90 @@ export async function updateCard(
   deckId: string,
   cardId: string,
   data: UpdateCardCommand
-): Promise<CardDTO> {
-  // 1. Check if the deck exists and belongs to the user
-  const { data: deck, error: deckError } = await supabase
-    .from('decks')
-    .select('id, owner_id')
-    .eq('id', deckId)
-    .single();
-
-  if (deckError) {
-    if (deckError.code === 'PGRST116') {
-      throw new Error('Deck not found');
-    }
-    throw deckError;
-  }
-
-  // Check if user is the owner of the deck
-  if (deck.owner_id !== userId) {
-    throw new Error('User is not the owner of this deck');
-  }
-
-  // 2. Check if the card exists and belongs to this deck
-  const { error: cardError } = await supabase
+): Promise<void> {
+  // 1. Check if the card exists and belongs to the user's deck
+  const { data: existingCard, error: cardError } = await supabase
     .from('cards')
-    .select('id')
+    .select('deck:decks(owner_id)')
     .eq('id', cardId)
     .eq('deck_id', deckId)
     .single();
 
   if (cardError) {
     if (cardError.code === 'PGRST116') {
-      throw new Error('Card not found in this deck');
+      throw new Error('Card not found');
     }
     throw cardError;
+  }
+
+  // @ts-expect-error deck type is correct
+  if (existingCard.deck.owner_id !== userId) {
+    throw new Error('User is not the owner of this deck');
+  }
+
+  // 2. Create new image metadata if provided
+  let imageMetadataId: string | null = null;
+  if (data.image_data) {
+    const { data: imageMetadata, error: metadataError } = await supabase
+      .from('image_metadata')
+      .insert({
+        entity_type: 'card_image',
+        file_path: data.image_data.url,
+        model: data.image_data.model,
+        parameters: data.image_data.parameters,
+        prompt: data.image_data.prompt,
+        user_id: userId,
+        entity_id: cardId, // We can set this right away for updates
+      })
+      .select()
+      .single();
+
+    if (metadataError) {
+      console.error('Error creating image metadata:', metadataError);
+      throw new Error('Failed to save image metadata');
+    }
+
+    imageMetadataId = imageMetadata.id;
   }
 
   // 3. Update the card
   const updateData: any = {};
   if (data.title !== undefined) updateData.title = data.title;
   if (data.description !== undefined) updateData.description = data.description;
+  if (imageMetadataId !== null) updateData.image_metadata_id = imageMetadataId;
   updateData.updated_at = new Date().toISOString();
 
-  const { error: updateError } = await supabase.from('cards').update(updateData).eq('id', cardId).eq('deck_id', deckId);
+  const { error: updateError } = await supabase.from('cards').update(updateData).eq('id', cardId);
 
   if (updateError) {
+    console.error('Error updating card:', updateError);
     throw updateError;
   }
 
   // 4. Update card attributes if provided
-  if (data.attributes) {
-    // Delete existing attributes
+  if (data.attributes && data.attributes.length > 0) {
+    // First delete existing attributes
     const { error: deleteError } = await supabase.from('card_attributes').delete().eq('card_id', cardId);
 
     if (deleteError) {
+      console.error('Error deleting existing card attributes:', deleteError);
       throw deleteError;
     }
 
-    // Insert new attributes
-    if (data.attributes.length > 0) {
-      const attributeInserts = data.attributes.map((attr) => ({
-        card_id: cardId,
-        attribute_type: attr.attribute_type,
-        value: attr.value,
-      }));
+    // Then insert new attributes
+    const cardAttributes = data.attributes.map((attr) => ({
+      card_id: cardId,
+      attribute_type: attr.attribute_type,
+      value: attr.value,
+    }));
 
-      const { error: insertError } = await supabase.from('card_attributes').insert(attributeInserts);
+    const { error: attributesError } = await supabase.from('card_attributes').insert(cardAttributes);
 
-      if (insertError) {
-        throw insertError;
-      }
+    if (attributesError) {
+      console.error('Error creating card attributes:', attributesError);
+      throw attributesError;
     }
   }
-
-  // 5. Get the updated card with attributes
-  const { data: updatedCard, error: fetchError } = await supabase.from('cards').select('*').eq('id', cardId).single();
-
-  if (fetchError) {
-    throw fetchError;
-  }
-
-  // Get card attributes
-  const { data: attributes, error: attrError } = await supabase
-    .from('card_attributes')
-    .select('*')
-    .eq('card_id', cardId);
-
-  if (attrError) {
-    throw attrError;
-  }
-
-  // 6. Return data in CardDTO format
-  return mapToCardDTO(updatedCard as Card, attributes as CardAttribute[]);
 }
 
 /**

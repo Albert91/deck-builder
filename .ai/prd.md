@@ -11,7 +11,6 @@ Główne cechy produktu:
 - Tworzenie obrazów postaci/przedmiotów/miejsc na podstawie tytułu karty
 - Edytor treści kart z podglądem na żywo
 - System zarządzania taliami kart
-- Eksport talii do formatu PDF gotowego do druku
 - Możliwość udostępniania talii przez unikalny URL
 
 ## 2. Problem użytkownika
@@ -47,7 +46,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
 
 ### 3.5 System zarządzania taliami
 - Tworzenie, przeglądanie, edycja i usuwanie talii
-- Eksport talii do formatu PDF gotowego do druku
 
 ### 3.6 System udostępniania
 - Generowanie unikalnego URL dla każdej talii kart
@@ -70,7 +68,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
 - Podstawowy edytor kart z funkcjami generowania tła i obrazów przez AI
 - Zarządzanie taliami kart (tworzenie, przeglądanie, edycja, usuwanie)
 - System kont użytkowników do przechowywania talii
-- Eksport talii do formatu do druku (PDF)
 - Udostępnianie talii przez unikalny URL
 
 ### Co NIE wchodzi w zakres MVP:
@@ -226,16 +223,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
   - Po potwierdzeniu, talia i wszystkie jej karty są trwale usuwane
   - System informuje użytkownika o pomyślnym usunięciu talii
   - Zmiana jest natychmiast widoczna w liście talii użytkownika
-
-### US-016
-- Tytuł: Eksport talii do PDF
-- Opis: Jako użytkownik z ukończoną talią, chcę wyeksportować moją talię do formatu PDF, aby móc ją wydrukować.
-- Kryteria akceptacji:
-  - Użytkownik może wybrać talię do eksportu
-  - System generuje plik PDF zawierający wszystkie karty w talii
-  - Karty w PDF są rozmieszczone optymalnie do druku (standardowy rozmiar 66x91mm)
-  - PDF zawiera zarówno awersy, jak i rewersy kart
-  - Użytkownik może pobrać wygenerowany plik PDF
 
 ### US-017
 - Tytuł: Generowanie linku do udostępniania talii

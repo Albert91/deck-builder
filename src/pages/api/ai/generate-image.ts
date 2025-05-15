@@ -51,10 +51,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Create image service and generate image
     const imageService = new ImageService(openaiApiKey);
-    const imageUrl = await imageService.generateImage({ prompt, type });
+    const result = await imageService.generateImage({ prompt, type });
 
-    // Return success response
-    return new Response(JSON.stringify({ imageUrl }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    // Return success response with image generation result
+    return new Response(JSON.stringify(result), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error('Error generating image:', error);
 
