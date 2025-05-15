@@ -197,7 +197,6 @@ export interface DeckLimitInfo {
 // View model for a single card
 export interface CardViewModel extends CardDTO {
   thumbnailUrl: string; // URL of the card thumbnail (front)
-  backThumbnailUrl: string; // URL of the card thumbnail (back)
 }
 
 // Card list parameters (extension of PaginationParams)

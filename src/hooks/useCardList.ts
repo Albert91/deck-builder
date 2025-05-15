@@ -37,12 +37,7 @@ export function useCardList(deckId: string) {
       const transformedCards = data.items.map(
         (card: CardDTO): CardViewModel => ({
           ...card,
-          thumbnailUrl: card.image_metadata_id
-            ? `/api/images/${card.image_metadata_id}`
-            : '/placeholders/card-front.png',
-          backThumbnailUrl: card.image_metadata_id
-            ? `/api/images/${card.image_metadata_id}/back`
-            : '/placeholders/card-back.png',
+          thumbnailUrl: card.image_data?.url ?? '/images/default-card-back.jpeg',
         })
       );
 

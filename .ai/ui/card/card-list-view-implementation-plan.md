@@ -190,7 +190,6 @@ DeckCardsPage
 // Model widoku dla pojedynczej karty
 export interface CardViewModel extends CardDTO {
   thumbnailUrl: string; // URL miniatury karty (awers)
-  backThumbnailUrl: string; // URL miniatury karty (rewers)
 }
 
 // Parametry listy kart (rozszerzenie PaginationParams)

@@ -7,13 +7,13 @@ import type {
   CreateCardCommand,
   UpdateCardCommand,
   CardAttribute,
-  ImageMetadata,
 } from '../../types';
 import { mapToCardDTO } from '../../types';
 
 /**
  * Retrieves a list of cards for a specific deck.
  * Supports pagination with page and limit parameters.
+ * Includes image URLs for each card.
  */
 export async function listCards(
   supabase: SupabaseClient,
@@ -45,14 +45,20 @@ export async function listCards(
   const limit = params.limit || 20;
   const offset = (page - 1) * limit;
 
-  // Get cards with pagination
+  // Get cards with pagination and join with image_metadata
   const {
     data: cards,
     count,
     error,
   } = await supabase
     .from('cards')
-    .select('*', { count: 'exact' })
+    .select(
+      `
+      *,
+      image_metadata:image_metadata!id(file_path)
+    `,
+      { count: 'exact' }
+    )
     .eq('deck_id', deckId)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
@@ -62,8 +68,18 @@ export async function listCards(
     throw error;
   }
 
-  // Convert database results to DTOs
-  const items: CardDTO[] = (cards || []).map((card) => mapToCardDTO(card as Card));
+  // Convert database results to DTOs with image data
+  const items: CardDTO[] = (cards || []).map((card: any) => ({
+    ...mapToCardDTO(card as Card),
+    image_data: card.image_metadata
+      ? {
+          url: card.image_metadata.file_path,
+          prompt: '', // We don't need these fields for list view
+          model: '', // but need to satisfy the type
+          parameters: {},
+        }
+      : undefined,
+  }));
 
   return {
     items,
