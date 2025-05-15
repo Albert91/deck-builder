@@ -91,14 +91,14 @@ export async function getCardCount(supabase: SupabaseClient, deckId: string): Pr
 }
 
 /**
- * Creates a new card in the specified deck.
- * Returns the created card as a CardDTO.
+ * Creates a new card in a deck.
+ * Also creates any associated card attributes.
  */
 export async function createCard(
   supabase: SupabaseClient,
   userId: string,
   deckId: string,
-  cardData: CreateCardCommand
+  data: CreateCardCommand
 ): Promise<CardDTO> {
   // First check if the deck exists and belongs to the user
   const { data: deck, error: deckError } = await supabase
@@ -119,29 +119,45 @@ export async function createCard(
     throw new Error('User is not the owner of this deck');
   }
 
-  // Check card limit
-  const cardCount = await getCardCount(supabase, deckId);
-  if (cardCount >= 100) {
-    throw new Error('Card limit reached (100)');
-  }
-
-  // Insert the new card
-  const { data: card, error } = await supabase
+  // Create the card
+  const { data: card, error: cardError } = await supabase
     .from('cards')
     .insert({
+      title: data.title,
+      description: data.description,
       deck_id: deckId,
-      title: cardData.title,
-      description: cardData.description || null,
     })
     .select()
     .single();
 
-  if (error) {
-    console.error('Error creating card:', error);
-    throw error;
+  if (cardError) {
+    console.error('Error creating card:', cardError);
+    throw cardError;
   }
 
-  return mapToCardDTO(card as Card);
+  // Create card attributes if provided
+  let attributes: CardAttribute[] = [];
+  if (data.attributes && data.attributes.length > 0) {
+    const attributeInserts = data.attributes.map((attr) => ({
+      card_id: card.id,
+      attribute_type: attr.attribute_type,
+      value: attr.value,
+    }));
+
+    const { data: createdAttributes, error: attrError } = await supabase
+      .from('card_attributes')
+      .insert(attributeInserts)
+      .select();
+
+    if (attrError) {
+      console.error('Error creating card attributes:', attrError);
+      throw attrError;
+    }
+
+    attributes = createdAttributes;
+  }
+
+  return mapToCardDTO(card as Card, attributes);
 }
 
 /**
@@ -200,8 +216,7 @@ export async function deleteCard(
 
 /**
  * Updates an existing card in the specified deck.
- * Verifies that the card exists, is part of the specified deck,
- * and the user is the owner of the deck.
+ * Also updates any associated card attributes.
  */
 export async function updateCard(
   supabase: SupabaseClient,
@@ -256,7 +271,32 @@ export async function updateCard(
     throw updateError;
   }
 
-  // 4. Get the updated card with attributes
+  // 4. Update card attributes if provided
+  if (data.attributes) {
+    // Delete existing attributes
+    const { error: deleteError } = await supabase.from('card_attributes').delete().eq('card_id', cardId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    // Insert new attributes
+    if (data.attributes.length > 0) {
+      const attributeInserts = data.attributes.map((attr) => ({
+        card_id: cardId,
+        attribute_type: attr.attribute_type,
+        value: attr.value,
+      }));
+
+      const { error: insertError } = await supabase.from('card_attributes').insert(attributeInserts);
+
+      if (insertError) {
+        throw insertError;
+      }
+    }
+  }
+
+  // 5. Get the updated card with attributes
   const { data: updatedCard, error: fetchError } = await supabase.from('cards').select('*').eq('id', cardId).single();
 
   if (fetchError) {
@@ -273,8 +313,8 @@ export async function updateCard(
     throw attrError;
   }
 
-  // 5. Return data in CardDTO format
-  return mapToCardDTO(updatedCard, attributes || []);
+  // 6. Return data in CardDTO format
+  return mapToCardDTO(updatedCard as Card, attributes as CardAttribute[]);
 }
 
 /**

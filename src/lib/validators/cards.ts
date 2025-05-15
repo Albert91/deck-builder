@@ -7,9 +7,15 @@ export const listCardsSchema = z.object({
 
 export type ListCardsSchema = z.infer<typeof listCardsSchema>;
 
+const attributeSchema = z.object({
+  attribute_type: z.enum(['strength', 'defense', 'health']),
+  value: z.number().int().min(0).max(99),
+});
+
 export const createCardSchema = z.object({
   title: z.string().trim().min(1).max(100),
   description: z.string().trim().optional(),
+  attributes: z.array(attributeSchema).optional(),
 });
 
 export type CreateCardSchema = z.infer<typeof createCardSchema>;
@@ -18,9 +24,10 @@ export const updateCardSchema = z
   .object({
     title: z.string().trim().min(1).max(100).optional(),
     description: z.string().trim().max(500).nullable().optional(),
+    attributes: z.array(attributeSchema).optional(),
   })
-  .refine((data) => data.title !== undefined || data.description !== undefined, {
-    message: 'You must provide a title or description for the card',
+  .refine((data) => data.title !== undefined || data.description !== undefined || data.attributes !== undefined, {
+    message: 'You must provide a title, description, or attributes to update',
   });
 
 export type UpdateCardSchema = z.infer<typeof updateCardSchema>;

@@ -69,11 +69,19 @@ export type CardDTO = Pick<Card, 'id' | 'title' | 'description' | 'image_metadat
 export interface CreateCardCommand {
   title: string;
   description: string | null;
+  attributes?: {
+    attribute_type: 'strength' | 'defense' | 'health';
+    value: number;
+  }[];
 }
 
 export interface UpdateCardCommand {
   title?: string;
   description?: string | null;
+  attributes?: {
+    attribute_type: 'strength' | 'defense' | 'health';
+    value: number;
+  }[];
 }
 
 export interface CardListResponseDTO {

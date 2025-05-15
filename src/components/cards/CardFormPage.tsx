@@ -68,8 +68,6 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
   const showLoading = isLoading || isGeneratingAI;
   const pageTitle = cardId ? 'Edit Card' : 'Create New Card';
 
-  console.log(formData);
-
   return (
     <div className="container max-w-4xl mx-auto py-8">
       <LoadingOverlay isLoading={showLoading} message={loadingMessage} />

@@ -78,21 +78,40 @@ export const useCardForm = (deckId: string, cardId?: string) => {
       });
       return null;
     }
+
     setIsLoading(true);
     setError(null);
+
     try {
       const createCommand: CreateCardCommand = {
         title: formData.title,
         description: formData.description || null,
+        attributes: [
+          {
+            attribute_type: 'strength',
+            value: formData.attributes.strength,
+          },
+          {
+            attribute_type: 'defense',
+            value: formData.attributes.defense,
+          },
+          {
+            attribute_type: 'health',
+            value: formData.attributes.health,
+          },
+        ],
       };
+
       const response = await fetch(`/api/decks/${deckId}/cards`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(createCommand),
       });
+
       if (!response.ok) {
         throw new Error('Failed to create card');
       }
+
       const newCard: CardDTO = await response.json();
       setToast({
         type: 'success',
@@ -121,21 +140,40 @@ export const useCardForm = (deckId: string, cardId?: string) => {
       setError('Title is required');
       return;
     }
+
     setIsLoading(true);
     setError(null);
+
     try {
       const updateCommand: UpdateCardCommand = {
         title: formData.title,
         description: formData.description || null,
+        attributes: [
+          {
+            attribute_type: 'strength',
+            value: formData.attributes.strength,
+          },
+          {
+            attribute_type: 'defense',
+            value: formData.attributes.defense,
+          },
+          {
+            attribute_type: 'health',
+            value: formData.attributes.health,
+          },
+        ],
       };
+
       const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateCommand),
       });
+
       if (!response.ok) {
         throw new Error('Failed to update card');
       }
+
       setToast({
         type: 'success',
         message: 'Changes saved',
