@@ -81,7 +81,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     ? {
         ...deck,
         cardCount: pagination.totalItems,
-        thumbnailUrl: deck.image_metadata_id ? `/api/images/${deck.image_metadata_id}` : '/placeholders/deck-cover.png',
+        thumbnailUrl: '/images/default-deck-cover.jpeg',
       }
     : undefined;
 
