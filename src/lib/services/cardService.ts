@@ -7,6 +7,7 @@ import type {
   CreateCardCommand,
   UpdateCardCommand,
   CardAttribute,
+  ImageMetadata,
 } from '../../types';
 import { mapToCardDTO } from '../../types';
 
@@ -153,7 +154,6 @@ export async function createCard(
 
   // Create image metadata if provided
   let imageMetadataId: string | null = null;
-  console.log(data.image_data);
   if (data.image_data) {
     const { data: imageMetadata, error: metadataError } = await supabase
       .from('image_metadata')
@@ -169,8 +169,6 @@ export async function createCard(
       .select()
       .single();
 
-      console.log(imageMetadata, metadataError);
-
     if (metadataError) {
       console.error('Error creating image metadata:', metadataError);
       throw new Error('Failed to save image metadata');
@@ -179,7 +177,10 @@ export async function createCard(
     imageMetadataId = imageMetadata.id;
   }
 
-  return card;
+  return {
+    ...card,
+    image_metadata_id: imageMetadataId,
+  };
 }
 
 /**
@@ -336,7 +337,7 @@ export async function updateCard(
  * Retrieves a single card by ID.
  * Verifies that the card exists, is part of the specified deck,
  * and the user is the owner of the deck.
- * Returns the card with its attributes.
+ * Returns the card with its attributes and image metadata.
  */
 export async function getCard(
   supabase: SupabaseClient,
@@ -389,5 +390,21 @@ export async function getCard(
     throw attrError;
   }
 
-  return mapToCardDTO(card as Card, attributes as CardAttribute[]);
+  // Get image metadata if it exists
+  let imageData = undefined;
+  const { data: metadata } = await supabase.from('image_metadata').select('*').eq('entity_id', cardId).single();
+
+  if (metadata) {
+    imageData = {
+      url: metadata.file_path,
+      prompt: metadata.prompt,
+      model: metadata.model,
+      parameters: metadata.parameters,
+    };
+  }
+
+  return {
+    ...mapToCardDTO(card as Card, attributes as CardAttribute[]),
+    image_data: imageData,
+  };
 }

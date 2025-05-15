@@ -23,7 +23,7 @@ export interface UserDTO {
 
 // =================== DECK TYPES ===================
 
-export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at' | 'image_metadata_id'>;
+export type DeckDTO = Pick<Deck, 'id' | 'name' | 'share_hash' | 'created_at' | 'updated_at'>;
 
 export interface CreateDeckCommand {
   name: string;
@@ -64,6 +64,12 @@ export type CardAttributeDTO = Pick<CardAttribute, 'id' | 'attribute_type' | 'va
 
 export type CardDTO = Pick<Card, 'id' | 'title' | 'description' | 'image_metadata_id' | 'created_at' | 'updated_at'> & {
   attributes?: CardAttributeDTO[];
+  image_data?: {
+    url: string;
+    prompt: string;
+    model: string;
+    parameters: Record<string, unknown>;
+  };
 };
 
 export interface CreateCardCommand {
@@ -239,5 +245,4 @@ export const mapToDeckDTO = (deck: Deck): DeckDTO => ({
   share_hash: deck.share_hash,
   created_at: deck.created_at,
   updated_at: deck.updated_at,
-  image_metadata_id: deck.image_metadata_id,
 });

@@ -77,27 +77,6 @@ export function useCardList(deckId: string) {
     [deckId]
   );
 
-  const duplicateCard = useCallback(
-    async (cardId: string) => {
-      if (!deckId || !cardId) return;
-
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        await cardApi.duplicateCard(deckId, cardId);
-
-        // Refresh the card list
-        await fetchCards();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Nieznany błąd');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [deckId, fetchCards]
-  );
-
   const deleteCard = useCallback(async () => {
     if (!deckId || !cardToDelete) return;
 
@@ -199,7 +178,6 @@ export function useCardList(deckId: string) {
     fetchCards,
     addCard,
     editCard,
-    duplicateCard,
     showDeleteConfirmation,
     cancelDelete,
     confirmDelete: deleteCard,

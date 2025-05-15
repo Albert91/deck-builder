@@ -105,7 +105,6 @@ DeckCardsPage
   - `cards: CardViewModel[]`
   - `isCardSideBack: boolean`
   - `onCardEdit: (cardId: string) => void`
-  - `onCardDuplicate: (cardId: string) => void`
   - `onCardDelete: (cardId: string) => void`
 
 ### CardItem
@@ -125,7 +124,6 @@ DeckCardsPage
   - `card: CardViewModel`
   - `isCardSideBack: boolean`
   - `onEdit: () => void`
-  - `onDuplicate: () => void`
   - `onDelete: () => void`
 
 ### Pagination
@@ -236,7 +234,6 @@ function useCardList(deckId: string) {
   // Funkcje akcji na kartach
   async function addCard() {...}
   async function editCard(cardId: string) {...}
-  async function duplicateCard(cardId: string) {...}
   async function deleteCard(cardId: string) {...}
   
   // Funkcje zarządzania paginacją
@@ -263,7 +260,6 @@ function useCardList(deckId: string) {
     fetchCards,
     addCard,
     editCard,
-    duplicateCard,
     showDeleteConfirmation,
     cancelDelete,
     confirmDelete: deleteCard,
@@ -305,23 +301,6 @@ async function deleteCard(deckId: string, cardId: string): Promise<void> {
   if (!response.ok) {
     throw new Error('Nie udało się usunąć karty');
   }
-}
-
-// Duplikowanie karty
-async function duplicateCard(deckId: string, cardId: string): Promise<CardDTO> {
-  const response = await fetch(`/api/decks/${deckId}/cards/${cardId}/duplicate`, {
-    method: 'POST'
-  });
-  
-  if (!response.ok) {
-    if (response.status === 403) {
-      throw new Error('Osiągnięto limit 100 kart');
-    } else {
-      throw new Error('Nie udało się zduplikować karty');
-    }
-  }
-  
-  return await response.json();
 }
 ```
 

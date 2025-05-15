@@ -135,7 +135,7 @@ Główne sekcje aplikacji:
    - Dostosowuje atrybuty karty (suwaki 0-99)
    - Zmiany są automatycznie zapisywane
 4. Wraca do listy kart
-5. Dodaje więcej kart / duplikuje istniejące
+5. Dodaje więcej kart
 6. Edytuje/usuwa karty bezpośrednio z listy
 
 ### 3.4. Udostępnianie

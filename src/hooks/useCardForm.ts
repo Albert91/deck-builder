@@ -54,7 +54,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
           defense: cardData.attributes?.find((a) => a.attribute_type === 'defense')?.value || 0,
           health: cardData.attributes?.find((a) => a.attribute_type === 'health')?.value || 0,
         },
-        image_metadata: undefined, // To be loaded separately if needed
+        image_metadata: cardData.image_data,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
@@ -145,14 +145,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
-        image_data: formData.image_metadata
-          ? {
-              url: formData.image_metadata.url,
-              prompt: formData.image_metadata.prompt,
-              model: formData.image_metadata.model,
-              parameters: formData.image_metadata.parameters,
-            }
-          : undefined,
+        image_data: formData.image_metadata,
       };
 
       const response = await fetch(`/api/decks/${deckId}/cards`, {
@@ -215,14 +208,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
-        image_data: formData.image_metadata
-          ? {
-              url: formData.image_metadata.url,
-              prompt: formData.image_metadata.prompt,
-              model: formData.image_metadata.model,
-              parameters: formData.image_metadata.parameters,
-            }
-          : undefined,
+        image_data: formData.image_metadata,
       };
 
       const response = await fetch(`/api/decks/${deckId}/cards/${cardId}`, {

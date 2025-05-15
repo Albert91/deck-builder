@@ -25,7 +25,6 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     fetchCards,
     addCard,
     editCard,
-    duplicateCard,
     showDeleteConfirmation,
     cancelDelete,
     confirmDelete,
@@ -64,9 +63,6 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     switch (option) {
       case 'edit':
         editCard(card.id);
-        break;
-      case 'duplicate':
-        duplicateCard(card.id);
         break;
       case 'delete':
         showDeleteConfirmation(card.id);
