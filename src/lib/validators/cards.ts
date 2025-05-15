@@ -35,9 +35,16 @@ export const updateCardSchema = z
     attributes: z.array(attributeSchema).optional(),
     image_data: imageDataSchema.optional(),
   })
-  .refine((data) => data.title !== undefined || data.description !== undefined || data.attributes !== undefined || data.image_data !== undefined, {
-    message: 'You must provide a title, description, attributes, or image data to update',
-  });
+  .refine(
+    (data) =>
+      data.title !== undefined ||
+      data.description !== undefined ||
+      data.attributes !== undefined ||
+      data.image_data !== undefined,
+    {
+      message: 'You must provide a title, description, attributes, or image data to update',
+    }
+  );
 
 export type UpdateCardSchema = z.infer<typeof updateCardSchema>;
 
