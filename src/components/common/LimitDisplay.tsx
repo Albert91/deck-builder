@@ -6,7 +6,7 @@ interface CardLimitDisplayProps {
   maxLimit?: number;
 }
 
-export function CardLimitDisplay({ currentCount, title, maxLimit = 100 }: CardLimitDisplayProps) {
+export function LimitDisplay({ currentCount, title, maxLimit = 100 }: CardLimitDisplayProps) {
   // Calculate progress percentage for the progress bar
   const progressPercentage = Math.min((currentCount / maxLimit) * 100, 100);
 

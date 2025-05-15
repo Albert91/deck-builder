@@ -54,7 +54,7 @@ const DeckFormPage: React.FC<DeckFormPageProps> = ({ deckId }) => {
   const handleCreateDeck = async () => {
     const newDeckId = await createDeck();
     if (newDeckId) {
-      window.location.href = `/decks/${newDeckId}/edit`;
+      window.location.href = '/';
     }
   };
 

@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { CardLimitDisplay } from './cards/CardLimitDisplay';
 import type { DeckViewModel, ExportStatus } from '@/types';
 import { Plus } from 'lucide-react';
+import { LimitDisplay } from '../common/LimitDisplay';
 
 interface DeckCardsHeaderProps {
   deck: DeckViewModel;
@@ -29,7 +30,7 @@ export function DeckCardsHeader({
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 mb-2">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold tracking-tight">Deck: {deck.name}</h1>
-        <CardLimitDisplay currentCount={totalCards} maxLimit={cardLimit} />
+        <LimitDisplay currentCount={totalCards} title="Cards" maxLimit={cardLimit} />
       </div>
       <div className="flex items-center gap-2">
         <Button onClick={onCreateCard} disabled={hasReachedLimit} className="gap-2">

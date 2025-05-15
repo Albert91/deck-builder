@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LimitDisplay } from '../common/LimitDisplay';
 
 interface DeckListHeaderProps {
   totalDecks: number;
@@ -12,15 +13,7 @@ export function DeckListHeader({ totalDecks, deckLimit, onCreateDeck }: DeckList
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 mb-2">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">My Decks</h1>
-        <p className="text-muted-foreground mt-1">
-          Used:{' '}
-          <span className={`font-medium ${hasReachedLimit ? 'text-destructive' : ''}`}>
-            {totalDecks}/{deckLimit}
-          </span>
-        </p>
-      </div>
+      <LimitDisplay currentCount={totalDecks} title="Decks" maxLimit={deckLimit} />
 
       <Button onClick={onCreateDeck} disabled={hasReachedLimit} className="gap-2">
         <Plus className="h-4 w-4" />
