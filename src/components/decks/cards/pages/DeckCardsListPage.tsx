@@ -21,7 +21,6 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     isLoading,
     error,
     showDeleteDialog,
-    exportStatus,
     fetchCards,
     addCard,
     editCard,
@@ -29,7 +28,6 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
     cancelDelete,
     confirmDelete,
     changePage,
-    exportToPdf,
     shareDeck,
   } = useCardList(deckId);
 
@@ -99,9 +97,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
             deck={deckViewModel}
             totalCards={limitInfo.totalCards}
             cardLimit={limitInfo.cardLimit}
-            onExport={exportToPdf}
             onShare={shareDeck}
-            exportStatus={exportStatus}
             onCreateCard={addCard}
           />
         </>

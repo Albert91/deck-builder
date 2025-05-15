@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import type { DeckViewModel, ExportStatus } from '@/types';
+import type { DeckViewModel } from '@/types';
 import { Plus } from 'lucide-react';
 import { LimitDisplay } from '../common/LimitDisplay';
 
@@ -8,21 +8,11 @@ interface DeckCardsHeaderProps {
   deck: DeckViewModel;
   totalCards: number;
   cardLimit: number;
-  exportStatus: ExportStatus;
-  onExport: () => void;
   onShare: () => void;
   onCreateCard: () => void;
 }
 
-export function DeckCardsHeader({
-  deck,
-  totalCards,
-  cardLimit,
-  exportStatus,
-  onExport,
-  onShare,
-  onCreateCard,
-}: DeckCardsHeaderProps) {
+export function DeckCardsHeader({ deck, totalCards, cardLimit, onShare, onCreateCard }: DeckCardsHeaderProps) {
   const hasReachedLimit = totalCards >= cardLimit;
 
   return (

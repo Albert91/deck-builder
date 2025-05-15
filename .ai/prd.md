@@ -313,7 +313,6 @@ AI Card Deck Creator rozwiązuje te problemy, oferując intuicyjny interfejs wsp
 
 ### 6.2 Metryki techniczne
 - Czas generowania pojedynczego obrazu przez AI nie przekracza 30 sekund
-- Czas generowania pliku PDF nie przekracza 60 sekund dla talii zawierającej 100 kart
 - Dostępność systemu na poziomie 99.5% w skali miesiąca
 
 ### 6.3 Metryki biznesowe

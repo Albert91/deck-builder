@@ -217,13 +217,6 @@ export interface CardLimitInfo {
   cardLimit: number; // maximum number of cards (100)
 }
 
-// Export operation state
-export interface ExportStatus {
-  isExporting: boolean; // whether export is in progress
-  progress?: number; // optional export progress (0-100)
-  error?: string; // optional export error
-}
-
 // Mapping helpers for converting database rows to DTOs
 export const mapToCardDTO = (card: Card, attributes?: CardAttribute[]): CardDTO => ({
   id: card.id,

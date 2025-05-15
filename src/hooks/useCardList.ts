@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { CardViewModel, PaginationModel, CardFilterState, CardDTO, ExportStatus } from '@/types';
+import type { CardViewModel, PaginationModel, CardFilterState, CardDTO } from '@/types';
 import * as cardApi from '@/lib/api/cards';
 import * as deckApi from '@/lib/api/decks';
 
@@ -22,11 +22,6 @@ export function useCardList(deckId: string) {
   // Modal state
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  // Export state
-  const [exportStatus, setExportStatus] = useState<ExportStatus>({
-    isExporting: false,
-  });
 
   // Data fetching function
   const fetchCards = useCallback(async () => {
@@ -104,32 +99,6 @@ export function useCardList(deckId: string) {
     setFilters((prev: CardFilterState) => ({ ...prev, page }));
   }, []);
 
-  // Export functions
-  const exportToPdf = useCallback(async () => {
-    if (!deckId) return;
-
-    setExportStatus({ isExporting: true });
-
-    try {
-      const blob = await cardApi.exportDeckToPdf(deckId);
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `talia-${deckId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      setExportStatus({ isExporting: false });
-    } catch (err) {
-      setExportStatus({
-        isExporting: false,
-        error: err instanceof Error ? err.message : 'Nieznany błąd',
-      });
-    }
-  }, [deckId]);
-
   const shareDeck = useCallback(async () => {
     if (!deckId) return;
 
@@ -174,7 +143,6 @@ export function useCardList(deckId: string) {
     error,
     showDeleteDialog,
     cardToDelete,
-    exportStatus,
     fetchCards,
     addCard,
     editCard,
@@ -182,7 +150,6 @@ export function useCardList(deckId: string) {
     cancelDelete,
     confirmDelete: deleteCard,
     changePage,
-    exportToPdf,
     shareDeck,
   };
 }
