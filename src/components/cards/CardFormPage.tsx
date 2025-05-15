@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { LoadingOverlay } from '../common/LoadingOverlay';
-import { useCardForm } from '@/hooks/useCardForm';
+import { useCardForm, type CardFormData } from '@/hooks/useCardForm';
 
 interface CardFormPageProps {
   deckId: string;
@@ -26,6 +26,7 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     createCard,
     updateCard,
     generateImage,
+    setFormData,
   } = useCardForm(deckId, cardId);
 
   useEffect(() => {
@@ -48,12 +49,12 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
   const handleCreateCard = async () => {
     const newCardId = await createCard();
     if (newCardId) {
-      window.location.href = `/decks/${deckId}/cards/${newCardId}/edit`;
+      window.location.href = `/decks/${deckId}/cards`;
     }
   };
 
   const handleCancel = () => {
-    window.location.href = `/decks/${deckId}`;
+    window.location.href = `/decks/${deckId}/cards`;
   };
 
   const handleGenerate = async (prompt: string, type: 'front' | 'back') => {
@@ -64,9 +65,10 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
     return imageUrl || '';
   };
 
-  const isFormValid = !!formData.title;
   const showLoading = isLoading || isGeneratingAI;
   const pageTitle = cardId ? 'Edit Card' : 'Create New Card';
+
+  console.log(formData);
 
   return (
     <div className="container max-w-4xl mx-auto py-8">
@@ -80,7 +82,8 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
             deckId={deckId}
             card={null} // TODO: Pass actual card data if needed
             isLoading={isLoading}
-            initialData={formData}
+            formData={formData}
+            setFormData={setFormData}
           />
           <CardPreview
             cardData={{
@@ -104,11 +107,11 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
               Cancel
             </Button>
             {!cardId ? (
-              <Button onClick={handleCreateCard} disabled={!isFormValid || showLoading}>
+              <Button onClick={handleCreateCard} disabled={showLoading}>
                 Create Card
               </Button>
             ) : (
-              <Button onClick={updateCard} disabled={!isFormValid || showLoading}>
+              <Button onClick={updateCard} disabled={showLoading}>
                 Save Changes
               </Button>
             )}

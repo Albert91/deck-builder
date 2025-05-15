@@ -203,5 +203,6 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     createCard,
     updateCard,
     generateImage,
+    setFormData,
   };
 };

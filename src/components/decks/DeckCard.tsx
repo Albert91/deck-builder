@@ -72,11 +72,11 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                     onClick={() => onOptionsClick('edit', deck)}
                   >
                     <Pencil className="h-4 w-4" />
-                    <span className="sr-only">Edytuj</span>
+                    <span className="sr-only">Edit</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Edytuj talię</p>
+                  <p>Edit deck</p>
                 </TooltipContent>
               </Tooltip>
 
@@ -90,11 +90,11 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                     onClick={() => onOptionsClick('share', deck)}
                   >
                     <Share2 className="h-4 w-4" />
-                    <span className="sr-only">Udostępnij</span>
+                    <span className="sr-only">Share</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Udostępnij talię</p>
+                  <p>Share deck</p>
                 </TooltipContent>
               </Tooltip>
 
@@ -108,11 +108,11 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                     onClick={() => onOptionsClick('delete', deck)}
                   >
                     <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Usuń</span>
+                    <span className="sr-only">Delete</span>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Usuń talię</p>
+                  <p>Delete deck</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

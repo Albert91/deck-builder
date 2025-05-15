@@ -12,7 +12,7 @@ export default function CardTitleInput({ value, onChange, error }: CardTitleInpu
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <Label htmlFor="title" className="text-sm font-medium">
-          Tytuł karty
+          Card title
         </Label>
         <span className="text-xs text-muted-foreground">{value.length}/100</span>
       </div>
@@ -20,7 +20,7 @@ export default function CardTitleInput({ value, onChange, error }: CardTitleInpu
         id="title"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Wpisz tytuł karty..."
+        placeholder="Enter card title..."
         className={error ? 'border-red-500' : ''}
         maxLength={100}
         aria-invalid={!!error}

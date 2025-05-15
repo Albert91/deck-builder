@@ -121,7 +121,7 @@ export default function DeckCardsListPage({ deckId }: DeckCardsListPageProps) {
         <>
           <CardGrid cards={cards} onCardOptionsClick={handleCardOptionsClick} />
 
-          <Pagination pagination={pagination} onPageChange={changePage} itemName="kart" />
+          <Pagination pagination={pagination} onPageChange={changePage} itemName="cards" />
         </>
       )}
 
