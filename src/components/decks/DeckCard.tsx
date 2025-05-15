@@ -87,24 +87,6 @@ export function DeckCard({ deck, onClick, onOptionsClick }: DeckCardProps) {
                     size="icon"
                     className="h-8 w-8"
                     data-action-button
-                    onClick={() => onOptionsClick('duplicate', deck)}
-                  >
-                    <Copy className="h-4 w-4" />
-                    <span className="sr-only">Duplikuj</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Duplikuj talię</p>
-                </TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    data-action-button
                     onClick={() => onOptionsClick('share', deck)}
                   >
                     <Share2 className="h-4 w-4" />

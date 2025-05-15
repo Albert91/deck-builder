@@ -56,9 +56,6 @@ export default function DeckListPage() {
       case 'edit':
         window.location.href = `/decks/${deck.id}/edit`;
         break;
-      case 'duplicate':
-        // TODO: Implement duplication logic
-        break;
       case 'share':
         // TODO: Implement sharing logic
         break;
