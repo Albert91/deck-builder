@@ -119,30 +119,6 @@ export async function createCard(
     throw new Error('User is not the owner of this deck');
   }
 
-  // Create image metadata if provided
-  let imageMetadataId: string | null = null;
-  if (data.image_data) {
-    const { data: imageMetadata, error: metadataError } = await supabase
-      .from('image_metadata')
-      .insert({
-        entity_type: 'card_image',
-        file_path: data.image_data.url,
-        model: data.image_data.model,
-        parameters: data.image_data.parameters,
-        prompt: data.image_data.prompt,
-        user_id: userId,
-      })
-      .select()
-      .single();
-
-    if (metadataError) {
-      console.error('Error creating image metadata:', metadataError);
-      throw new Error('Failed to save image metadata');
-    }
-
-    imageMetadataId = imageMetadata.id;
-  }
-
   // Create the card
   const { data: card, error: cardError } = await supabase
     .from('cards')
@@ -150,7 +126,6 @@ export async function createCard(
       title: data.title,
       description: data.description,
       deck_id: deckId,
-      image_metadata_id: imageMetadataId,
     })
     .select()
     .single();
@@ -176,17 +151,32 @@ export async function createCard(
     }
   }
 
-  // Update image metadata with card ID if it was created
-  if (imageMetadataId) {
-    const { error: updateError } = await supabase
+  // Create image metadata if provided
+  let imageMetadataId: string | null = null;
+  console.log(data.image_data);
+  if (data.image_data) {
+    const { data: imageMetadata, error: metadataError } = await supabase
       .from('image_metadata')
-      .update({ entity_id: card.id })
-      .eq('id', imageMetadataId);
+      .insert({
+        entity_id: card.id,
+        entity_type: 'card_image',
+        file_path: data.image_data.url,
+        model: data.image_data.model,
+        parameters: data.image_data.parameters,
+        prompt: data.image_data.prompt,
+        user_id: userId,
+      })
+      .select()
+      .single();
 
-    if (updateError) {
-      console.error('Error updating image metadata entity_id:', updateError);
-      // Don't throw here as the card was created successfully
+      console.log(imageMetadata, metadataError);
+
+    if (metadataError) {
+      console.error('Error creating image metadata:', metadataError);
+      throw new Error('Failed to save image metadata');
     }
+
+    imageMetadataId = imageMetadata.id;
   }
 
   return card;

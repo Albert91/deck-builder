@@ -60,7 +60,7 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
   const handleGenerate = async (prompt: string, type: 'front' | 'back') => {
     const imageUrl = await generateImage(prompt, type);
     if (imageUrl) {
-      toast.success(`${type === 'front' ? 'Front' : 'Back'} image generated successfully`);
+      toast.success('Image generated successfully');
     }
     return imageUrl || '';
   };
@@ -88,8 +88,8 @@ const CardFormPage: React.FC<CardFormPageProps> = ({ deckId, cardId }) => {
               title: formData.title,
               description: formData.description,
               attributes: formData.attributes,
-              frontImageUrl: formData.frontImageUrl ?? '/images/default-card-front.jpeg',
-              backImageUrl: formData.backImageUrl ?? '/images/default-card-back.jpeg',
+              frontImageUrl: formData.image_metadata?.url ?? '/images/default-card-front.jpeg',
+              backImageUrl: '/images/default-card-back.jpeg',
             }}
             viewMode="front"
           />

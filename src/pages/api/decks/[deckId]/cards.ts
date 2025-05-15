@@ -131,10 +131,12 @@ export const POST: APIRoute = async ({ params, request, locals }) => {
       const deckId = deckIdValidation.data;
       const validatedData = validationResult.data;
 
-      // Convert the Zod schema result to the required CreateCardCommand type
+      // Convert validated data to CreateCardCommand
       const cardData: CreateCardCommand = {
         title: validatedData.title,
         description: validatedData.description ?? null,
+        attributes: validatedData.attributes,
+        image_data: validatedData.image_data,
       };
 
       const result = await createCard(locals.supabase, user.id, deckId, cardData);

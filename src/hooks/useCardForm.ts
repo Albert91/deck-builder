@@ -9,14 +9,8 @@ export interface CardFormData {
     defense: number;
     health: number;
   };
-  frontImageUrl?: string;
-  backImageUrl?: string;
-  frontImageData?: {
-    prompt: string;
-    model: string;
-    parameters: Record<string, unknown>;
-  };
-  backImageData?: {
+  image_metadata?: {
+    url: string;
     prompt: string;
     model: string;
     parameters: Record<string, unknown>;
@@ -28,10 +22,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
     title: '',
     description: '',
     attributes: { strength: 0, defense: 0, health: 0 },
-    frontImageUrl: undefined,
-    backImageUrl: undefined,
-    frontImageData: undefined,
-    backImageData: undefined,
+    image_metadata: undefined,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
@@ -63,10 +54,7 @@ export const useCardForm = (deckId: string, cardId?: string) => {
           defense: cardData.attributes?.find((a) => a.attribute_type === 'defense')?.value || 0,
           health: cardData.attributes?.find((a) => a.attribute_type === 'health')?.value || 0,
         },
-        frontImageUrl: undefined, // To be loaded separately if needed
-        backImageUrl: undefined,
-        frontImageData: undefined,
-        backImageData: undefined,
+        image_metadata: undefined, // To be loaded separately if needed
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
@@ -102,8 +90,8 @@ export const useCardForm = (deckId: string, cardId?: string) => {
       const { imageUrl, model, parameters } = result;
       setFormData((prev) => ({
         ...prev,
-        [type === 'front' ? 'frontImageUrl' : 'backImageUrl']: imageUrl,
-        [type === 'front' ? 'frontImageData' : 'backImageData']: {
+        image_metadata: {
+          url: imageUrl,
           prompt,
           model,
           parameters,
@@ -157,12 +145,12 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
-        image_data: formData.frontImageData
+        image_data: formData.image_metadata
           ? {
-              url: formData.frontImageUrl!,
-              prompt: formData.frontImageData.prompt,
-              model: formData.frontImageData.model,
-              parameters: formData.frontImageData.parameters,
+              url: formData.image_metadata.url,
+              prompt: formData.image_metadata.prompt,
+              model: formData.image_metadata.model,
+              parameters: formData.image_metadata.parameters,
             }
           : undefined,
       };
@@ -227,12 +215,12 @@ export const useCardForm = (deckId: string, cardId?: string) => {
             value: formData.attributes.health,
           },
         ],
-        image_data: formData.frontImageData
+        image_data: formData.image_metadata
           ? {
-              url: formData.frontImageUrl!,
-              prompt: formData.frontImageData.prompt,
-              model: formData.frontImageData.model,
-              parameters: formData.frontImageData.parameters,
+              url: formData.image_metadata.url,
+              prompt: formData.image_metadata.prompt,
+              model: formData.image_metadata.model,
+              parameters: formData.image_metadata.parameters,
             }
           : undefined,
       };
