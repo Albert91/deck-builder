@@ -22,7 +22,7 @@ export function CardLimitDisplay({ currentCount, title, maxLimit = 100 }: CardLi
     <Tooltip>
       <TooltipTrigger asChild>
         <div className="flex flex-col gap-1 w-full max-w-xs">
-          <div className="flex  text-xs text-muted-foreground gap-2">
+          <div className="flex text-xs text-muted-foreground gap-2">
             <span>{title}</span>
             <span aria-live="polite">
               {currentCount}/{maxLimit}

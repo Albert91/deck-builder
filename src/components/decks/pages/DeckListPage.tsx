@@ -13,9 +13,9 @@ import { EmptyState } from '../DeckEmptyState';
 
 // Default sort options
 const sortOptions: DeckSortOption[] = [
-  { id: 'updated', label: 'Data aktualizacji', value: 'updated_at' },
-  { id: 'created', label: 'Data utworzenia', value: 'created_at' },
-  { id: 'name', label: 'Nazwa', value: 'name' },
+  { id: 'updated', label: 'Updated at', value: 'updated_at' },
+  { id: 'created', label: 'Created at', value: 'created_at' },
+  { id: 'name', label: 'Name', value: 'name' },
 ];
 
 export default function DeckListPage() {

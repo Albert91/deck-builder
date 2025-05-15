@@ -41,7 +41,7 @@ export function LimitDisplay({ currentCount, title, maxLimit = 100 }: CardLimitD
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        {currentCount === maxLimit ? 'Osiągnięto limit kart' : `Możesz dodać jeszcze ${maxLimit - currentCount} kart`}
+        {currentCount === maxLimit ? 'You reach the limit' : `You can add ${maxLimit - currentCount} more`}
       </TooltipContent>
     </Tooltip>
   );
