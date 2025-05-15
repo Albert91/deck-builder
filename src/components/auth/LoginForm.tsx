@@ -140,9 +140,9 @@ export function LoginForm() {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
-            Welcome Back
+            Card Deck Creator
           </CardTitle>
-          <CardDescription className="text-center">Sign in to your account to continue</CardDescription>
+          <CardDescription className="text-center">Create amazing card decks with AI</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {error && <div className="p-3 bg-destructive/15 text-destructive text-sm rounded-md">{error}</div>}
@@ -225,7 +225,7 @@ export function LoginForm() {
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div className="text-xs text-center">
+                    <div className="text-sm text-center">
                       <span className="text-muted-foreground">Code not received? </span>
                       <button
                         type="button"
@@ -238,7 +238,7 @@ export function LoginForm() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-sm text-center text-muted-foreground">
+                  <div className="text-sm text-center text-muted-foreground mt-7">
                     We&apos;ll send a one-time password to your email
                   </div>
                 )}
@@ -257,7 +257,7 @@ export function LoginForm() {
                   : 'Send OTP Code'}
           </Button>
         </CardFooter>
-        <div className="px-6 pb-6 text-center text-sm text-muted-foreground">
+        <div className="px-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
           <a href="/register" className="text-primary hover:underline">
             Create account

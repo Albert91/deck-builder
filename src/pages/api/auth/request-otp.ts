@@ -39,11 +39,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error) {
-      console.error('OTP request error:', error);
+      console.error('OTP request error:', error.code);
       return new Response(
         JSON.stringify({
           success: false,
-          message: 'Konto nie istnieje',
+          message: error.code?.includes('over_email_send_rate_limit')
+            ? 'Odczekaj chwilę i spróbuj ponownie'
+            : 'Wystąpił nieoczekiwany błąd',
         }),
         { status: 401 }
       );
